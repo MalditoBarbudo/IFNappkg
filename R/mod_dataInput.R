@@ -34,7 +34,7 @@ mod_dataInput <- function(id) {
           shiny::column(
             4,
             shiny::selectInput(
-              ns('ifn'), 'Versió de les dades', ifns,
+              ns('ifn'), 'Versió de les dades', dic_ifn_choices[["esp"]],
               selected = 'ifn3'
             )
           ),
@@ -42,7 +42,7 @@ mod_dataInput <- function(id) {
             6, offset = 2,
             shiny::radioButtons(
               ns('viz_shape'), 'Tipus de visualització',
-              choices = c('Parcel·les' = 'parcela', 'Poligons' = 'polygon'),
+              choices = dic_viz_shape_choices[["esp"]],
               selected = 'polygon', inline = TRUE
             )
           )
@@ -52,15 +52,15 @@ mod_dataInput <- function(id) {
           shiny::column(
             6,
             shiny::selectInput(
-              ns('admin_div'), 'Divisions administratatives', admin_divs,
-              selected = 'comarca'
+              ns('admin_div'), 'Divisions administratatives',
+              dic_admin_div_choices[["esp"]], selected = 'comarca'
             )
           ),
           shiny::column(
             6,
             shiny::selectInput(
-              ns('espai_tipus'), "Tipus d'espai", espai_tipus,
-              selected = 'proteccio'
+              ns('espai_tipus'), "Tipus d'espai",
+              dic_espai_tipus_choices[["esp"]], selected = 'proteccio'
             )
           )
         )
@@ -80,7 +80,7 @@ mod_dataInput <- function(id) {
             6,
             shiny::selectInput(
               ns('admin_div_fil'), 'Filtra per division administrative',
-              choices = c('Tota Catalunya' = ''),
+              choices = dic_admin_div_fil_choices[["esp"]][["comarca"]],
               selected = '', multiple = TRUE, width = '100%'
             )
           ),
@@ -183,28 +183,13 @@ mod_data <- function(
     admin_div_sel <- input$admin_div
     if (is.null(admin_div_sel) | admin_div_sel == '') {
 
-      # admin_div_fil_choices <- list(
-      #   catalunya = ''
-      # )
-
-      # if catalunya is selected, the filter has no sense (there is nothing
-      # to filter by), so we disable the input with shinyjs, but before that
-      # we update the input to show the original title (if not, the title is
-      # stuck with the last admin div selected)
-      shiny::updateSelectInput(
-        session, 'admin_div_fil', 'Filtra per division administrative',
-        choices = c('Tota Catalunya' = ''),
-        selected = ''
-      )
-
+      shinyjs::reset('admin_div_fil')
       shinyjs::disable('admin_div_fil')
 
     } else {
-      admin_div_fil_choices <- noms_divs
       shiny::updateSelectInput(
         session, 'admin_div_fil', label = paste0('Filtra per ', admin_div_sel),
-        choices = admin_div_fil_choices[[admin_div_sel]],
-        selected = admin_div_fil_choices[[admin_div_sel]][1]
+        choices = dic_admin_div_choices[["esp"]][[admin_div_sel]]
       )
 
       shinyjs::enable('admin_div_fil')

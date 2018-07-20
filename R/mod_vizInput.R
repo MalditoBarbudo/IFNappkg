@@ -80,27 +80,11 @@ mod_viz <- function(
   shiny::observeEvent(
     eventExpr = input_scenario(),
     handlerExpr = {
-      # if scenario changes, reset the input
-      shinyjs::reset('color')
-
-      # scenarios 1 and 2 (plots with/without breakdown)
-      if (input_scenario() %in% c('scenario1', 'scenario2')) {
-
-        # update the needed inputs
-        shiny::updateSelectInput(
-          session, 'color', label = 'Color',
-          choices = vars_to_use
-        )
-      # scenarios 3 y 4
-      } else {
-
-        # update the needed inputs
-        shiny::updateSelectInput(
-          session, 'color', label = 'Color',
-          choices = vars_to_use
-        )
-
-      }
+      # update the needed inputs
+      shiny::updateSelectInput(
+        session, 'color', label = 'Color',
+        choices = dic_color_choices[["cat"]][[input_scenario()]]
+      )
     }
   )
 
