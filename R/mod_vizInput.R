@@ -35,9 +35,9 @@ mod_vizInput <- function(id) {
           ns('tipo_grup_func'), 'Tipus grup funcional',
           choices = c(
             'Espècie' = 'especie',
-            'Espècie simplificat' = 'especiesimple',
+            'Espècie simplificat' = 'especiesimp',
             'Gènere' = 'genere',
-            'Conífera/Caducifoli/Esclerofil·le' = 'caducesclerconif',
+            'Conífera/Caducifoli/Esclerofil·le' = 'cadesccon',
             'Conífera/Planifoli' = 'planifconif'
           ), width = '100%'
         ),
@@ -72,63 +72,40 @@ mod_viz <- function(
   mod_data
 ) {
 
-  # update inputs with variables present in data. We have four input scenarios
-  # so we build a reactive to know which scenario we have using the get_scenario
-  # function from global.R
-  input_scenario <- reactive({
+  input_scenario <- shiny::reactive({
     get_scenario(mod_data$viz_shape, mod_data$agg_level)
   })
 
-  # color input
-  observeEvent(
+  ## Color input
+  shiny::observeEvent(
     eventExpr = input_scenario(),
     handlerExpr = {
       # if scenario changes, reset the input
       shinyjs::reset('color')
 
-      # scenarios 1 and 2 (parecelas con y sin desglose)
+      # scenarios 1 and 2 (plots with/without breakdown)
       if (input_scenario() %in% c('scenario1', 'scenario2')) {
-        # data needed
-        vars_clima <- names(mod_data$data_clima() %>% collect()) %>%
-          stringr::str_sort()
-        vars_viz <- names(mod_data$data_core()) %>%
-          stringr::str_sort()
-
-        vars_to_use <- list(
-          "Variables parcel·la" = vars_viz,
-          "Variables climàtiques" = vars_clima
-        )
 
         # update the needed inputs
-        updateSelectInput(
+        shiny::updateSelectInput(
           session, 'color', label = 'Color',
-          choices = vars_to_use, selected = vars_to_use[[1]][1]
+          choices = vars_to_use
         )
+      # scenarios 3 y 4
       } else {
-        # scenarios 3 y 4
-        # data needed
-        vars_viz <- names(mod_data$data_core()) %>%
-          stringr::str_sort() %>%
-          stringr::str_remove(
-            pattern = '_mean$|_sd$|_min$|_max$|_n$|_q95$|_median$'
-          ) %>%
-          unique()
-
-        vars_to_use <- list(
-          "Variables poligon" = vars_viz
-        )
 
         # update the needed inputs
-        updateSelectInput(
+        shiny::updateSelectInput(
           session, 'color', label = 'Color',
-          choices = vars_to_use, selected = vars_to_use[[1]][1]
+          choices = vars_to_use
         )
+
       }
     }
   )
 
-  # mida input
-  observeEvent(
+  ## Size input
+  shiny::observeEvent(
     eventExpr = input_scenario(),
     handlerExpr = {
       # if scenario changes, reset the input
@@ -137,38 +114,26 @@ mod_viz <- function(
       # browser()
       # scenarios 1 and 2 (parecelas con y sin desglose)
       if (input_scenario() %in% c('scenario1', 'scenario2')) {
-        # data needed
-        vars_clima <- names(mod_data$data_clima() %>% collect()) %>%
-          stringr::str_sort()
-        vars_viz <- names(mod_data$data_core()) %>%
-          stringr::str_sort() %>%
-          paste0('', .)
 
-        vars_to_use <- list(
-          "Variables parcel·la" = vars_viz,
-          "Variables climàtiques" = vars_clima
-        )
-
-        # update the needed inputs
-        updateSelectInput(
+        shiny::updateSelectInput(
           session, 'mida', label = 'Mida',
           choices = vars_to_use, selected = ''
         )
 
         # show and enable
         shinyjs::show('mida')
-        # shinyjs::enable('mida')
 
       } else {
+
         # hide and disable
         shinyjs::hide('mida')
-        # shinyjs::disable('mida')
+
       }
     }
   )
 
-  # tipo_grup_func input
-  observeEvent(
+  ## Functional group class input
+  shiny::observeEvent(
     eventExpr = input_scenario(),
     handlerExpr = {
       # solo aparece en scenarios 1 y 3
@@ -182,8 +147,8 @@ mod_viz <- function(
     }
   )
 
-  # grup_func input
-  observeEvent(
+  # Functional group values input
+  shiny::observeEvent(
     eventExpr = {
       input$tipo_grup_func
       mod_data$agg_level
@@ -193,57 +158,37 @@ mod_viz <- function(
       # de tipo_grup_funcional en 1 y 3 y de los datos en 2 y 4
       if (input_scenario() == 'scenario1') {
 
-        # choices
-        grup_func_choices <- mod_data$data_core() %>%
-          pull(!!sym(glue('{input$tipo_grup_func}dens'))) %>%
-          stringr::str_sort() %>%
-          c('Qualsevol', .)
-
-        updateSelectInput(
+        shiny::updateSelectInput(
           session, 'grup_func',
           label = glue('{input$tipo_grup_func} dominant per densitat'),
           choices = grup_func_choices, selected = 'Qualsevol'
         )
+
       } else {
         if (input_scenario() %in% c('scenario2', 'scenario4')) {
 
-          # choices
-          grup_func_var <- glue('id{mod_data$agg_level}')
-
-          grup_func_choices <- mod_data$data_core() %>%
-            pull(!!sym(grup_func_var)) %>%
-            stringr::str_sort()
-
-          updateSelectInput(
+          shiny::updateSelectInput(
             session, 'grup_func', label = glue('{mod_data$agg_level}'),
             choices = grup_func_choices
           )
+
         } else {
           if (input_scenario() == 'scenario3') {
 
-            # choices
-            grup_func_choices <- data_generator(
-              oracle_ifn, mod_data$ifn, 'parcela', 'parcela', NULL, FALSE,
-              {mod_data$data_sig() %>% collect()}, NULL
-            ) %>%
-              pull(!!sym(glue('{input$tipo_grup_func}dens'))) %>%
-              stringr::str_sort() %>%
-              c('Qualsevol', .)
-
-
-            updateSelectInput(
+            shiny::updateSelectInput(
               session, 'grup_func',
               label = glue('{input$tipo_grup_func} dominant per densitat'),
               choices = grup_func_choices
             )
+
           }
         }
       }
     }
   )
 
-  # statistic input
-  observeEvent(
+  # Statistic input
+  shiny::observeEvent(
     eventExpr = input_scenario(),
     handlerExpr = {
 
@@ -261,9 +206,9 @@ mod_viz <- function(
   )
 
   # reactive with the inputs values
-  viz_reactives <- reactiveValues()
+  viz_reactives <- shiny::reactiveValues()
 
-  observe({
+  shiny::observe({
     # inputs
     viz_reactives$color <- input$color
     viz_reactives$inverse_pal <- input$inverse_pal

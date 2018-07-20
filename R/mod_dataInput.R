@@ -178,7 +178,7 @@ mod_data <- function(
 ) {
 
   # observers to update the dataFil inputs
-  observe({
+  shiny::observe({
     # create the input choices based on the administrative division input
     admin_div_sel <- input$admin_div
     if (is.null(admin_div_sel) | admin_div_sel == '') {
@@ -191,175 +191,42 @@ mod_data <- function(
       # to filter by), so we disable the input with shinyjs, but before that
       # we update the input to show the original title (if not, the title is
       # stuck with the last admin div selected)
-      updateSelectInput(
+      shiny::updateSelectInput(
         session, 'admin_div_fil', 'Filtra per division administrative',
         choices = c('Tota Catalunya' = ''),
         selected = ''
       )
 
-      disable('admin_div_fil')
+      shinyjs::disable('admin_div_fil')
 
     } else {
       admin_div_fil_choices <- noms_divs
-      updateSelectInput(
+      shiny::updateSelectInput(
         session, 'admin_div_fil', label = paste0('Filtra per ', admin_div_sel),
         choices = admin_div_fil_choices[[admin_div_sel]],
         selected = admin_div_fil_choices[[admin_div_sel]][1]
       )
 
-      enable('admin_div_fil')
+      shinyjs::enable('admin_div_fil')
     }
   })
 
-  observe({
+  shiny::observe({
     # get the protection level and create the choices based on the dic
     espai_tipus_sel <- input$espai_tipus
     espai_tipus_fil_choices <- proteccion_dictionary[[espai_tipus_sel]]
 
-    updateSelectInput(
+    shiny::updateSelectInput(
       session, 'espai_tipus_fil', label = paste0('Filtra per ', espai_tipus_sel),
       choices = espai_tipus_fil_choices,
       selected = espai_tipus_fil_choices[1]
     )
   })
 
-  # data reactives to create (sig, clima and core). The sig data is the key
-  # as it can be filtered by admin divs and espais. Also, is really costy, so
-  # it must be only recalculated when the user selection is completly done,
-  # so we have to add a button to signal the filtering step.
-  data_sig <- eventReactive(
-    ignoreNULL = FALSE, ignoreInit = FALSE,
-    eventExpr = {
-
-      # we need to update the data when ifn is changed or when filterings are
-      # applied
-      input$apply_filters
-      input$ifn
-
-    },
-    valueExpr = {
-
-      # stuff needed
-      sig_name <- paste0('parcela', input$ifn, '_sig_etrs89')
-
-      # if apply_filters button is not pressed, then return the initial data
-      if (input$apply_filters == 0) {
-        return(tbl(oracle_ifn, sig_name))
-      } else {
-
-        # when button is pressed, then all the logic start working
-        if (is.null(input$admin_div_fil)) {
-          filter_expr_admin <- quo(TRUE)
-        } else {
-          filter_expr_admin <- quo(!!sym(input$admin_div) %in% !!input$admin_div_fil)
-        }
-
-        if (is.null(input$espai_tipus_fil) || any(input$espai_tipus_fil == 'Tots')) {
-          filter_expr_espai <- quo(TRUE)
-        } else {
-          # here we need also to check for nomes protegits and sense proteccio
-          # to be able to filter these cases
-          if (any(input$espai_tipus_fil %in% c(
-            'Només protegits',
-            "Només espais d'interès nacional",
-            "Només espai de protecció especial",
-            "Només en Xarxa Natura 2000"
-          ))) {
-            filter_expr_espai <- quo(
-              !(!!sym(input$espai_tipus) %in% c(
-                "Sense Pein", "Sense protecció", "SenseXarxa"
-              ))
-            )
-          } else {
-            filter_expr_espai <- quo(!!sym(input$espai_tipus) %in% !!input$espai_tipus_fil)
-          }
-        }
-
-        # here the advanced filters
-        # TODO
-
-        tbl(oracle_ifn, sig_name) %>%
-          filter(!!! filter_expr_admin) %>%
-          filter(!!! filter_expr_espai) #%>%
-        # advanced filters also TODO
-
-      }
-    }
-  )
-
-  data_clima <- eventReactive(
-    ignoreNULL = FALSE, ignoreInit = FALSE,
-    # data_clima only depends on data_sig and must be updated when data_sig is
-    eventExpr = data_sig(),
-    valueExpr = {
-      clima_name <- paste0('parcela', input$ifn, '_clima')
-
-      data_sig() %>%
-        select(idparcela) %>%
-        left_join(tbl(oracle_ifn, clima_name), by = 'idparcela')
-    }
-  )
-
-  data_core <- reactive({
-
-    data_generator(
-      sql_db = oracle_ifn,
-      ifn = input$ifn,
-      viz_shape = input$viz_shape,
-      agg_level = input$agg_level,
-      admin_div = input$admin_div,
-      diam_class = input$diam_class,
-      data_sig = data_sig(),
-      .funs = funs(
-        mean(., na.rm = TRUE),
-        sd(., na.rm = TRUE),
-        min(., na.rm = TRUE),
-        max(., na.rm = TRUE),
-        median(., na.rm = TRUE),
-        q95 = quantile(., probs = 0.95, na.rm = TRUE),
-        n()
-      )
-    )
-  })
-
-  # data viz reactive for generating the data for map points and the mod_viz
-  # variables
-  data_viz <- eventReactive(
-    eventExpr = {
-      data_sig()
-      input$agg_level
-      input$admin_div
-    },
-    valueExpr = {
-
-      # plots, tipus funcionals, and their derivatives
-      if (input$agg_level %in% c(
-        'parcela', 'especie', 'espsimple', 'genere', 'cadesclcon', 'plancon',
-        'especie_rt', 'espsimple_rt', 'genere_rt', 'cadesclcon_rt', 'plancon_rt'
-      )) {
-
-        res <- data_generator(
-          sql_db = oracle_ifn,
-          ifn = input$ifn,
-          agg = 'parcela',
-          cd = FALSE,
-          data_sig = data_sig(),
-          admin_div = NULL,
-          .funs = NULL
-        )
-
-      } else {
-        res <- data_core()
-      }
-
-      return(res)
-    }
-  )
-
   # reactive values to return for use in other modules
-  data_reactives <- reactiveValues()
+  data_reactives <- shiny::reactiveValues()
 
-  observe({
+  shiny::observe({
     # inputs
     data_reactives$ifn <- input$ifn
     data_reactives$admin_div <- input$admin_div
@@ -371,21 +238,15 @@ mod_data <- function(
     data_reactives$diam_class <- input$diam_class
     data_reactives$viz_shape <- input$viz_shape
 
-    # data
-    data_reactives$data_sig <- data_sig
-    data_reactives$data_clima <- data_clima
-    data_reactives$data_core <- data_core
-    data_reactives$data_viz <- data_viz
-
   })
 
   # viz controls
-  viz_reactives <- callModule(
+  viz_reactives <- shiny::callModule(
     mod_viz, 'mod_vizInput',
     data_reactives
   )
 
-  observe({
+  shiny::observe({
     # inputs
     data_reactives$color <- viz_reactives$color
     data_reactives$inverse_pal <- viz_reactives$inverse_pal
