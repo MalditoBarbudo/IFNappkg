@@ -79,7 +79,7 @@ mod_dataInput <- function(id) {
           shiny::column(
             6,
             shiny::selectInput(
-              ns('admin_div_fil'), 'Filtra per division administrative',
+              ns('admin_div_fil'), names_admin_div_fil[['esp']][['comarca']],
               choices = dic_admin_div_fil_choices[["esp"]][["comarca"]],
               selected = '', multiple = TRUE, width = '100%'
             )
@@ -87,8 +87,8 @@ mod_dataInput <- function(id) {
           shiny::column(
             6,
             shiny::selectInput(
-              ns('espai_tipus_fil'), "Filtra per tipus d'espai",
-              choices = c('Totes' = ''),
+              ns('espai_tipus_fil'), names_espai_tipus_fil[["esp"]][['proteccio']],
+              choices = dic_espai_tipus_fil_choices[["esp"]][['proteccio']],
               selected = '', multiple = TRUE, width = '100%'
             )
           )
@@ -188,8 +188,9 @@ mod_data <- function(
 
     } else {
       shiny::updateSelectInput(
-        session, 'admin_div_fil', label = paste0('Filtra per ', admin_div_sel),
-        choices = dic_admin_div_choices[["esp"]][[admin_div_sel]]
+        session, 'admin_div_fil',
+        label = names_admin_div_fil[["esp"]][[admin_div_sel]],
+        choices = dic_admin_div_fil_choices[["esp"]][[admin_div_sel]]
       )
 
       shinyjs::enable('admin_div_fil')
@@ -199,12 +200,10 @@ mod_data <- function(
   shiny::observe({
     # get the protection level and create the choices based on the dic
     espai_tipus_sel <- input$espai_tipus
-    espai_tipus_fil_choices <- proteccion_dictionary[[espai_tipus_sel]]
-
     shiny::updateSelectInput(
-      session, 'espai_tipus_fil', label = paste0('Filtra per ', espai_tipus_sel),
-      choices = espai_tipus_fil_choices,
-      selected = espai_tipus_fil_choices[1]
+      session, 'espai_tipus_fil',
+      label = names_espai_tipus_fil[["esp"]][[espai_tipus_sel]],
+      choices = dic_espai_tipus_fil_choices[["esp"]][[espai_tipus_sel]]
     )
   })
 
