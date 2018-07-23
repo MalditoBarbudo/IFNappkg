@@ -37,18 +37,17 @@ mod_vizInput <- function(id) {
         ),
         shiny::selectInput(
           ns('tipo_grup_func'), 'Tipus grup funcional',
-          choices = dic_tipo_grup_func[['esp']], width = '100%'
+          choices = dic_tipo_grup_func_choices[['esp']], width = '100%'
         ),
         shiny::selectInput(
-          ns('grup_func'), 'Grup funcional', c(Cap = ''), width = '100%'
+          ns('grup_func'), 'Grup funcional',
+          choices = dic_grup_func_choices[['scenario3']][['especie']],
+          width = '100%'
         ),
         shiny::selectInput(
           ns('statistic'), 'Mètrica',
-          c(
-            'Mitjana' = '_mean', 'Mediana' = '_median',
-            'Desviació estàndard' = '_sd', 'Mìnim' = '_min', 'Màxim' = '_max',
-            'Nombre parcel·les' = '_n', 'Quartil 95' = '_q95'
-          ), width = '100%'
+          choices = dic_statistic_choices[['esp']],
+          width = '100%'
         )
       )
     )
@@ -143,7 +142,7 @@ mod_viz <- function(
         shiny::updateSelectInput(
           session, 'grup_func',
           label = glue('{input$tipo_grup_func} dominant per densitat'),
-          choices = grup_func_choices, selected = 'Qualsevol'
+          choices = dic_grup_func_choices[['scenario1']][[input$tipo_grup_func]]
         )
 
       } else {
@@ -151,7 +150,7 @@ mod_viz <- function(
 
           shiny::updateSelectInput(
             session, 'grup_func', label = glue('{mod_data$agg_level}'),
-            choices = grup_func_choices
+            choices = dic_grup_func_choices[[input_scenario()]][[mod_data$agg_level]]
           )
 
         } else {
@@ -160,7 +159,7 @@ mod_viz <- function(
             shiny::updateSelectInput(
               session, 'grup_func',
               label = glue('{input$tipo_grup_func} dominant per densitat'),
-              choices = grup_func_choices
+              choices = dic_grup_func_choices[['scenario3']][[input$tipo_grup_func]]
             )
 
           }
