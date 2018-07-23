@@ -95,3 +95,78 @@ names_diam_class <- list(
 
 ## mod_viz inputs ####
 
+# color input
+# there is no need, as color is equal in the three lenguages
+
+# mida input (size)
+names_mida <- list(
+  cat = 'Mida',
+  esp = 'Tamaño',
+  eng = 'Size'
+)
+
+# tipo_grup_func input
+names_tipo_grup_func <- list(
+  cat = 'Tipus grup funcional',
+  esp = 'Tipo de grupo funcional',
+  eng = 'Functional group type'
+)
+
+# grup_func input
+names_grup_func <- list(
+  cat = list(
+    scenario1 = list(
+      especie = 'Espècie dominant per densitat',
+      especiesimp = 'Espècie simplificat dominant per densitat',
+      genere = 'Gènere dominant per densitat',
+      cadesccon = 'Caducifoli/Esclerofil/Conifera dominant per densitat',
+      planifconif = 'Planifoli/Conifera dominant per densitat'
+    ),
+    scenario2 = list(
+      especie = 'Espècie a visualitzar',
+      especiesimp = 'Espècie simplificat a visualitzar',
+      genere = 'Génere a visualitzar',
+      cadesccon = 'Caducifoli/Esclerofil/Conifera a visualitzar',
+      planifconif = 'Planifoli/Conifera a visualitzar'
+    )
+  ),
+  esp = list(
+    scenario1 = list(
+      especie = 'Especie dominante en densidad',
+      especiesimp = 'Especie simplificada dominante en densidad',
+      genere = 'Género dominante en densidad',
+      cadesccon = 'Caducifolia/Esclerofila/Conífera dominante en densidad',
+      planifconif = 'Planifolia/Conífera dominante en densidad'
+    ),
+    scenario2 = list(
+      especie = 'Especie a visualizar',
+      especiesimp = 'Especie simplificada a visualizar',
+      genere = 'Género a visualizar',
+      cadesccon = 'Caducifolia/Esclerofila/Conífera a visualizar',
+      planifconif = 'Planifolia/Conífera a visualizar'
+    )
+  ),
+  eng = list(
+    scenario1 = list(
+      especie = 'Dominant species by density',
+      especiesimp = 'Dominant simplified species by density',
+      genere = 'Dominant genera by density',
+      cadesccon = 'Dominant Deciduous/Sclerophyllous/Conifer by density',
+      planifconif = 'Dominant Broadleaf/Conifer by density'
+    ),
+    scenario2 = list(
+      especie = 'Species to visualize',
+      especiesimp = 'Simplified species to visualize',
+      genere = 'Genera to visualize',
+      cadesccon = 'Deciduous/Sclerophyllous/Conifer to visualize',
+      planifconif = 'Broadleaf/Conifer to visualize'
+    )
+  )
+)
+
+# statistic input
+names_statistic <- list(
+  cat = 'Mètrica',
+  esp = 'Métrica',
+  eng = 'Metric'
+)
