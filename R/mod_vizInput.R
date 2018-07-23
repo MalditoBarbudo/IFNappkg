@@ -21,25 +21,23 @@ mod_vizInput <- function(id) {
       shiny::wellPanel(
         shiny::h3('Visualització'),
         shiny::selectInput(
-          ns('color'), 'Color', c(Cap = ''), width = '100%'
+          ns('color'), 'Color',
+          dic_color_choices[['esp']][['scenario3']],
+          width = '100%'
         ),
         shiny::checkboxInput(
           ns('inverse_pal'), 'Invertir colors', value = FALSE
         ),
         shinyjs::hidden(
           shiny::selectInput(
-            ns('mida'), 'Mida', c(Cap = ''), width = '100%'
+            ns('mida'), 'Mida',
+            dic_mida_choices[['esp']][['scenario1']],
+            width = '100%'
           )
         ),
         shiny::selectInput(
           ns('tipo_grup_func'), 'Tipus grup funcional',
-          choices = c(
-            'Espècie' = 'especie',
-            'Espècie simplificat' = 'especiesimp',
-            'Gènere' = 'genere',
-            'Conífera/Caducifoli/Esclerofil·le' = 'cadesccon',
-            'Conífera/Planifoli' = 'planifconif'
-          ), width = '100%'
+          choices = dic_tipo_grup_func[['esp']], width = '100%'
         ),
         shiny::selectInput(
           ns('grup_func'), 'Grup funcional', c(Cap = ''), width = '100%'
@@ -83,7 +81,7 @@ mod_viz <- function(
       # update the needed inputs
       shiny::updateSelectInput(
         session, 'color', label = 'Color',
-        choices = dic_color_choices[["cat"]][[input_scenario()]]
+        choices = dic_color_choices[["esp"]][[input_scenario()]]
       )
     }
   )
@@ -101,7 +99,7 @@ mod_viz <- function(
 
         shiny::updateSelectInput(
           session, 'mida', label = 'Mida',
-          choices = vars_to_use, selected = ''
+          choices = dic_mida_choices[["esp"]][[input_scenario()]]
         )
 
         # show and enable

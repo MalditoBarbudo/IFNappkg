@@ -1123,3 +1123,32 @@ dic_color_choices <- list(
   )
 
 )
+
+# Mida (size) input
+dic_mida_choices <- dic_color_choices
+
+# Functional type group input
+dic_tipo_grup_func <- list(
+  cat = list(
+    'Espècie' = 'especie',
+    'Espècie simplificat' = 'especiesimp',
+    'Gènere' = 'genere',
+    'Conífera/Caducifoli/Esclerofil·le' = 'cadesccon',
+    'Conífera/Planifoli' = 'planifconif'
+  ),
+  esp = list(
+    'Especie' = 'especie',
+    'Especie simplificada' = 'especiesimp',
+    'Género' = 'genere',
+    'Caducifolia/Esclerófila/Conífera' = 'cadesccon',
+    'Planifolia/Conífera' = 'planifconif'
+  ),
+  eng = list(
+    'Species' = 'especie',
+    'Simplified Species' = 'especiesimp',
+    'Genera' = 'genere',
+    'Deciduous/Sclerophyllous/Conifer' = 'cadesccon',
+    'Broadleaf/Conifer' = 'planifconif'
+  )
+)
+
