@@ -568,6 +568,33 @@ dic_espai_tipus_fil_choices <- list(
 
 )
 
+# agg_level input
+dic_agg_level_choices <- list(
+  cat = c(
+    'Agregat o Total???' = 'parcela',
+    'Desglossat per Espècie' = 'especie',
+    'Desglossat per Espècie simplificat' = 'espsimple',
+    'Desglossat per Gènere' = 'genere',
+    'Desglossat per Conífera/Caducifoli/Esclerofil·le' = 'cadesclcon',
+    'Desglossat per Conífera/Planifoli' = 'plancon'
+  ),
+  esp = c(
+    'Agregado o Total???' = 'parcela',
+    'Desglosado por Especie' = 'especie',
+    'Desglosado por Especie simplificada' = 'espsimple',
+    'Desglosado por Género' = 'genere',
+    'Desglosado por Caducifolio/Esclerófila/Conífera' = 'cadesclcon',
+    'Desglosado por Planifolia/Conífera' = 'plancon'
+  ),
+  eng = c(
+    'Aggregated or Total???' = 'parcela',
+    'Breakdown by Species' = 'especie',
+    'Breakdown by Simplified Species' = 'espsimple',
+    'Breakdown by Genera' = 'genere',
+    'Breakdown by Deciduous/Sclerophyllous/Conifer' = 'cadesclcon',
+    'Breakdown by Broadleaf/Conifer' = 'plancon'
+  )
+)
 
 
 ## mod_viz inputs ####

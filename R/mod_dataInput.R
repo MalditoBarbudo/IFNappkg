@@ -34,14 +34,16 @@ mod_dataInput <- function(id) {
           shiny::column(
             4,
             shiny::selectInput(
-              ns('ifn'), 'Versió de les dades', dic_ifn_choices[["esp"]],
+              ns('ifn'),
+              label = label_ifn[['esp']],
+              choices = dic_ifn_choices[["esp"]],
               selected = 'ifn3'
             )
           ),
           shiny::column(
             6, offset = 2,
             shiny::radioButtons(
-              ns('viz_shape'), 'Tipus de visualització',
+              ns('viz_shape'), label_viz_shape[['esp']],
               choices = dic_viz_shape_choices[["esp"]],
               selected = 'polygon', inline = TRUE
             )
@@ -52,14 +54,14 @@ mod_dataInput <- function(id) {
           shiny::column(
             6,
             shiny::selectInput(
-              ns('admin_div'), 'Divisions administratatives',
+              ns('admin_div'), label_admin_div[['esp']],
               dic_admin_div_choices[["esp"]], selected = 'comarca'
             )
           ),
           shiny::column(
             6,
             shiny::selectInput(
-              ns('espai_tipus'), "Tipus d'espai",
+              ns('espai_tipus'), label_espai_tipus[['esp']],
               dic_espai_tipus_choices[["esp"]], selected = 'proteccio'
             )
           )
@@ -79,7 +81,7 @@ mod_dataInput <- function(id) {
           shiny::column(
             6,
             shiny::selectInput(
-              ns('admin_div_fil'), names_admin_div_fil[['esp']][['comarca']],
+              ns('admin_div_fil'), label_admin_div_fil[['esp']][['comarca']],
               choices = dic_admin_div_fil_choices[["esp"]][["comarca"]],
               selected = '', multiple = TRUE, width = '100%'
             )
@@ -87,7 +89,7 @@ mod_dataInput <- function(id) {
           shiny::column(
             6,
             shiny::selectInput(
-              ns('espai_tipus_fil'), names_espai_tipus_fil[["esp"]][['proteccio']],
+              ns('espai_tipus_fil'), label_espai_tipus_fil[["esp"]][['proteccio']],
               choices = dic_espai_tipus_fil_choices[["esp"]][['proteccio']],
               selected = '', multiple = TRUE, width = '100%'
             )
@@ -138,14 +140,15 @@ mod_dataInput <- function(id) {
           shiny::column(
             9,
             shiny::selectInput(
-              ns('agg_level'), "Nivell d'agregació", agg_levels,
+              ns('agg_level'), label_agg_level[['esp']],
+              choices = dic_agg_level_choices[['esp']],
               selected = 'parcela', width = '100%'
             )
           ),
           shiny::column(
             3,
             shiny::checkboxInput(
-              ns('diam_class'), '¿Desglossar per classes diametriques?',
+              ns('diam_class'), label_diam_class[['esp']],
               value = FALSE
             )
           )
@@ -189,7 +192,7 @@ mod_data <- function(
     } else {
       shiny::updateSelectInput(
         session, 'admin_div_fil',
-        label = names_admin_div_fil[["esp"]][[admin_div_sel]],
+        label = label_admin_div_fil[["esp"]][[admin_div_sel]],
         choices = dic_admin_div_fil_choices[["esp"]][[admin_div_sel]]
       )
 
@@ -202,7 +205,7 @@ mod_data <- function(
     espai_tipus_sel <- input$espai_tipus
     shiny::updateSelectInput(
       session, 'espai_tipus_fil',
-      label = names_espai_tipus_fil[["esp"]][[espai_tipus_sel]],
+      label = label_espai_tipus_fil[["esp"]][[espai_tipus_sel]],
       choices = dic_espai_tipus_fil_choices[["esp"]][[espai_tipus_sel]]
     )
   })

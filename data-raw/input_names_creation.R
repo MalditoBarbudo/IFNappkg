@@ -1,35 +1,35 @@
 ## mod_data inputs ####
 
 # ifn input
-names_ifn <- list(
+label_ifn <- list(
   cat = 'Versió de les dades',
   esp = 'Versión de los datos',
   eng = 'Data version'
 )
 
 # viz_shape input
-names_viz_shape <- list(
+label_viz_shape <- list(
   cat = 'Tipus de visualització',
   esp = 'Tipo de visualización',
   eng = 'Visualization kind'
 )
 
 # admin_div input
-names_admin_div <- list(
+label_admin_div <- list(
   cat = 'Divisions administratives',
   esp = 'Divisiones administrativas',
   eng = 'Administrative divisions'
 )
 
 # espai_tipus input
-names_espai_tipus <- list(
+label_espai_tipus <- list(
   cat = "Tipus d'espai",
   esp = "Tipo de espacio",
   eng = "Space kind"
 )
 
 # admin_div_fil input
-names_admin_div_fil <- list(
+label_admin_div_fil <- list(
   cat = list(
     provincia = 'Filtra per provincia',
     vegueria = 'Filtra per vegueria',
@@ -51,7 +51,7 @@ names_admin_div_fil <- list(
 )
 
 # espai_tipus_fil input
-names_espai_tipus_fil <- list(
+label_espai_tipus_fil <- list(
   cat = list(
     proteccio = 'Filtra per nivell de proteccio',
     nomein = "Filtra per espai d'interès nacional",
@@ -73,21 +73,21 @@ names_espai_tipus_fil <- list(
 )
 
 # apply_filters input
-names_apply_filters <- list(
+label_apply_filters <- list(
   cat = "Aplicar filtres",
   esp = 'Aplicar filtros',
   eng = 'Apply filters'
 )
 
 # agg_level input
-names_agg_level <- list(
+label_agg_level <- list(
   cat = "Nivell d'agregació",
   esp = 'Nivel de agragación',
   eng = 'Aggregation level'
 )
 
 # diam_class input
-names_diam_class <- list(
+label_diam_class <- list(
   cat = '¿Desglossar per classes diametriques?',
   esp = '¿Desglosar por clases diamétricas',
   eng = 'Breakdown by diameter classes?'
@@ -99,21 +99,21 @@ names_diam_class <- list(
 # there is no need, as color is equal in the three lenguages
 
 # mida input (size)
-names_mida <- list(
+label_mida <- list(
   cat = 'Mida',
   esp = 'Tamaño',
   eng = 'Size'
 )
 
 # tipo_grup_func input
-names_tipo_grup_func <- list(
+label_tipo_grup_func <- list(
   cat = 'Tipus grup funcional',
   esp = 'Tipo de grupo funcional',
   eng = 'Functional group type'
 )
 
 # grup_func input
-names_grup_func <- list(
+label_grup_func <- list(
   cat = list(
     scenario1 = list(
       especie = 'Espècie dominant per densitat',
@@ -165,7 +165,7 @@ names_grup_func <- list(
 )
 
 # statistic input
-names_statistic <- list(
+label_statistic <- list(
   cat = 'Mètrica',
   esp = 'Métrica',
   eng = 'Metric'
