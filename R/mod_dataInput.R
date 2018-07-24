@@ -116,14 +116,14 @@ mod_dataInput <- function(id) {
           shiny::column(
             4, offset = 2,
             shiny::actionButton(
-              ns('show_adv_fils'), 'Filtres avançats', width = '100%'
+              ns('show_adv_fils'), label_show_adv_fils[['esp']], width = '100%'
             )
           ),
 
           shiny::column(
             4, offset = 2,
             shiny::actionButton(
-              ns('apply_filters'), 'Aplicar filtres', width = '100%'
+              ns('apply_filters'), label_apply_filters[['esp']], width = '100%'
             )
           )
         )

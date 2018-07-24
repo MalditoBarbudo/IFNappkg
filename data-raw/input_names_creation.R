@@ -72,7 +72,14 @@ label_espai_tipus_fil <- list(
   )
 )
 
-# apply_filters input
+# advanced filters button input
+label_show_adv_fils <- list(
+  cat = 'Filtres avançats',
+  esp = 'Más Filtros',
+  eng = 'More filters'
+)
+
+# apply_filters button input
 label_apply_filters <- list(
   cat = "Aplicar filtres",
   esp = 'Aplicar filtros',
