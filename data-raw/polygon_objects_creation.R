@@ -44,3 +44,73 @@ names_veguerias <- c(
 names_provincias <- c(
   sort(as.character(polygons_provincies@data$NOM_PROV))
 )
+
+## Polygons dictionary ####
+polygons_dictionary <- list(
+
+  ## admin divs
+
+  provincia = list(
+    polygon = 'polygons_provincies',
+    group = 'provincia',
+    label = ~NOM_PROV,
+    label_new = ~provincia,
+    layerId = 'nom_provincies',
+    # color_var = ~pal(NOM_PROV),
+    label_chr = 'NOM_PROV'
+  ),
+
+  vegueria = list(
+    polygon = 'polygons_vegueries',
+    group = 'vegueria',
+    label = ~NOMVEGUE,
+    label_new = ~vegueria,
+    layerId = 'nom_vegueries',
+    # color_var = ~pal(NOMVEGUE),
+    label_chr = 'NOMVEGUE'
+  ),
+
+  comarca = list(
+    polygon = 'polygons_comarques',
+    group = 'comarca',
+    label = ~NOM_COMAR,
+    label_new = ~comarca,
+    layerId = 'nom_comarques',
+    # color_var = ~pal(NOM_COMAR),
+    label_chr = 'NOM_COMAR'
+  ),
+
+  municipi = list(
+    polygon = 'polygons_municipis',
+    group = 'municipi',
+    label = ~NOM_MUNI,
+    label_new = ~municipi,
+    layerId = 'nom_municipis',
+    # color_var = ~pal(NOM_MUNI),
+    label_chr = 'NOM_MUNI'
+  ),
+
+  ## espai tipus
+
+  nomein = list(
+    polygon = 'polygons_pein',
+    group = 'nomein',
+    label = ~nom,
+    layerId = 'nom_pein'
+  ),
+
+  enpes = list(
+    polygon = 'polygons_enpe',
+    group = 'enpes',
+    label = ~nom,
+    layerId = 'nom_enpe'
+  ),
+
+  nomxarxa2000 = list(
+    polygon = 'polygons_xn2000',
+    group = 'nomxarxa2000',
+    label = ~nom_n2,
+    layerId = 'nom_xn2000'
+  )
+
+)
