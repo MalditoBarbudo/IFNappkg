@@ -210,6 +210,7 @@ mod_map <- function(
       mod_data$mida
       mod_data$tipo_grup_func
       mod_data$grup_func
+      data_scenario()
     },
 
     handlerExpr = {
