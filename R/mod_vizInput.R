@@ -30,7 +30,7 @@ mod_vizInput <- function(id) {
         ),
         shinyjs::hidden(
           shiny::selectInput(
-            ns('mida'), names_mida[['esp']],
+            ns('mida'), label_mida[['esp']],
             dic_mida_choices[['esp']][['scenario1']],
             width = '100%'
           )
@@ -40,12 +40,12 @@ mod_vizInput <- function(id) {
           choices = dic_tipo_grup_func_choices[['esp']], width = '100%'
         ),
         shiny::selectInput(
-          ns('grup_func'), names_grup_func[['esp']][['scenario3']][['especie']],
+          ns('grup_func'), label_grup_func[['esp']][['scenario3']][['especie']],
           choices = dic_grup_func_choices[['scenario3']][['especie']],
           width = '100%'
         ),
         shiny::selectInput(
-          ns('statistic'), label = names_statistic[['esp']],
+          ns('statistic'), label = label_statistic[['esp']],
           choices = dic_statistic_choices[['esp']],
           width = '100%'
         )
@@ -97,7 +97,7 @@ mod_viz <- function(
       if (input_scenario() %in% c('scenario1', 'scenario2')) {
 
         shiny::updateSelectInput(
-          session, 'mida', label = names_mida[['esp']],
+          session, 'mida', label = label_mida[['esp']],
           choices = dic_mida_choices[["esp"]][[input_scenario()]]
         )
 
@@ -141,7 +141,7 @@ mod_viz <- function(
 
         shiny::updateSelectInput(
           session, 'grup_func',
-          label = names_grup_func[['esp']][['scenario1']][[input$tipo_grup_func]],
+          label = label_grup_func[['esp']][['scenario1']][[input$tipo_grup_func]],
           choices = dic_grup_func_choices[['scenario1']][[input$tipo_grup_func]]
         )
 
@@ -150,7 +150,7 @@ mod_viz <- function(
 
           shiny::updateSelectInput(
             session, 'grup_func',
-            label = names_grup_func[['esp']][[input_scenario()]][[mod_data$agg_level]],
+            label = label_grup_func[['esp']][[input_scenario()]][[mod_data$agg_level]],
             choices = dic_grup_func_choices[[input_scenario()]][[mod_data$agg_level]]
           )
 
@@ -159,7 +159,7 @@ mod_viz <- function(
 
             shiny::updateSelectInput(
               session, 'grup_func',
-              label = names_grup_func[['esp']][['scenario3']][[input$tipo_grup_func]],
+              label = label_grup_func[['esp']][['scenario3']][[input$tipo_grup_func]],
               choices = dic_grup_func_choices[['scenario3']][[input$tipo_grup_func]]
             )
 

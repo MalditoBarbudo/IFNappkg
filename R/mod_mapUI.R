@@ -189,10 +189,11 @@ mod_map <- function(
     ## CLIMA data
     clima_filters <- quo(TRUE)
     clima <- tidyIFN::data_clima(sig, mod_data$ifn, ifndb, !!! clima_filters)
+    clima_plots <- clima %>% pull(idparcela)
 
     ## CORE data
     core <- tidyIFN::data_core(
-      sig, mod_data$ifn, mod_data$agg_level, ifndb, clima[['idparcela']]
+      sig, mod_data$ifn, mod_data$agg_level, ifndb, clima_plots
     )
 
     res_list <- list(
@@ -460,27 +461,26 @@ mod_map <- function(
 
         if (grup_func_val == 'Qualsevol') {
 
-          data_map <- scenario_data[['sig']] %>%
-            dplyr::select(idparcela, !!rlang::sym(admin_div_val)) %>%
-            dplyr::inner_join(scenario_data[['core']], by = 'idparcela') %>%
+          data_map <- scenario_data[['core']] %>%
             dplyr::collect() %>%
             tidyIFN::summarise_polygons(polygon_group = admin_div_val)
 
 
         } else {
 
+          # debug
+          browser()
+
           filter_arg_val <- rlang::quo(
             !!rlang::sym(glue::glue('{tipo_grup_func_val}_dom_percdens')) ==
               !!grup_func_val
           )
 
-          data_map <- scenario_data[['sig']] %>%
-            dplyr::select(idparcela, !!rlang::sym(admin_div_val)) %>%
-            dplyr::inner_join(scenario_data[['core']], by = 'idparcela') %>%
+          data_map <- scenario_data[['core']] %>%
             dplyr::collect() %>%
             tidyIFN::summarise_polygons(
-              polygon_group = admin_div_val, func_group = grup_func_val,
-              !!! filter_arg_val
+              filter_arg_val,
+              polygon_group = admin_div_val, func_group = grup_func_val
             )
         }
 
@@ -566,14 +566,12 @@ mod_map <- function(
           !!rlang::sym(glue::glue('id{mod_data$agg_level}')) == !!grup_func_val
         )
 
-        data_map <- scenario_data[['sig']] %>%
-          dplyr::select(idparcela, !!rlang::sym(admin_div_val)) %>%
-          dplyr::inner_join(scenario_data[['core']], by = 'idparcela') %>%
+        data_map <- scenario_data[['core']] %>%
           dplyr::collect() %>%
           tidyIFN::summarise_polygons(
+            !!! filter_arg_val,
             polygon_group = admin_div_val,
-            func_group = glue::glue('id{mod_data$agg_level}'),
-            !!! filter_arg_val
+            func_group = glue::glue('id{mod_data$agg_level}')
           )
 
         polygons_label_var <- polygons_dictionary[[admin_div_val]][['label_chr']]
