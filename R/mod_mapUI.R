@@ -561,7 +561,7 @@ mod_map <- function(
         inverse_pal_val <- mod_data$inverse_pal
         admin_div_val <- mod_data$admin_div
 
-        filter_arg <- rlang::quo(
+        filter_arg_val <- rlang::quo(
           !!rlang::sym(glue::glue('id{mod_data$agg_level}')) == !!grup_func_val
         )
 
@@ -643,9 +643,9 @@ mod_map <- function(
   )
 
   # reactive with the map events
-  map_reactives <- reactiveValues()
+  map_reactives <- shiny::reactiveValues()
 
-  observe({
+  shiny::observe({
     map_reactives$map_shape_click <- input$map_shape_click
     # map_reactives$shape_mouseover <- input$map_shape_mouseover
     # map_reactives$shape_mouseout <- input$map_shape_mouseout
