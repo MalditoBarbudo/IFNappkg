@@ -211,7 +211,8 @@ mod_map <- function(
       mod_data$mida
       mod_data$tipo_grup_func
       mod_data$grup_func
-      data_scenario()
+      mod_data$statistic
+      # data_scenario()
     },
 
     handlerExpr = {
@@ -229,7 +230,9 @@ mod_map <- function(
         inverse_pal_val <- mod_data$inverse_pal
         admin_div_val <- mod_data$admin_div
 
+        # debug
         # browser()
+
         # vars to select
         vars_to_sel <- c(
           color_val, mida_val, 'latitude', 'longitude', 'idparcela',
@@ -253,17 +256,21 @@ mod_map <- function(
           pal <- leaflet::colorFactor('viridis', color_vector)
         } else {
 
-          if (grup_func_val != 'Qualsevol') {
-            if (is.numeric(data_map[[color_val]])) {
+          if (grup_func_val != '') {
+            if (is.double(data_map[[color_val]])) {
               na <- NA_real_
             } else {
-              na <- NA_character_
+              if (is.integer(data_map[[color_val]])) {
+                na <- NA_integer_
+              } else {
+                na <- NA_character_
+              }
             }
 
             data_map <- data_map %>%
               dplyr::mutate(
                 !!color_val := dplyr::case_when(
-                  !!rlang::sym(glue::glue('{tipo_grup_func_val}dens')) ==
+                  !!rlang::sym(glue::glue('{tipo_grup_func_val}_dom_percdens')) ==
                     grup_func_val ~ !!rlang::sym(color_val),
                   TRUE ~ na
                 )
@@ -316,10 +323,14 @@ mod_map <- function(
           leaflet::clearGroup('municipi') %>%
           leaflet::clearGroup('provincia') %>%
           leaflet::addPolygons(
-            data = rlang::eval_tidy(rlang::sym(polygons_dictionary[[admin_div_val]][['polygon']])),
+            data = rlang::eval_tidy(
+              rlang::sym(polygons_dictionary[[admin_div_val]][['polygon']])
+            ),
             group = polygons_dictionary[[admin_div_val]][['group']],
             label = polygons_dictionary[[admin_div_val]][['label']],
-            layerId = rlang::eval_tidy(rlang::sym(polygons_dictionary[[admin_div_val]][['layerId']])),
+            layerId = rlang::eval_tidy(
+              rlang::sym(polygons_dictionary[[admin_div_val]][['layerId']])
+            ),
             weight = 1, smoothFactor = 1,
             opacity = 1.0, fill = TRUE,
             color = '#6C7A89FF', fillColor = "#CF000F00",
@@ -341,6 +352,14 @@ mod_map <- function(
         mida_val <- mod_data$mida
         grup_func_val <- mod_data$grup_func
         inverse_pal_val <- mod_data$inverse_pal
+        admin_div_val <- mod_data$admin_div
+
+        if (grup_func_val == '') {
+          return()
+        }
+
+        # debug
+        # browser()
 
         # vars to select
         vars_to_sel <- c(
@@ -360,10 +379,14 @@ mod_map <- function(
           dplyr::collect()
 
 
-        if (is.numeric(data_map[[color_val]])) {
+        if (is.double(data_map[[color_val]])) {
           na <- NA_real_
         } else {
-          na <- NA_character_
+          if (is.integer(data_map[[color_val]])) {
+            na <- NA_integer_
+          } else {
+            na <- NA_character_
+          }
         }
 
         data_map <- data_map %>%
@@ -431,10 +454,10 @@ mod_map <- function(
           leaflet::clearGroup('municipi') %>%
           leaflet::clearGroup('provincia') %>%
           leaflet::addPolygons(
-            data = rlang::eval_tidy(rlang::sym(polygons_dictionary[[admin_div]][['polygon']])),
-            group = polygons_dictionary[[admin_div]][['group']],
-            label = polygons_dictionary[[admin_div]][['label']],
-            layerId = rlang::eval_tidy(rlang::sym(polygons_dictionary[[admin_div]][['layerId']])),
+            data = rlang::eval_tidy(rlang::sym(polygons_dictionary[[admin_div_val]][['polygon']])),
+            group = polygons_dictionary[[admin_div_val]][['group']],
+            label = polygons_dictionary[[admin_div_val]][['label']],
+            layerId = rlang::eval_tidy(rlang::sym(polygons_dictionary[[admin_div_val]][['layerId']])),
             weight = 1, smoothFactor = 1,
             opacity = 1.0, fill = TRUE,
             color = '#6C7A89FF', fillColor = "#CF000F00",
@@ -459,7 +482,7 @@ mod_map <- function(
         inverse_pal_val <- mod_data$inverse_pal
         admin_div_val <- mod_data$admin_div
 
-        if (grup_func_val == 'Qualsevol') {
+        if (grup_func_val == '') {
 
           data_map <- scenario_data[['core']] %>%
             dplyr::collect() %>%
@@ -467,9 +490,6 @@ mod_map <- function(
 
 
         } else {
-
-          # debug
-          browser()
 
           filter_arg_val <- rlang::quo(
             !!rlang::sym(glue::glue('{tipo_grup_func_val}_dom_percdens')) ==
@@ -480,7 +500,8 @@ mod_map <- function(
             dplyr::collect() %>%
             tidyIFN::summarise_polygons(
               filter_arg_val,
-              polygon_group = admin_div_val, func_group = grup_func_val
+              polygon_group = admin_div_val,
+              func_group = glue::glue('{tipo_grup_func_val}_dom_percdens')
             )
         }
 
@@ -490,7 +511,9 @@ mod_map <- function(
         )
 
         polygon_data@data <- polygon_data@data %>%
-          dplyr::rename(!!rlang::sym(admin_div_val) := !!rlang::sym(polygons_label_var)) %>%
+          dplyr::rename(
+            !!rlang::sym(admin_div_val) := !!rlang::sym(polygons_label_var)
+          ) %>%
           dplyr::left_join(data_map, by = admin_div_val)
 
         # color palette
@@ -562,6 +585,13 @@ mod_map <- function(
         inverse_pal_val <- mod_data$inverse_pal
         admin_div_val <- mod_data$admin_div
 
+        if (grup_func_val == '') {
+          return()
+        }
+
+        # debug
+        # browser()
+
         filter_arg_val <- rlang::quo(
           !!rlang::sym(glue::glue('id{mod_data$agg_level}')) == !!grup_func_val
         )
@@ -569,7 +599,7 @@ mod_map <- function(
         data_map <- scenario_data[['core']] %>%
           dplyr::collect() %>%
           tidyIFN::summarise_polygons(
-            !!! filter_arg_val,
+            filter_arg_val,
             polygon_group = admin_div_val,
             func_group = glue::glue('id{mod_data$agg_level}')
           )

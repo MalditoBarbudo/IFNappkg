@@ -1,3 +1,9 @@
+
+# source scripts
+source('data-raw/input_dictionaries_creation.R')
+source('data-raw/input_names_creation.R')
+
+# use data
 devtools::use_data(
 dic_admin_div_choices, dic_admin_div_fil_choices, dic_agg_level_choices, dic_color_choices,
 dic_espai_tipus_choices, dic_espai_tipus_fil_choices, dic_grup_func_choices, dic_ifn_choices,

@@ -114,62 +114,69 @@ label_mida <- list(
 
 # tipo_grup_func input
 label_tipo_grup_func <- list(
-  cat = 'Tipus grup funcional',
-  esp = 'Tipo de grupo funcional',
-  eng = 'Functional group type'
+  cat = 'Tipus grup funcional dominant',
+  esp = 'Tipo de grupo funcional dominante',
+  eng = 'Dominant functional group type'
 )
 
 # grup_func input
 label_grup_func <- list(
   cat = list(
     scenario1 = list(
-      especie = 'Espècie dominant per densitat',
-      especiesimp = 'Espècie simplificat dominant per densitat',
-      genere = 'Gènere dominant per densitat',
-      cadesccon = 'Caducifoli/Esclerofil/Conifera dominant per densitat',
-      planifconif = 'Planifoli/Conifera dominant per densitat'
+      especie = "Mostra l'espècie dominant per densitat",
+      especiesimp = "Mostra l'espècie simplificat dominant per densitat",
+      genere = 'Mostra el gènere dominant per densitat',
+      cadesccon = 'Mostra la Caducifoli/Esclerofil/Conifera dominant per densitat',
+      planifconif = 'Mostra la Planifoli/Conifera dominant per densitat'
     ),
     scenario2 = list(
-      especie = 'Espècie a visualitzar',
-      especiesimp = 'Espècie simplificat a visualitzar',
-      genere = 'Génere a visualitzar',
-      cadesccon = 'Caducifoli/Esclerofil/Conifera a visualitzar',
-      planifconif = 'Planifoli/Conifera a visualitzar'
+      especie = "Selecciona l'espècie a visualitzar",
+      especiesimp = "Selecciona l'espècie simplificat a visualitzar",
+      genere = 'Selecciona el génere a visualitzar',
+      cadesccon = 'Selecciona la Caducifoli/Esclerofil/Conifera a visualitzar',
+      planifconif = 'Selecciona la Planifoli/Conifera a visualitzar'
     )
   ),
   esp = list(
     scenario1 = list(
-      especie = 'Especie dominante en densidad',
-      especiesimp = 'Especie simplificada dominante en densidad',
-      genere = 'Género dominante en densidad',
-      cadesccon = 'Caducifolia/Esclerofila/Conífera dominante en densidad',
-      planifconif = 'Planifolia/Conífera dominante en densidad'
+      especie = 'Muestra la especie dominante en densidad',
+      especiesimp = 'Muestra la especie simplificada dominante en densidad',
+      genere = 'Muestra el género dominante en densidad',
+      cadesccon = 'Muestra la Caducifolia/Esclerofila/Conífera dominante en densidad',
+      planifconif = 'Muestra la Planifolia/Conífera dominante en densidad'
     ),
     scenario2 = list(
-      especie = 'Especie a visualizar',
-      especiesimp = 'Especie simplificada a visualizar',
-      genere = 'Género a visualizar',
-      cadesccon = 'Caducifolia/Esclerofila/Conífera a visualizar',
-      planifconif = 'Planifolia/Conífera a visualizar'
+      especie = 'Selecciona la especie a visualizar',
+      especiesimp = 'Selecciona la especie simplificada a visualizar',
+      genere = 'Selecciona el género a visualizar',
+      cadesccon = 'Selecciona la Caducifolia/Esclerofila/Conífera a visualizar',
+      planifconif = 'Selecciona la Planifolia/Conífera a visualizar'
     )
   ),
   eng = list(
     scenario1 = list(
-      especie = 'Dominant species by density',
-      especiesimp = 'Dominant simplified species by density',
-      genere = 'Dominant genera by density',
-      cadesccon = 'Dominant Deciduous/Sclerophyllous/Conifer by density',
-      planifconif = 'Dominant Broadleaf/Conifer by density'
+      especie = 'Show the dominant species by density',
+      especiesimp = 'Show the dominant simplified species by density',
+      genere = 'Show the dominant genera by density',
+      cadesccon = 'Show the dominant Deciduous/Sclerophyllous/Conifer by density',
+      planifconif = 'Show the dominant Broadleaf/Conifer by density'
     ),
     scenario2 = list(
-      especie = 'Species to visualize',
-      especiesimp = 'Simplified species to visualize',
-      genere = 'Genera to visualize',
-      cadesccon = 'Deciduous/Sclerophyllous/Conifer to visualize',
-      planifconif = 'Broadleaf/Conifer to visualize'
+      especie = 'Select the species to visualize',
+      especiesimp = 'Select the simplified species to visualize',
+      genere = 'Select the genera to visualize',
+      cadesccon = 'Select the Deciduous/Sclerophyllous/Conifer to visualize',
+      planifconif = 'Select the Broadleaf/Conifer to visualize'
     )
   )
 )
+
+label_grup_func$esp$scenario3 <- label_grup_func$esp$scenario1
+label_grup_func$cat$scenario3 <- label_grup_func$cat$scenario1
+label_grup_func$eng$scenario3 <- label_grup_func$eng$scenario1
+label_grup_func$esp$scenario4 <- label_grup_func$esp$scenario2
+label_grup_func$cat$scenario4 <- label_grup_func$cat$scenario2
+label_grup_func$eng$scenario4 <- label_grup_func$eng$scenario2
 
 # statistic input
 label_statistic <- list(

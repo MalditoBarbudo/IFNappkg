@@ -36,12 +36,12 @@ mod_vizInput <- function(id) {
           )
         ),
         shiny::selectInput(
-          ns('tipo_grup_func'), 'Tipus grup funcional',
+          ns('tipo_grup_func'), label_tipo_grup_func[['esp']],
           choices = dic_tipo_grup_func_choices[['esp']], width = '100%'
         ),
         shiny::selectInput(
           ns('grup_func'), label_grup_func[['esp']][['scenario3']][['especie']],
-          choices = dic_grup_func_choices[['scenario3']][['especie']],
+          choices = dic_grup_func_choices[['esp']][['scenario3']][['especie']],
           width = '100%'
         ),
         shiny::selectInput(
@@ -142,7 +142,7 @@ mod_viz <- function(
         shiny::updateSelectInput(
           session, 'grup_func',
           label = label_grup_func[['esp']][['scenario1']][[input$tipo_grup_func]],
-          choices = dic_grup_func_choices[['scenario1']][[input$tipo_grup_func]]
+          choices = dic_grup_func_choices[['esp']][['scenario1']][[input$tipo_grup_func]]
         )
 
       } else {
@@ -151,7 +151,7 @@ mod_viz <- function(
           shiny::updateSelectInput(
             session, 'grup_func',
             label = label_grup_func[['esp']][[input_scenario()]][[mod_data$agg_level]],
-            choices = dic_grup_func_choices[[input_scenario()]][[mod_data$agg_level]]
+            choices = dic_grup_func_choices[['esp']][[input_scenario()]][[mod_data$agg_level]]
           )
 
         } else {
@@ -160,7 +160,7 @@ mod_viz <- function(
             shiny::updateSelectInput(
               session, 'grup_func',
               label = label_grup_func[['esp']][['scenario3']][[input$tipo_grup_func]],
-              choices = dic_grup_func_choices[['scenario3']][[input$tipo_grup_func]]
+              choices = dic_grup_func_choices[['esp']][['scenario3']][[input$tipo_grup_func]]
             )
 
           }
