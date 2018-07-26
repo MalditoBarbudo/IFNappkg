@@ -145,73 +145,67 @@ mod_map <- function(
     get_scenario(mod_data$viz_shape, mod_data$agg_level)
   })
 
-  data_scenario <- shiny::eventReactive(
-    eventExpr = {
-      mod_data$apply_filters
-      mod_data$ifn
-      mod_data$agg_level
-    },
-    valueExpr = {
+  data_scenario <- shiny::reactive({
 
-      ## SIG data
-      # admin_div filter
-      if (is.null(mod_data$admin_div_fil)) {
-        filter_expr_admin <- rlang::quo(TRUE)
+    ## SIG data
+    # admin_div filter
+    if (is.null(mod_data$admin_div_fil)) {
+      filter_expr_admin <- rlang::quo(TRUE)
+    } else {
+      filter_expr_admin <- rlang::quo(
+        !!rlang::sym(mod_data$admin_div) %in% !!mod_data$admin_div_fil
+      )
+    }
+
+    # espai tipus filter
+    if (is.null(mod_data$espai_tipus_fil) ||
+        any(mod_data$espai_tipus_fil == 'Tots')) {
+      filter_expr_espai <- rlang::quo(TRUE)
+    } else {
+      # here we need also to check for nomes protegits and sense proteccio
+      # to be able to filter these cases
+      if (any(mod_data$espai_tipus_fil %in% c(
+        'Només protegits',
+        "Només espais d'interès nacional",
+        "Només espai de protecció especial",
+        "Només en Xarxa Natura 2000"
+      ))) {
+        filter_expr_espai <- rlang::quo(
+          !(!!rlang::sym(mod_data$espai_tipus) %in% c(
+            "Sense Pein", "Sense protecció", "SenseXarxa"
+          ))
+        )
       } else {
-        filter_expr_admin <- rlang::quo(
-          !!rlang::sym(mod_data$admin_div) %in% !!mod_data$admin_div_fil
+        filter_expr_espai <- rlang::quo(
+          !!rlang::sym(mod_data$espai_tipus) %in% !!mod_data$espai_tipus_fil
         )
       }
-
-      # espai tipus filter
-      if (is.null(mod_data$espai_tipus_fil) ||
-          any(mod_data$espai_tipus_fil == 'Tots')) {
-        filter_expr_espai <- rlang::quo(TRUE)
-      } else {
-        # here we need also to check for nomes protegits and sense proteccio
-        # to be able to filter these cases
-        if (any(mod_data$espai_tipus_fil %in% c(
-          'Només protegits',
-          "Només espais d'interès nacional",
-          "Només espai de protecció especial",
-          "Només en Xarxa Natura 2000"
-        ))) {
-          filter_expr_espai <- rlang::quo(
-            !(!!rlang::sym(mod_data$espai_tipus) %in% c(
-              "Sense Pein", "Sense protecció", "SenseXarxa"
-            ))
-          )
-        } else {
-          filter_expr_espai <- rlang::quo(
-            !!rlang::sym(mod_data$espai_tipus) %in% !!mod_data$espai_tipus_fil
-          )
-        }
-      }
-
-      sig_filters <- list(filter_expr_admin, filter_expr_espai)
-
-      sig <- tidyIFN::data_sig(mod_data$ifn, ifndb, !!! sig_filters)
-
-      ## CLIMA data
-      clima_filters <- quo(TRUE)
-      clima <- tidyIFN::data_clima(sig, mod_data$ifn, ifndb, !!! clima_filters)
-      clima_plots <- clima %>% pull(idparcela)
-
-      ## CORE data
-      core <- tidyIFN::data_core(
-        sig, mod_data$ifn, mod_data$agg_level, ifndb, clima_plots
-      )
-
-      res_list <- list(
-        sig = sig, clima = clima, core = core
-      )
-
-      return(res_list)
     }
-  )
+
+    sig_filters <- list(filter_expr_admin, filter_expr_espai)
+
+    sig <- tidyIFN::data_sig(mod_data$ifn, ifndb, !!! sig_filters)
+
+    ## CLIMA data
+    clima_filters <- quo(TRUE)
+    clima <- tidyIFN::data_clima(sig, mod_data$ifn, ifndb, !!! clima_filters)
+    clima_plots <- clima %>% pull(idparcela)
+
+    ## CORE data
+    core <- tidyIFN::data_core(
+      sig, mod_data$ifn, mod_data$agg_level, ifndb, clima_plots
+    )
+
+    res_list <- list(
+      sig = sig, clima = clima, core = core
+    )
+
+    return(res_list)
+  })
 
   shiny::observeEvent(
     eventExpr = {
+      mod_data$ifn
       mod_data$inverse_pal
       mod_data$color
       mod_data$mida
@@ -395,7 +389,7 @@ mod_map <- function(
         }
 
         # debug
-        browser()
+        # browser()
 
         data_map <- data_map %>%
           dplyr::mutate(
