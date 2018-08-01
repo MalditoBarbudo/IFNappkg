@@ -145,538 +145,67 @@ mod_map <- function(
     get_scenario(mod_data$viz_shape, mod_data$agg_level)
   })
 
-  data_scenario <- shiny::reactive({
+  input_reactives <- shiny::reactive({
+    input_reactives <- list()
+    input_reactives$admin_div <- mod_data$admin_div
+    # input_reactives$admin_div_fil <- mod_data$admin_div_fil
+    input_reactives$espai_tipus <- mod_data$espai_tipus
+    # input_reactives$espai_tipus_fil <- mod_data$espai_tipus_fil
+    input_reactives$ifn <- mod_data$ifn
+    input_reactives$inverse_pal <- mod_data$inverse_pal
+    input_reactives$color <- mod_data$color
+    input_reactives$mida <- mod_data$mida
+    input_reactives$tipo_grup_func <- mod_data$tipo_grup_func
+    input_reactives$grup_func <- mod_data$grup_func
+    input_reactives$statistic <- mod_data$statistic
+    input_reactives$agg_level <- mod_data$agg_level
+    input_reactives$viz_shape <- mod_data$viz_shape
+    input_reactives$apply_filters <- mod_data$apply_filters
 
-    ## SIG data
-    # admin_div filter
-    if (is.null(mod_data$admin_div_fil)) {
-      filter_expr_admin <- rlang::quo(TRUE)
-    } else {
-      filter_expr_admin <- rlang::quo(
-        !!rlang::sym(mod_data$admin_div) %in% !!mod_data$admin_div_fil
-      )
-    }
+    return(input_reactives)
+  }) %>%
+    shiny::debounce(millis = 500)
 
-    # espai tipus filter
-    if (is.null(mod_data$espai_tipus_fil) ||
-        any(mod_data$espai_tipus_fil == 'Tots')) {
-      filter_expr_espai <- rlang::quo(TRUE)
-    } else {
-      # here we need also to check for nomes protegits and sense proteccio
-      # to be able to filter these cases
-      if (any(mod_data$espai_tipus_fil %in% c(
-        'Només protegits',
-        "Només espais d'interès nacional",
-        "Només espai de protecció especial",
-        "Només en Xarxa Natura 2000"
-      ))) {
-        filter_expr_espai <- rlang::quo(
-          !(!!rlang::sym(mod_data$espai_tipus) %in% c(
-            "Sense Pein", "Sense protecció", "SenseXarxa"
-          ))
-        )
-      } else {
-        filter_expr_espai <- rlang::quo(
-          !!rlang::sym(mod_data$espai_tipus) %in% !!mod_data$espai_tipus_fil
-        )
-      }
-    }
-
-    sig_filters <- list(filter_expr_admin, filter_expr_espai)
-
-    sig <- tidyIFN::data_sig(mod_data$ifn, ifndb, !!! sig_filters)
-
-    ## CLIMA data
-    clima_filters <- quo(TRUE)
-    clima <- tidyIFN::data_clima(sig, mod_data$ifn, ifndb, !!! clima_filters)
-    clima_plots <- clima %>% pull(idparcela)
-
-    ## CORE data
-    core <- tidyIFN::data_core(
-      sig, mod_data$ifn, mod_data$agg_level, ifndb, clima_plots
-    )
-
-    res_list <- list(
-      sig = sig, clima = clima, core = core
-    )
-
-    return(res_list)
-  })
-
-  shiny::observeEvent(
+  input_map <- shiny::eventReactive(
+    ignoreInit = TRUE,
     eventExpr = {
-      mod_data$ifn
-      mod_data$inverse_pal
-      mod_data$color
-      mod_data$mida
-      mod_data$tipo_grup_func
-      mod_data$grup_func
-      mod_data$statistic
-      # data_scenario()
+      input_reactives()
     },
+    valueExpr = {
 
-    handlerExpr = {
+      browser()
 
-      scenario <- input_scenario()
-      scenario_data <- data_scenario()
-
-      if (scenario == 'scenario1') {
-
-        # viz_inputs needed
-        color_val <- mod_data$color
-        mida_val <- mod_data$mida
-        tipo_grup_func_val <- mod_data$tipo_grup_func
-        grup_func_val <- mod_data$grup_func
-        inverse_pal_val <- mod_data$inverse_pal
-        admin_div_val <- mod_data$admin_div
-
-        # debug
-        # browser()
-
-        # vars to select
-        vars_to_sel <- c(
-          color_val, mida_val, 'latitude', 'longitude', 'idparcela',
-          glue::glue('{tipo_grup_func_val}_dom_percdens')
+      data_scenario(
+        mod_data$admin_div,
+        mod_data$admin_div_fil,
+        mod_data$espai_tipus,
+        mod_data$espai_tipus_fil,
+        mod_data$ifn,
+        ifndb,
+        mod_data$agg_level
+      ) %>%
+        map_modificator(
+          input_scenario(),
+          mod_data$ifn,
+          mod_data$inverse_pal,
+          mod_data$color,
+          mod_data$mida,
+          mod_data$tipo_grup_func,
+          mod_data$grup_func,
+          mod_data$statistic,
+          mod_data$admin_div,
+          mod_data$agg_level
         )
 
-        core <- scenario_data[['core']] %>%
-          dplyr::select(dplyr::one_of(vars_to_sel))
-        sig <- scenario_data[['sig']] %>%
-          dplyr::select(dplyr::one_of(vars_to_sel))
-        clima <- scenario_data[['clima']] %>%
-          dplyr::select(dplyr::one_of(vars_to_sel))
-        data_map <- core %>%
-          dplyr::left_join(sig, by = 'idparcela') %>%
-          dplyr::left_join(clima, by = 'idparcela') %>%
-          dplyr::collect()
-
-        # color palette
-        if (is.null(color_val) || color_val == '') {
-          color_vector <- rep('parcel·la', nrow(data_map))
-          pal <- leaflet::colorFactor('viridis', color_vector)
-        } else {
-
-          if (grup_func_val != '') {
-            if (is.double(data_map[[color_val]])) {
-              na <- NA_real_
-            } else {
-              if (is.integer(data_map[[color_val]])) {
-                na <- NA_integer_
-              } else {
-                na <- NA_character_
-              }
-            }
-
-            data_map <- data_map %>%
-              dplyr::mutate(
-                !!color_val := dplyr::case_when(
-                  !!rlang::sym(glue::glue('{tipo_grup_func_val}_dom_percdens')) ==
-                    grup_func_val ~ !!rlang::sym(color_val),
-                  TRUE ~ na
-                )
-              )
-          }
-
-          # We must take into account if the variable is categorical or
-          # numerical
-          color_vector <- data_map[[color_val]]
-          if (is.numeric(color_vector)) {
-            pal <- leaflet::colorBin('viridis', color_vector, 9, reverse = inverse_pal_val)
-          } else {
-            pal <- leaflet::colorFactor('viridis', color_vector, reverse = inverse_pal_val)
-          }
-        }
-
-        # mida vector
-        # size vector
-        if (is.null(mida_val) || mida_val == '') {
-          mida_vector <- rep(750, nrow(data_map))
-        } else {
-          # We must take into account if the variable is categorical or
-          # numerical
-          mida_val_values <- data_map[[mida_val]]
-
-          if (is.numeric(mida_val_values)) {
-            mida_vector <- mida_val_values / max(mida_val_values, na.rm = TRUE) * 3000
-          } else {
-            mida_vector <- as.numeric(as.factor(mida_val_values)) /
-              max(as.numeric(as.factor(mida_val_values)), na.rm = TRUE) * 3000
-          }
-        }
-
-        mida_vector[is.na(color_vector)] <- 250
-
-        # update map
-        leaflet::leafletProxy('map', data = data_map) %>%
-          leaflet::clearGroup('idparcela') %>%
-          leaflet::addCircles(
-            group = 'idparcela', lng = ~longitude, lat = ~latitude,
-            label = ~idparcela, layerId = ~idparcela,
-            stroke = FALSE, fillOpacity = 0.4, fillColor = pal(color_vector),
-            radius = mida_vector,
-            options = leaflet::pathOptions(pane = 'parceles')
-          ) %>%
-          leaflet::addLegend(
-            position = 'topright', pal = pal, values = color_vector,
-            title = color_val, layerId = 'color_legend'
-          ) %>%
-          leaflet::clearGroup('vegueria') %>%
-          leaflet::clearGroup('comarca') %>%
-          leaflet::clearGroup('municipi') %>%
-          leaflet::clearGroup('provincia') %>%
-          leaflet::addPolygons(
-            data = rlang::eval_tidy(
-              rlang::sym(polygons_dictionary[[admin_div_val]][['polygon']])
-            ),
-            group = polygons_dictionary[[admin_div_val]][['group']],
-            label = polygons_dictionary[[admin_div_val]][['label']],
-            layerId = rlang::eval_tidy(
-              rlang::sym(polygons_dictionary[[admin_div_val]][['layerId']])
-            ),
-            weight = 1, smoothFactor = 1,
-            opacity = 1.0, fill = TRUE,
-            color = '#6C7A89FF', fillColor = "#CF000F00",
-            highlightOptions = leaflet::highlightOptions(
-              color = "#CF000F", weight = 2,
-              bringToFront = FALSE,
-              fill = TRUE, fillColor = "#CF000F00"
-            ),
-            options = leaflet::pathOptions(
-              pane = 'admin_divs'
-            )
-          )
-      }
-
-      if (scenario == 'scenario2') {
-
-        # viz_inputs needed
-        color_val <- mod_data$color
-        mida_val <- mod_data$mida
-        grup_func_val <- mod_data$grup_func
-        inverse_pal_val <- mod_data$inverse_pal
-        admin_div_val <- mod_data$admin_div
-
-        if (grup_func_val == '') {
-          return()
-        }
-
-        # vars to select
-        vars_to_sel <- c(
-          color_val, mida_val, 'latitude', 'longitude', 'idparcela',
-          glue::glue('id{mod_data$agg_level}')
-        )
-
-        core <- scenario_data[['core']] %>%
-          dplyr::select(dplyr::one_of(vars_to_sel))
-        sig <- scenario_data[['sig']] %>%
-          dplyr::select(dplyr::one_of(vars_to_sel))
-        clima <- scenario_data[['clima']] %>%
-          dplyr::select(dplyr::one_of(vars_to_sel))
-        data_map <- core %>%
-          dplyr::left_join(sig, by = 'idparcela') %>%
-          dplyr::left_join(clima, by = 'idparcela') %>%
-          dplyr::collect()
-
-
-        if (is.double(data_map[[color_val]])) {
-          na <- NA_real_
-        } else {
-          if (is.integer(data_map[[color_val]])) {
-            na <- NA_integer_
-          } else {
-            na <- NA_character_
-          }
-        }
-
-        # debug
-        # browser()
-
-        data_map <- data_map %>%
-          dplyr::mutate(
-            !!color_val := dplyr::case_when(
-              !!rlang::sym(glue::glue('id{mod_data$agg_level}')) ==
-                grup_func_val ~ !!rlang::sym(color_val),
-              TRUE ~ na
-            )
-          ) %>%
-          dplyr::arrange(!!rlang::sym(color_val)) %>%
-          dplyr::group_by(idparcela) %>%
-          dplyr::slice(1)
-
-        # color palette
-        if (is.null(color_val) || color_val == '') {
-          color_vector <- rep('parcel·la', nrow(data_map))
-          pal <- leaflet::colorFactor('viridis', color_vector)
-        } else {
-
-          # We must take into account if the variable is categorical or
-          # numerical
-          color_vector <- data_map[[color_val]]
-          if (is.numeric(color_vector)) {
-            pal <- leaflet::colorBin(
-              'viridis', color_vector, 9, reverse = inverse_pal_val
-            )
-          } else {
-            pal <- leaflet::colorFactor(
-              'viridis', color_vector, reverse = inverse_pal_val
-            )
-          }
-        }
-
-        # mida vector
-        # size vector
-        if (is.null(mida_val) || mida_val == '') {
-          mida_vector <- rep(750, nrow(data_map))
-        } else {
-          # We must take into account if the variable is categorical or
-          # numerical
-          mida_val_values <- data_map[[mida_val]]
-
-          if (is.numeric(mida_val_values)) {
-            mida_vector <- mida_val_values / max(mida_val_values, na.rm = TRUE) * 3000
-          } else {
-            mida_vector <- as.numeric(as.factor(mida_val_values)) /
-              max(as.numeric(as.factor(mida_val_values)), na.rm = TRUE) * 3000
-          }
-        }
-
-        mida_vector[is.na(color_vector)] <- 250
-
-        # update map
-        leaflet::leafletProxy('map', data = data_map) %>%
-          leaflet::clearGroup('idparcela') %>%
-          leaflet::addCircles(
-            group = 'idparcela', lng = ~longitude, lat = ~latitude,
-            label = ~idparcela, layerId = ~idparcela,
-            stroke = FALSE, fillOpacity = 0.4, fillColor = pal(color_vector),
-            radius = mida_vector,
-            options = leaflet::pathOptions(pane = 'parceles')
-          ) %>%
-          leaflet::addLegend(
-            position = 'topright', pal = pal, values = color_vector,
-            title = color_val, layerId = 'color_legend'
-          ) %>%
-          leaflet::clearGroup('vegueria') %>%
-          leaflet::clearGroup('comarca') %>%
-          leaflet::clearGroup('municipi') %>%
-          leaflet::clearGroup('provincia') %>%
-          leaflet::addPolygons(
-            data = rlang::eval_tidy(rlang::sym(polygons_dictionary[[admin_div_val]][['polygon']])),
-            group = polygons_dictionary[[admin_div_val]][['group']],
-            label = polygons_dictionary[[admin_div_val]][['label']],
-            layerId = rlang::eval_tidy(rlang::sym(polygons_dictionary[[admin_div_val]][['layerId']])),
-            weight = 1, smoothFactor = 1,
-            opacity = 1.0, fill = TRUE,
-            color = '#6C7A89FF', fillColor = "#CF000F00",
-            highlightOptions = leaflet::highlightOptions(
-              color = "#CF000F", weight = 2,
-              bringToFront = FALSE,
-              fill = TRUE, fillColor = "#CF000F00"
-            ),
-            options = leaflet::pathOptions(
-              pane = 'admin_divs'
-            )
-          )
-      }
-
-      if (scenario == 'scenario3') {
-
-        # viz_inputs needed
-        color_val <- mod_data$color
-        tipo_grup_func_val <- mod_data$tipo_grup_func
-        grup_func_val <- mod_data$grup_func
-        statistic_val <- mod_data$statistic
-        inverse_pal_val <- mod_data$inverse_pal
-        admin_div_val <- mod_data$admin_div
-
-        if (grup_func_val == '') {
-
-          data_map <- scenario_data[['core']] %>%
-            dplyr::collect() %>%
-            tidyIFN::summarise_polygons(polygon_group = admin_div_val)
-
-
-        } else {
-
-          filter_arg_val <- rlang::quo(
-            !!rlang::sym(glue::glue('{tipo_grup_func_val}_dom_percdens')) ==
-              !!grup_func_val
-          )
-
-          data_map <- scenario_data[['core']] %>%
-            dplyr::collect() %>%
-            tidyIFN::summarise_polygons(
-              filter_arg_val,
-              polygon_group = admin_div_val,
-              func_group = glue::glue('{tipo_grup_func_val}_dom_percdens')
-            )
-        }
-
-        polygons_label_var <- polygons_dictionary[[admin_div_val]][['label_chr']]
-        polygon_data <- rlang::eval_tidy(
-          rlang::sym(polygons_dictionary[[admin_div_val]][['polygon']])
-        )
-
-        polygon_data@data <- polygon_data@data %>%
-          dplyr::rename(
-            !!rlang::sym(admin_div_val) := !!rlang::sym(polygons_label_var)
-          ) %>%
-          dplyr::left_join(data_map, by = admin_div_val)
-
-        # color palette
-        if (is.null(color_val) || color_val == '') {
-          color_variable_def <- 'Sense color'
-          color_vector <- rep('parcel·la', nrow(polygon_data@data))
-          pal <- leaflet::colorFactor('viridis', color_vector)
-        } else {
-
-          # We must take into account if the variable is categorical or
-          # numerical
-          color_variable_def <- paste0(color_val, statistic_val)
-          color_vector <- polygon_data@data[[color_variable_def]]
-
-          if (is.numeric(color_vector)) {
-            pal <- leaflet::colorBin(
-              'viridis', color_vector, 9, reverse = inverse_pal_val
-            )
-          } else {
-            pal <- leaflet::colorFactor(
-              'viridis', color_vector, reverse = inverse_pal_val
-            )
-          }
-        }
-
-        if (admin_div_val == '') {
-          leaflet::leafletProxy('map') %>%
-            leaflet::clearGroup('vegueria') %>%
-            leaflet::clearGroup('comarca') %>%
-            leaflet::clearGroup('municipi') %>%
-            leaflet::clearGroup('provincia')
-        } else {
-          leaflet::leafletProxy('map') %>%
-            leaflet::clearGroup('vegueria') %>%
-            leaflet::clearGroup('comarca') %>%
-            leaflet::clearGroup('municipi') %>%
-            leaflet::clearGroup('provincia') %>%
-            leaflet::clearGroup('idparcela') %>%
-            leaflet::addPolygons(
-              data = polygon_data,
-              group = polygons_dictionary[[admin_div_val]][['group']],
-              label = polygons_dictionary[[admin_div_val]][['label_new']],
-              layerId = rlang::eval_tidy(rlang::sym(polygons_dictionary[[admin_div_val]][['layerId']])),
-              weight = 1, smoothFactor = 1,
-              opacity = 1.0, color = '#6C7A89FF',
-              fill = TRUE, fillColor = pal(color_vector),
-              fillOpacity = 1,
-              highlightOptions = leaflet::highlightOptions(
-                color = "#CF000F", weight = 2,
-                bringToFront = FALSE
-              ),
-              options = leaflet::pathOptions(
-                pane = 'admin_divs'
-              )
-            ) %>%
-            leaflet::addLegend(
-              position = 'topright', pal = pal, values = color_vector,
-              title = color_variable_def, layerId = 'color_legend', opacity = 1
-            )
-        }
-      }
-
-      if (scenario == 'scenario4') {
-
-        # viz_inputs needed
-        color_val <- mod_data$color
-        grup_func_val <- mod_data$grup_func
-        statistic_val <- mod_data$statistic
-        inverse_pal_val <- mod_data$inverse_pal
-        admin_div_val <- mod_data$admin_div
-
-        if (grup_func_val == '') {
-          return()
-        }
-
-        # debug
-        # browser()
-
-        filter_arg_val <- rlang::quo(
-          !!rlang::sym(glue::glue('id{mod_data$agg_level}')) == !!grup_func_val
-        )
-
-        data_map <- scenario_data[['core']] %>%
-          dplyr::collect() %>%
-          tidyIFN::summarise_polygons(
-            filter_arg_val,
-            polygon_group = admin_div_val,
-            func_group = glue::glue('id{mod_data$agg_level}')
-          )
-
-        polygons_label_var <- polygons_dictionary[[admin_div_val]][['label_chr']]
-        polygon_data <- rlang::eval_tidy(
-          rlang::sym(polygons_dictionary[[admin_div_val]][['polygon']])
-        )
-
-        polygon_data@data <- polygon_data@data %>%
-          dplyr::rename(!!rlang::sym(admin_div_val) := !!rlang::sym(polygons_label_var)) %>%
-          dplyr::left_join(data_map, by = admin_div_val)
-
-        # color palette
-        if (is.null(color_val) || color_val == '') {
-          color_variable_def <- 'Sense color'
-          color_vector <- rep('parcel·la', nrow(polygon_data@data))
-          pal <- leaflet::colorFactor('viridis', color_vector)
-        } else {
-
-          # We must take into account if the variable is categorical or
-          # numerical
-          color_variable_def <- paste0(color_val, statistic_val)
-          color_vector <- polygon_data@data[[color_variable_def]]
-
-          if (is.numeric(color_vector)) {
-            pal <- leaflet::colorBin('viridis', color_vector, 9, reverse = inverse_pal_val)
-          } else {
-            pal <- leaflet::colorFactor('viridis', color_vector, reverse = inverse_pal_val)
-          }
-        }
-
-        if (admin_div_val == '') {
-          leaflet::leafletProxy('map') %>%
-            leaflet::clearGroup('vegueria') %>%
-            leaflet::clearGroup('comarca') %>%
-            leaflet::clearGroup('municipi') %>%
-            leaflet::clearGroup('provincia')
-        } else {
-          leaflet::leafletProxy('map') %>%
-            leaflet::clearGroup('vegueria') %>%
-            leaflet::clearGroup('comarca') %>%
-            leaflet::clearGroup('municipi') %>%
-            leaflet::clearGroup('provincia') %>%
-            leaflet::clearGroup('idparcela') %>%
-            leaflet::addPolygons(
-              data = polygon_data,
-              group = polygons_dictionary[[admin_div_val]][['group']],
-              label = polygons_dictionary[[admin_div_val]][['label_new']],
-              layerId = rlang::eval_tidy(rlang::sym(polygons_dictionary[[admin_div_val]][['layerId']])),
-              weight = 1, smoothFactor = 1,
-              opacity = 1.0, color = '#6C7A89FF',
-              fill = TRUE, fillColor = pal(color_vector),
-              fillOpacity = 1,
-              highlightOptions = leaflet::highlightOptions(
-                color = "#CF000F", weight = 2,
-                bringToFront = FALSE
-              ),
-              options = leaflet::pathOptions(
-                pane = 'admin_divs'
-              )
-            ) %>%
-            leaflet::addLegend(
-              position = 'topright', pal = pal, values = color_vector,
-              title = color_variable_def, layerId = 'color_legend', opacity = 1
-            )
-        }
-      }
     }
   )
+
+ shiny::observeEvent(
+   eventExpr = input_map(),
+   handlerExpr = {
+     input_map()
+   }
+ )
 
   # reactive with the map events
   map_reactives <- shiny::reactiveValues()

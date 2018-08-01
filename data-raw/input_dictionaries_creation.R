@@ -573,26 +573,26 @@ dic_agg_level_choices <- list(
   cat = c(
     'Agregat o Total???' = 'parcela',
     'Desglossat per Espècie' = 'especie',
-    'Desglossat per Espècie simplificat' = 'espsimple',
+    'Desglossat per Espècie simplificat' = 'especiesimp',
     'Desglossat per Gènere' = 'genere',
-    'Desglossat per Conífera/Caducifoli/Esclerofil·le' = 'cadesclcon',
-    'Desglossat per Conífera/Planifoli' = 'plancon'
+    'Desglossat per Conífera/Caducifoli/Esclerofil·le' = 'cadesccon',
+    'Desglossat per Conífera/Planifoli' = 'planifconif'
   ),
   esp = c(
     'Agregado o Total???' = 'parcela',
     'Desglosado por Especie' = 'especie',
-    'Desglosado por Especie simplificada' = 'espsimple',
+    'Desglosado por Especie simplificada' = 'especiesimp',
     'Desglosado por Género' = 'genere',
-    'Desglosado por Caducifolio/Esclerófila/Conífera' = 'cadesclcon',
-    'Desglosado por Planifolia/Conífera' = 'plancon'
+    'Desglosado por Caducifolio/Esclerófila/Conífera' = 'cadesccon',
+    'Desglosado por Planifolia/Conífera' = 'planifconif'
   ),
   eng = c(
     'Aggregated or Total???' = 'parcela',
     'Breakdown by Species' = 'especie',
-    'Breakdown by Simplified Species' = 'espsimple',
+    'Breakdown by Simplified Species' = 'especiesimp',
     'Breakdown by Genera' = 'genere',
-    'Breakdown by Deciduous/Sclerophyllous/Conifer' = 'cadesclcon',
-    'Breakdown by Broadleaf/Conifer' = 'plancon'
+    'Breakdown by Deciduous/Sclerophyllous/Conifer' = 'cadesccon',
+    'Breakdown by Broadleaf/Conifer' = 'planifconif'
   )
 )
 
@@ -1364,7 +1364,7 @@ dic_grup_func_choices <- list(
         Qualsevol = '',
         "Conífera",  "Caducifoli", "Esclerofil·le"
       ),
-      planif_conif = c(
+      planifconif = c(
         Qualsevol = '',
         "Planifoli", 'Conífera'
       )
@@ -1562,7 +1562,7 @@ dic_grup_func_choices <- list(
       cadesccon = c(
         "Conífera",  "Caducifoli", "Esclerofil·le"
       ),
-      planif_conif = c(
+      planifconif = c(
         "Planifoli", 'Conífera'
       )
     )
@@ -1734,7 +1734,7 @@ dic_grup_func_choices <- list(
         Cualquiera = '',
         "Conífera",  "Caducifoli", "Esclerofil·le"
       ),
-      planif_conif = c(
+      planifconif = c(
         Cualquiera = '',
         "Planifoli", 'Conífera'
       )
@@ -1932,7 +1932,7 @@ dic_grup_func_choices <- list(
       cadesccon = c(
         "Conífera",  "Caducifoli", "Esclerofil·le"
       ),
-      planif_conif = c(
+      planifconif = c(
         "Planifoli", 'Conífera'
       )
     )
@@ -2104,7 +2104,7 @@ dic_grup_func_choices <- list(
         Any = '',
         "Conífera",  "Caducifoli", "Esclerofil·le"
       ),
-      planif_conif = c(
+      planifconif = c(
         Any = '',
         "Planifoli", 'Conífera'
       )
@@ -2302,7 +2302,7 @@ dic_grup_func_choices <- list(
       cadesccon = c(
         "Conífera",  "Caducifoli", "Esclerofil·le"
       ),
-      planif_conif = c(
+      planifconif = c(
         "Planifoli", 'Conífera'
       )
     )
