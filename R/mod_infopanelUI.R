@@ -95,7 +95,9 @@ mod_infopanel <- function(
                     "npp_s")
 
     if (mod_data$color %in% clima_vars) {
-      color_val <- rlang::quo(densitat)
+      color_val <- rlang::quo(!!rlang::sym(
+        glue::glue('{mod_data$tipo_grup_func}_dom_percdens_val')
+      ))
     } else {
       color_val <- rlang::quo(!!rlang::sym(mod_data$color))
     }
