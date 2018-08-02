@@ -8,7 +8,23 @@ map_modificator(data_scenario, scenario, ifn, inverse_pal, color, mida,
   tipo_grup_func, grup_func, statistic, admin_div, agg_level)
 }
 \arguments{
-\item{statistic}{}
+\item{data_scenario}{tbl_sql object}
+
+\item{scenario}{character indicating the scenario}
+
+\item{ifn}{Input}
+
+\item{inverse_pal}{Input}
+
+\item{color}{Input}
+
+\item{mida}{Input}
+
+\item{tipo_grup_func}{Input}
+
+\item{grup_func}{Input}
+
+\item{statistic}{Input}
 }
 \description{
 this returns the leaflet proxy object to modify the map

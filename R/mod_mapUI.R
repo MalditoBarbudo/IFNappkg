@@ -173,8 +173,6 @@ mod_map <- function(
     },
     valueExpr = {
 
-      browser()
-
       data_scenario(
         mod_data$admin_div,
         mod_data$admin_div_fil,
@@ -182,7 +180,8 @@ mod_map <- function(
         mod_data$espai_tipus_fil,
         mod_data$ifn,
         ifndb,
-        mod_data$agg_level
+        mod_data$agg_level,
+        diameter_classes = FALSE
       ) %>%
         map_modificator(
           input_scenario(),

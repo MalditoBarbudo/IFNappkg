@@ -5,10 +5,24 @@
 \title{Get a list woth sig, clima and core data}
 \usage{
 data_scenario(admin_div, admin_div_fil, espai_tipus, espai_tipus_fil, ifn,
-  ifndb, agg_level)
+  ifndb, agg_level, diameter_classes)
 }
 \arguments{
-\item{agg_level}{}
+\item{admin_div}{Input}
+
+\item{admin_div_fil}{Input}
+
+\item{espai_tipus}{Input}
+
+\item{espai_tipus_fil}{Input}
+
+\item{ifn}{Input}
+
+\item{ifndb}{Database pool object}
+
+\item{agg_level}{Input}
+
+\item{diameter_classes}{Input}
 }
 \description{
 sig, clima and core data for the corresponding agg level

@@ -34,13 +34,14 @@ get_scenario <- function(viz_shape, agg_level) {
 #'
 #' sig, clima and core data for the corresponding agg level
 #'
-#' @param admin_div
-#' @param admin_div_fil
-#' @param espai_tipus
-#' @param espai_tipus_fil
-#' @param ifn
-#' @param ifndb
-#' @param agg_level
+#' @param admin_div Input
+#' @param admin_div_fil  Input
+#' @param espai_tipus  Input
+#' @param espai_tipus_fil  Input
+#' @param ifn  Input
+#' @param ifndb  Database pool object
+#' @param agg_level  Input
+#' @param diameter_classes  Input
 #'
 #' @export
 data_scenario <- function(
@@ -50,7 +51,8 @@ data_scenario <- function(
   espai_tipus_fil,
   ifn,
   ifndb,
-  agg_level
+  agg_level,
+  diameter_classes
 ) {
 
   ## SIG data
@@ -65,17 +67,12 @@ data_scenario <- function(
 
   # espai tipus filter
   if (is.null(espai_tipus_fil) ||
-      any(espai_tipus_fil == 'Tots')) {
+      any(espai_tipus_fil == '')) {
     filter_expr_espai <- rlang::quo(TRUE)
   } else {
     # here we need also to check for nomes protegits and sense proteccio
     # to be able to filter these cases
-    if (any(espai_tipus_fil %in% c(
-      'Només protegits',
-      "Només espais d'interès nacional",
-      "Només espai de protecció especial",
-      "Només en Xarxa Natura 2000"
-    ))) {
+    if (any(espai_tipus_fil == "only_protected")) {
       filter_expr_espai <- rlang::quo(
         !(!!rlang::sym(espai_tipus) %in% c(
           "Sense Pein", "Sense protecció", "SenseXarxa"
@@ -98,8 +95,9 @@ data_scenario <- function(
   clima_plots <- clima %>% dplyr::pull(idparcela)
 
   ## CORE data
+
   core <- tidyIFN::data_core(
-    sig, ifn, agg_level, ifndb, clima_plots
+    sig, ifn, agg_level, ifndb, clima_plots, diameter_classes
   )
 
   res_list <- list(
@@ -114,15 +112,15 @@ data_scenario <- function(
 #'
 #' this returns the leaflet proxy object to modify the map
 #'
-#' @param data_scenario
-#' @param scenario
-#' @param ifn
-#' @param inverse_pal
-#' @param color
-#' @param mida
-#' @param tipo_grup_func
-#' @param grup_func
-#' @param statistic
+#' @param data_scenario tbl_sql object
+#' @param scenario character indicating the scenario
+#' @param ifn Input
+#' @param inverse_pal Input
+#' @param color Input
+#' @param mida Input
+#' @param tipo_grup_func Input
+#' @param grup_func Input
+#' @param statistic Input
 #'
 #' @export
 map_modificator <- function(

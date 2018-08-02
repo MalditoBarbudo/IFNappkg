@@ -151,7 +151,7 @@ dic_espai_tipus_fil_choices <- list(
     proteccio = list(
       general = c(
         "Tots" = '', "Només protegits" = 'only_protected',
-        "Sense protecció" = 'no_protected'
+        "Sense protecció" = 'Sense protecció'
       ),
       espais = c(
         "Paratge Natural d'Interès Nacional", "Parc Nacional", "Parc Natural",
@@ -162,7 +162,7 @@ dic_espai_tipus_fil_choices <- list(
     nomein = list(
       general = c(
         "Tots" = '', "Només espais d'interès nacional" = 'only_protected',
-        "Sense Pein" = 'no_protection'
+        "Sense Pein" = 'Sense Pein'
       ),
       espais = c(
         "Aiguabarreig Segre-Noguera Pallaresa", "Aiguabarreig Segre-Noguera Ribagorçana",
@@ -201,7 +201,7 @@ dic_espai_tipus_fil_choices <- list(
     enpes = list(
       general = c(
         "Tots" = '', "Només espai de protecció especial" = 'only_protected',
-        "Sense protecció" = 'no_protected'
+        "Sense protecció" = 'Sense protecció'
       ),
       espais = c(
         "Paratge natural d'interès nacional de cap Gros-cap de Creus",
@@ -246,7 +246,7 @@ dic_espai_tipus_fil_choices <- list(
     nomxarxa2000 = list(
       general = c(
         "Tots" = '', "Només en Xarxa Natura 2000" = 'only_protected',
-        "Sense Xarxa Natura 2000" = 'no_protected'
+        "Sense Xarxa Natura 2000" = 'SenseXarxa'
       ),
       espais = c(
         "Aiguabarreig Segre- Noguera Pallaresa", "Aiguabarreig Segre-Noguera Ribagorçana",
@@ -289,7 +289,7 @@ dic_espai_tipus_fil_choices <- list(
     proteccio = list(
       general = c(
         "Todos" = '', "Solo protegidos" = 'only_protected',
-        "Sin protección" = 'no_protected'
+        "Sin protección" = 'Sense protecció'
       ),
       espacios = c(
         "Paraje Natural de Interés Nacional" = "Paratge Natural d'Interès Nacional",
@@ -302,8 +302,8 @@ dic_espai_tipus_fil_choices <- list(
     ),
     nomein = list(
       general = c(
-        "Todos" = '', "Solo espacios de interés nacional" = 'ony_protection',
-        "Sin PEIN" = 'no_protection'
+        "Todos" = '', "Solo espacios de interés nacional" = 'ony_protected',
+        "Sin PEIN" = 'Sense Pein'
       ),
       espacios = c(
         "Aiguabarreig Segre-Noguera Pallaresa", "Aiguabarreig Segre-Noguera Ribagorçana",
@@ -342,7 +342,7 @@ dic_espai_tipus_fil_choices <- list(
     enpes = list(
       general = c(
         "Todos" = '', "Solo espacios con protección especial" = 'only_protected',
-        "Sin ENPES" = 'no_protected'
+        "Sin ENPES" = 'Sense protecció'
       ),
       espais = c(
         "Paratge natural d'interès nacional de cap Gros-cap de Creus",
@@ -387,7 +387,7 @@ dic_espai_tipus_fil_choices <- list(
     nomxarxa2000 = list(
       general = c(
         "Todos" = '', "Solo aquellos en la Red Natura 2000" = 'only_protected',
-        "Sin Red Natura 2000" = 'no_protected'
+        "Sin Red Natura 2000" = 'SenseXarxa'
       ),
       espais = c(
         "Aiguabarreig Segre- Noguera Pallaresa", "Aiguabarreig Segre-Noguera Ribagorçana",
@@ -430,7 +430,7 @@ dic_espai_tipus_fil_choices <- list(
     proteccio = list(
       general = c(
         "All" = '', "Only protected" = 'only_protected',
-        "No protected" = 'no_protected'
+        "No protected" = 'Sense protecció'
       ),
       espacios = c(
         "Paraje Natural de Interés Nacional" = "Paratge Natural d'Interès Nacional",
@@ -443,8 +443,8 @@ dic_espai_tipus_fil_choices <- list(
     ),
     nomein = list(
       general = c(
-        "All" = '', "Only national spaces of interest" = 'ony_protection',
-        "No PEIN" = 'no_protection'
+        "All" = '', "Only national spaces of interest" = 'only_protected',
+        "No PEIN" = 'Sense Pein'
       ),
       espacios = c(
         "Aiguabarreig Segre-Noguera Pallaresa", "Aiguabarreig Segre-Noguera Ribagorçana",
@@ -483,7 +483,7 @@ dic_espai_tipus_fil_choices <- list(
     enpes = list(
       general = c(
         "All" = '', "Only spaces with special protection" = 'only_protected',
-        "No ENPES" = 'no_protected'
+        "No ENPES" = 'Sense protecció'
       ),
       espais = c(
         "Paratge natural d'interès nacional de cap Gros-cap de Creus",
@@ -528,7 +528,7 @@ dic_espai_tipus_fil_choices <- list(
     nomxarxa2000 = list(
       general = c(
         "All" = '', "Only those inside Natura 2000 Net" = 'only_protected',
-        "No Natura 2000 Net" = 'no_protected'
+        "No Natura 2000 Net" = 'SenseXarxa'
       ),
       espais = c(
         "Aiguabarreig Segre- Noguera Pallaresa", "Aiguabarreig Segre-Noguera Ribagorçana",
