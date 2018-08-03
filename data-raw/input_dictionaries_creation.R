@@ -302,7 +302,7 @@ dic_espai_tipus_fil_choices <- list(
     ),
     nomein = list(
       general = c(
-        "Todos" = '', "Solo espacios de interés nacional" = 'ony_protected',
+        "Todos" = '', "Solo espacios de interés nacional" = 'only_protected',
         "Sin PEIN" = 'Sense Pein'
       ),
       espacios = c(
@@ -2346,3 +2346,5 @@ dic_statistic_choices <- list(
     'Quantile 95' = '_q95'
   )
 )
+
+## mod_infopanels inputs ####

@@ -184,3 +184,218 @@ label_statistic <- list(
   esp = 'Métrica',
   eng = 'Metric'
 )
+
+## mod_infopanel plots ####
+label_tabpanel_visualization <- list(
+  cat = 'Visualització',
+  esp = 'Visualización',
+  eng = 'Visualization'
+)
+
+label_infopanel_plot <- list(
+  cat = list(
+    parcela = list(
+      title = 'Parcel·la {click$id}',
+      subtitle = ''
+    ),
+    polygon = list(
+      title = 'Parcel·les seleccionats a {click$id}',
+      subtitle = ''
+    )
+  ),
+  esp = list(
+    parcela = list(
+      title = 'Parcela {click$id}',
+      subtitle = ''
+    ),
+    polygon = list(
+      title = 'Parcelas seleccionadas en {click$id}',
+      subtitle = ''
+    )
+  ),
+  eng = list(
+    parcela = list(
+      title = 'Plot {click$id}',
+      subtitle = ''
+    ),
+    polygon = list(
+      title = 'Plots selected in {click$id}',
+      subtitle = ''
+    )
+  )
+)
+
+label_infopanel_variables <- list(
+  cat = list(
+    # y values
+    "idparcela" = "ID parcel·la",
+    "idclasse" = "ID classe",
+    "cadesccon_dom_percdens" = "Caducifoli/Esclerofil/Conifera dominant per densitat",
+    "cadesccon_dom_percdens_val" = "Percentatge Densitat Caducifoli/Esclerofil/Conifera dominant",
+    "cadesccon_dom_percab" = "Caducifoli/Esclerofil/Conifera dominant per àrea basal",
+    "cadesccon_dom_percab_val" = "Percentatge Àrea Basal Caducifoli/Esclerofil/Conifera dominant",
+    "planifconif_dom_percdens" = "Planifoli/Conifera dominant per densitat",
+    "planifconif_dom_percdens_val" = "Percentatge Densitat Planifoli/Conifera dominant",
+    "planifconif_dom_percab" = "Planifoli/Conifera dominant per àrea basal",
+    "planifconif_dom_percab_val" = "Percentatge Àrea Basal Planifoli/Conifera dominant",
+    "genere_dom_percdens" = "Gènere dominant per densitat",
+    "genere_dom_percdens_val" = "Percentatge Densitat Gènere dominant",
+    "genere_dom_percab" = "Gènere dominant per àrea basal",
+    "genere_dom_percab_val" = "Percentatge Àrea Basal Gènere dominant",
+    "especiesimp_dom_percdens" = "Espècie simplificat dominant per densitat",
+    "especiesimp_dom_percdens_val" = "Percentatge Densitat Espècie simplificat dominant",
+    "especiesimp_dom_percab" = "Espècie simplificat dominant per àrea basal",
+    "especiesimp_dom_percab_val" = "Percentatge Àrea Basal Espècie simplificat dominant",
+    "especie_dom_percdens" = "Espècie dominant per densitat",
+    "especie_dom_percdens_val" = "Percentatge Densitat Espècie dominant",
+    "especie_dom_percab" = "Espècie dominant per àrea basal",
+    "especie_dom_percab_val" = "Percentatge Àrea Basal Espècie dominant",
+    "densitat" = "Densitat total parcel·la",
+    "densitatmorts" = "Densitat total peus morts parcel·la",
+    "ab" = "Àrea Basal total parcel·la",
+    "abmorts" = "Àrea Basal total peus morts parcel·la",
+    "dbh" = "Diàmetre a l'altura del pit parcel·la",
+    "dbhmorts" = "Diàmetre a l'altura del pit peus morts parcel·la",
+    "rc" = "rc",
+    "vcc" = "vcc",
+    "vccmorts" = "vccmorts",
+    "vsc" = "vsc",
+    "vscmorts" = "vscmorts",
+    "bm" = "bm",
+    "bc" = "bc",
+    "br" = "br",
+    "bh" = "bh",
+    "bat" = "bat",
+    "iaf" = "iaf",
+    "cm" = "cm",
+    "cc" = "cc",
+    "cr" = "cr",
+    "ch" = "ch",
+    "cat" = "cat",
+    "cca" = "cca",
+    "ordredens" = 'Ordre per Densitat',
+    "ordreab" = 'Ordre per Àrea Basal',
+    "percdens" = 'Percentatge Densitat',
+    "percab" = 'Percentatge Àrea Basal',
+    # x values
+    'idespecie' = 'Espècie',
+    'idespeciesimp' = 'Espècie simplificat',
+    'idgenere' = 'Gènere',
+    'idcadesccon' = 'Conífera/Caducifoli/Esclerofil·le',
+    'idplanifconif' = 'Conífera/Planifoli'
+  ),
+  esp = list(
+    "idparcela" = "ID parcela",
+    "idclasse" = "ID clase",
+    "cadesccon_dom_percdens" = "Caducifolia/Esclerofila/Conifera dominante por densidad",
+    "cadesccon_dom_percdens_val" = "Porcentaje Densidad Caducifolia/Esclerofila/Conifera dominante",
+    "cadesccon_dom_percab" = "Caducifolia/Esclerofila/Conifera dominante por área basal",
+    "cadesccon_dom_percab_val" = "Porcentaje Área Basal Caducifolia/Esclerofila/Conifera dominante",
+    "planifconif_dom_percdens" = "Planifolia/Conifera dominante por densidad",
+    "planifconif_dom_percdens_val" = "Porcentaje Densidad Planifolia/Conifera dominante",
+    "planifconif_dom_percab" = "Planifolia/Conifera dominante por área basal",
+    "planifconif_dom_percab_val" = "Porcentaje Área Basal Planifolia/Conifera dominante",
+    "genere_dom_percdens" = "Género dominante por densidad",
+    "genere_dom_percdens_val" = "Porcentaje Densidad Género dominante",
+    "genere_dom_percab" = "Género dominante por área basal",
+    "genere_dom_percab_val" = "Porcentaje Área Basal Género dominante",
+    "especiesimp_dom_percdens" = "Especie simplificado dominante por densidad",
+    "especiesimp_dom_percdens_val" = "Porcentaje Densidad Especie simplificado dominante",
+    "especiesimp_dom_percab" = "Especie simplificado dominante por densidad",
+    "especiesimp_dom_percab_val" = "Porcentaje Densidad Especie simplificado dominante",
+    "especie_dom_percdens" = "Especie dominante por densidad",
+    "especie_dom_percdens_val" = "Porcentaje Densidad Especie dominante",
+    "especie_dom_percab" = "Especie dominante por densidad",
+    "especie_dom_percab_val" = "Porcentaje Densidad Especie dominante",
+    "densitat" = "Densidad total parcela",
+    "densitatmorts" = "Densidad total pies muertos parcela",
+    "ab" = "Área Basal total parcela",
+    "abmorts" = "Área Basal total pies muertos parcela",
+    "dbh" = "Diámetro a la altura del pecho parcela",
+    "dbhmorts" = "Diámetro a la altura del pecho pies muertos parcela",
+    "rc" = "rc",
+    "vcc" = "vcc",
+    "vccmorts" = "vccmorts",
+    "vsc" = "vsc",
+    "vscmorts" = "vscmorts",
+    "bm" = "bm",
+    "bc" = "bc",
+    "br" = "br",
+    "bh" = "bh",
+    "bat" = "bat",
+    "iaf" = "iaf",
+    "cm" = "cm",
+    "cc" = "cc",
+    "cr" = "cr",
+    "ch" = "ch",
+    "cat" = "cat",
+    "cca" = "cca",
+    "ordredens" = 'Orden por densidad',
+    "ordreab" = 'Orden por área basal',
+    "percdens" = 'Porcentaje densidad',
+    "percab" = 'Porcentaje área basal',
+    # x values
+    'idespecie' = 'Especie',
+    'idespeciesimp' = 'Especie simplificada',
+    'idgenere' = 'Género',
+    'idcadesccon' = 'Caducifolia/Esclerófila/Conífera',
+    'idplanifconif' = 'Planifolia/Conífera'
+  ),
+  eng = list(
+    "idparcela" = "ID plot",
+    "idclasse" = "ID class",
+    "cadesccon_dom_percdens" = "Dominant Deciduous/Sclerophyllous/Conifer by density",
+    "cadesccon_dom_percdens_val" = "Density Percentage Dominant Deciduous/Sclerophyllous/Conifer",
+    "cadesccon_dom_percab" = "Dominant Deciduous/Sclerophyllous/Conifer by basal area",
+    "cadesccon_dom_percab_val" = "Basal Area Percentage Dominant Deciduous/Sclerophyllous/Conifer",
+    "planifconif_dom_percdens" = "Dominant Broadleaf/Conifer by density",
+    "planifconif_dom_percdens_val" = "Density Percentage Dominant Broadleaf/Conifer",
+    "planifconif_dom_percab" = "Dominant Broadleaf/Conifer by basal area",
+    "planifconif_dom_percab_val" = "Basal Area Percentage Dominant Broadleaf/Conifer",
+    "genere_dom_percdens" = "Dominant Genera by density",
+    "genere_dom_percdens_val" = "Density Percentage Dominant genera",
+    "genere_dom_percab" = "Dominant Genera by basal area",
+    "genere_dom_percab_val" = "Basal Area Percentage Dominant Genera",
+    "especiesimp_dom_percdens" = "Dominant Simplified Species by density",
+    "especiesimp_dom_percdens_val" = "Density Percentage Dominant Simplified Species",
+    "especiesimp_dom_percab" = "Dominant Simplified Species by basal area",
+    "especiesimp_dom_percab_val" = "Basal Area Percentage Dominant Simplified Species",
+    "especie_dom_percdens" = "Dominant Species by density",
+    "especie_dom_percdens_val" = "Density Percentage Dominant Species",
+    "especie_dom_percab" = "Dominant Species by basal area",
+    "especie_dom_percab_val" = "Basal Area Percentage Dominant Species",
+    "densitat" = "Total Plot Density",
+    "densitatmorts" = "Total Plot Density Dead Trees",
+    "ab" = "Total Plot Basal Area",
+    "abmorts" = "Total Plot Basal Area Dead Trees",
+    "dbh" = "Diameter at Breast Height Plot",
+    "dbhmorts" = "Diameter at Breast Height Dead Trees plot",
+    "rc" = "rc",
+    "vcc" = "vcc",
+    "vccmorts" = "vccmorts",
+    "vsc" = "vsc",
+    "vscmorts" = "vscmorts",
+    "bm" = "bm",
+    "bc" = "bc",
+    "br" = "br",
+    "bh" = "bh",
+    "bat" = "bat",
+    "iaf" = "iaf",
+    "cm" = "cm",
+    "cc" = "cc",
+    "cr" = "cr",
+    "ch" = "ch",
+    "cat" = "cat",
+    "cca" = "cca",
+    "ordredens" = 'Rank by Density',
+    "ordreab" = 'Rank by Basal Area',
+    "percdens" = 'Density Percentage',
+    "percab" = 'Basal Area Percentage',
+    # x values
+    'idespecie' = 'Species',
+    'idespeciesimp' = 'Simplified Species',
+    'idgenere' = 'Genera',
+    'idcadesccon' = 'Deciduous/Sclerophyllous/Conifer',
+    'idplanifconif' = 'Broadleaf/Conifer'
+  )
+)

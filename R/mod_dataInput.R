@@ -148,7 +148,7 @@ mod_dataInput <- function(id) {
           shiny::column(
             3,
             shiny::checkboxInput(
-              ns('diam_class'), label_diam_class[['esp']],
+              ns('diameter_classes'), label_diam_class[['esp']],
               value = FALSE
             )
           )
@@ -222,7 +222,7 @@ mod_data <- function(
     data_reactives$espai_tipus_fil <- input$espai_tipus_fil
     data_reactives$apply_filters <- input$apply_filters
     data_reactives$agg_level <- input$agg_level
-    data_reactives$diam_class <- input$diam_class
+    data_reactives$diameter_classes <- input$diameter_classes
     data_reactives$viz_shape <- input$viz_shape
 
   })

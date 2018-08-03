@@ -14,6 +14,8 @@ label_ifn, label_mida, label_show_adv_fils, label_statistic,
 label_tipo_grup_func, label_viz_shape, names_comarcas, names_municipios,
 names_provincias, names_veguerias, polygons_comarques, polygons_dictionary,
 polygons_enpe, polygons_municipis, polygons_pein, polygons_provincies,
-polygons_vegueries, polygons_xn2000,
+polygons_vegueries, polygons_xn2000, label_tabpanel_visualization,
+label_infopanel_plot, label_infopanel_variables,
+
 internal = TRUE, overwrite = TRUE
 )
