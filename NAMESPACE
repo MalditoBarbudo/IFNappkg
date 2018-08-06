@@ -2,6 +2,7 @@
 
 export(data_scenario)
 export(get_scenario)
+export(infopanel_plot_gen)
 export(map_modificator)
 export(mod_data)
 export(mod_dataInput)

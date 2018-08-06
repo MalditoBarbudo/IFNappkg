@@ -86,107 +86,124 @@ mod_infopanel <- function(
 
   output$shape_click_plot <- shiny::renderPlot({
 
-    # click
-    click <- mod_map$map_shape_click
-
-    # values
-    clima_vars <- c('radiacioanual',
-                    "temperaturaminimaanual",
-                    "temperaturamitjanaanual",
-                    "temperaturamaximaanual",
-                    "precipitacioanual",
-                    "npp_s")
-
-    if (mod_data$color %in% clima_vars) {
-      color_val <- rlang::quo(!!rlang::sym(
-        glue::glue('{mod_data$tipo_grup_func}_dom_percdens_val')
-      ))
-    } else {
-      color_val <- rlang::quo(!!rlang::sym(mod_data$color))
-    }
-
-    scenario <- get_scenario(mod_data$viz_shape, mod_data$agg_level)
-
-    # x var depending on scenarios
-    if (scenario %in% c('scenario1', 'scenario3')) {
-      x_var_plot <- rlang::quo(!!rlang::sym(
-        glue::glue('{mod_data$tipo_grup_func}_dom_percdens')
-      ))
-    } else {
-      x_var_plot <- rlang::quo(!!rlang::sym(
-        glue::glue('id{mod_data$agg_level}')
-      ))
-    }
-
-    x_var_index <- as.character(rlang::get_expr(x_var_plot))
-    y_var_index <- as.character(rlang::get_expr(color_val))
-
-    plot_y_lab <- label_infopanel_variables[['esp']][[y_var_index]]
-    plot_x_lab <- label_infopanel_variables[['esp']][[x_var_index]]
-
-    # click in plot
-    if (click$group == 'idparcela') {
-
-      plot_title <- glue::glue(
-        label_infopanel_plot[['esp']][['parcela']][['title']]
+    shiny::validate(
+      shiny::need(
+        expr = !is.null(data_infopanel()[[mod_data$color]]),
+        message = 'Selected color variable is not available in the data'
       )
-      plot_subt <- glue::glue(
-        label_infopanel_plot[['esp']][['parcela']][['subtitle']]
-      )
+    )
 
-      if (isTRUE(mod_data$diameter_classes)) {
-        infopanel_plot <- data_infopanel() %>%
-          ggplot2::ggplot(
-            ggplot2::aes(x = !! x_var_plot, y = !! color_val, group = idcd)
-          ) +
-          ggplot2::geom_col() +
-          ggplot2::labs(
-            title = plot_title, subtitle = plot_subt,
-            x = plot_x_lab, y = plot_y_lab
-          )
-      } else {
-        infopanel_plot <- data_infopanel() %>%
-          ggplot2::ggplot(ggplot2::aes(x = !! x_var_plot, y = !! color_val)) +
-          ggplot2::geom_col() +
-          ggplot2::labs(
-            title = plot_title, subtitle = plot_subt,
-            x = plot_x_lab, y = plot_y_lab
-          )
-      }
+    infopanel_plot_gen(
+      data_infopanel, mod_map$map_shape_click, mod_data$color,
+      mod_data$viz_shape, mod_data$agg_level, mod_data$diameter_classes,
+      mod_data$tipo_grup_func
+    )
 
-    } else {
-
-      plot_title <- glue::glue(
-        label_infopanel_plot[['esp']][['polygon']][['title']]
-      )
-      plot_subt <- glue::glue(
-        label_infopanel_plot[['esp']][['polygon']][['subtitle']]
-      )
-
-      browser()
-
-      # click in polygon
-      if (isTRUE(mod_data$diameter_classes)) {
-        infopanel_plot <- data_infopanel() %>%
-          ggplot2::ggplot(
-            ggplot2::aes(x = !! x_var_plot, y = !! color_val, group = idcd)
-          ) +
-          ggplot2::geom_boxplot() +
-          ggplot2::labs(
-            title = plot_title, subtitle = plot_subt,
-            x = plot_x_lab, y = plot_y_lab
-          )
-      } else {
-        infopanel_plot <- data_infopanel() %>%
-          ggplot2::ggplot(ggplot2::aes(x = !! x_var_plot, y = !! color_val)) +
-          ggplot2::geom_boxplot() +
-          ggplot2::labs(
-            title = plot_title, subtitle = plot_subt,
-            x = plot_x_lab, y = plot_y_lab
-          )
-      }
-    }
-
-    return(infopanel_plot)
+    # # click
+    # click <- mod_map$map_shape_click
+    #
+    # # values
+    # clima_vars <- c('radiacioanual',
+    #                 "temperaturaminimaanual",
+    #                 "temperaturamitjanaanual",
+    #                 "temperaturamaximaanual",
+    #                 "precipitacioanual",
+    #                 "npp_s")
+    #
+    # if (mod_data$color %in% clima_vars) {
+    #   color_val <- rlang::quo(!!rlang::sym(
+    #     glue::glue('{mod_data$tipo_grup_func}_dom_percdens_val')
+    #   ))
+    # } else {
+    #   color_val <- rlang::quo(!!rlang::sym(mod_data$color))
+    # }
+    #
+    # scenario <- get_scenario(mod_data$viz_shape, mod_data$agg_level)
+    #
+    # # x var
+    # if (isTRUE(mod_data$diameter_classes)) {
+    #   x_var_plot <- rlang::quo(!!rlang::sym('idcd'))
+    # } else {
+    #   if (scenario %in% c('scenario1', 'scenario3')) {
+    #     x_var_plot <- rlang::quo(!!rlang::sym(
+    #       glue::glue('{mod_data$tipo_grup_func}_dom_percdens')
+    #     ))
+    #   } else {
+    #     x_var_plot <- rlang::quo(!!rlang::sym(
+    #       glue::glue('id{mod_data$agg_level}')
+    #     ))
+    #   }
+    # }
+    #
+    # x_var_index <- as.character(rlang::get_expr(x_var_plot))
+    # y_var_index <- as.character(rlang::get_expr(color_val))
+    #
+    # plot_y_lab <- label_infopanel_variables[['esp']][[y_var_index]]
+    # plot_x_lab <- label_infopanel_variables[['esp']][[x_var_index]]
+    #
+    # browser()
+    #
+    # # click in plot
+    # if (click$group == 'idparcela') {
+    #
+    #   plot_title <- glue::glue(
+    #     label_infopanel_plot[['esp']][['parcela']][['title']]
+    #   )
+    #   plot_subt <- glue::glue(
+    #     label_infopanel_plot[['esp']][['parcela']][['subtitle']]
+    #   )
+    #
+    #   if (isTRUE(mod_data$diameter_classes)) {
+    #     infopanel_plot <- data_infopanel() %>%
+    #       ggplot2::ggplot(
+    #         ggplot2::aes(x = !! x_var_plot, y = !! color_val, group = idcd)
+    #       ) +
+    #       ggplot2::geom_col() +
+    #       ggplot2::labs(
+    #         title = plot_title, subtitle = plot_subt,
+    #         x = plot_x_lab, y = plot_y_lab
+    #       )
+    #   } else {
+    #     infopanel_plot <- data_infopanel() %>%
+    #       ggplot2::ggplot(ggplot2::aes(x = !! x_var_plot, y = !! color_val)) +
+    #       ggplot2::geom_col() +
+    #       ggplot2::labs(
+    #         title = plot_title, subtitle = plot_subt,
+    #         x = plot_x_lab, y = plot_y_lab
+    #       )
+    #   }
+    #
+    # } else {
+    #
+    #   plot_title <- glue::glue(
+    #     label_infopanel_plot[['esp']][['polygon']][['title']]
+    #   )
+    #   plot_subt <- glue::glue(
+    #     label_infopanel_plot[['esp']][['polygon']][['subtitle']]
+    #   )
+    #
+    #   # click in polygon
+    #   if (isTRUE(mod_data$diameter_classes)) {
+    #     infopanel_plot <- data_infopanel() %>%
+    #       ggplot2::ggplot(
+    #         ggplot2::aes(x = !! x_var_plot, y = !! color_val, group = idcd)
+    #       ) +
+    #       ggplot2::geom_boxplot() +
+    #       ggplot2::labs(
+    #         title = plot_title, subtitle = plot_subt,
+    #         x = plot_x_lab, y = plot_y_lab
+    #       )
+    #   } else {
+    #     infopanel_plot <- data_infopanel() %>%
+    #       ggplot2::ggplot(ggplot2::aes(x = !! x_var_plot, y = !! color_val)) +
+    #       ggplot2::geom_boxplot() +
+    #       ggplot2::labs(
+    #         title = plot_title, subtitle = plot_subt,
+    #         x = plot_x_lab, y = plot_y_lab
+    #       )
+    #   }
+    # }
+    #
+    # return(infopanel_plot)
   })
 }

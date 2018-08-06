@@ -230,6 +230,7 @@ label_infopanel_variables <- list(
     # y values
     "idparcela" = "ID parcel·la",
     "idclasse" = "ID classe",
+    "idcd" = 'Classe diametrica',
     "cadesccon_dom_percdens" = "Caducifoli/Esclerofil/Conifera dominant per densitat",
     "cadesccon_dom_percdens_val" = "Percentatge Densitat Caducifoli/Esclerofil/Conifera dominant",
     "cadesccon_dom_percab" = "Caducifoli/Esclerofil/Conifera dominant per àrea basal",
@@ -287,6 +288,7 @@ label_infopanel_variables <- list(
   esp = list(
     "idparcela" = "ID parcela",
     "idclasse" = "ID clase",
+    "idcd" = 'Clase diamétrica',
     "cadesccon_dom_percdens" = "Caducifolia/Esclerofila/Conifera dominante por densidad",
     "cadesccon_dom_percdens_val" = "Porcentaje Densidad Caducifolia/Esclerofila/Conifera dominante",
     "cadesccon_dom_percab" = "Caducifolia/Esclerofila/Conifera dominante por área basal",
@@ -344,6 +346,7 @@ label_infopanel_variables <- list(
   eng = list(
     "idparcela" = "ID plot",
     "idclasse" = "ID class",
+    "idcd" = "Diamter Class",
     "cadesccon_dom_percdens" = "Dominant Deciduous/Sclerophyllous/Conifer by density",
     "cadesccon_dom_percdens_val" = "Density Percentage Dominant Deciduous/Sclerophyllous/Conifer",
     "cadesccon_dom_percab" = "Dominant Deciduous/Sclerophyllous/Conifer by basal area",
