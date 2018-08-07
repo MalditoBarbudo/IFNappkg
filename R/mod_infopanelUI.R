@@ -74,7 +74,7 @@ mod_infopanel <- function(
       # data inputs
       mod_data$ifn
       mod_data$viz_shape
-      mod_data$admin_divs
+      mod_data$admin_div
       mod_data$espai_tipus
       mod_data$apply_filters
       mod_data$agg_level
