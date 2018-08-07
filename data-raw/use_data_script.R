@@ -15,7 +15,7 @@ label_tipo_grup_func, label_viz_shape, names_comarcas, names_municipios,
 names_provincias, names_veguerias, polygons_comarques, polygons_dictionary,
 polygons_enpe, polygons_municipis, polygons_pein, polygons_provincies,
 polygons_vegueries, polygons_xn2000, label_tabpanel_visualization,
-label_infopanel_plot, label_infopanel_variables,
+label_infopanel_plot, label_infopanel_variables, label_shape_click_info,
 
 internal = TRUE, overwrite = TRUE
 )

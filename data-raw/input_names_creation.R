@@ -618,3 +618,26 @@ label_infopanel_variables <- list(
     'idplanifconif' = 'Broadleaf/Conifer'
   )
 )
+
+## mod_infopanel info ####
+
+label_shape_click_info <- list(
+  esp = list(
+    plot = list(
+      header = 'Parcela #{click$id}',
+      altitude = 'Altitud: {sig[["altitud"]][1]}',
+      slope = 'Pendiente: {sig[["pendentpercentatge"]][1]}',
+      muni = 'Municipio: {sig[["municipi"]][1]}',
+      comarca = 'Comarca: {sig[["comarca"]][1]}',
+      province = 'Provincia: {sig[["provincia"]][1]}',
+
+      an_rad = 'Radiación anual: {clima[["radiacioanual"]][1]}',
+      an_ave_temp = 'Temperatura media anual: {clima[["temperaturamitjanaanual"]][1]}',
+      an_prec = 'Precipitación anual: {clima[["precipitacioanual"]][1]}'
+    ),
+    polygon = list(
+      header = '{length(unique(sig[["idparcela"]]))} parcelas en {click$id}',
+      explanation = ''
+    )
+  )
+)

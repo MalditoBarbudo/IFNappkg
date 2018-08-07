@@ -153,4 +153,68 @@ mod_infopanel <- function(
   output$shape_click_plot <- shiny::renderPlot({
     plot_infopanel()
   })
+
+  output$shape_click_info <- shiny::renderUI({
+
+    click <- mod_map$map_shape_click
+
+    if (click$group == 'idparcela') {
+
+      browser()
+
+      sig <- tidyIFN::data_sig(mod_data$ifn, ifndb, idparcela == click$id)
+      clima <- tidyIFN::data_clima(sig, mod_data$ifn, ifndb) %>%
+        dplyr::collect()
+      sig <- sig %>% dplyr::collect()
+
+      shiny::tagList(
+        # header
+        shiny::h4(
+          glue::glue(label_shape_click_info[['esp']][['plot']][['header']])
+        ),
+        # muni
+        glue::glue(label_shape_click_info[['esp']][['plot']][['muni']]),
+        # comarca
+        glue::glue(label_shape_click_info[['esp']][['plot']][['comarca']]),
+        # province
+        glue::glue(label_shape_click_info[['esp']][['plot']][['province']]),
+
+        shiny::br(),
+
+        # altitude
+        glue::glue(label_shape_click_info[['esp']][['plot']][['altitude']]),
+        # slope
+        glue::glue(label_shape_click_info[['esp']][['plot']][['slope']]),
+        # an_rad
+        glue::glue(label_shape_click_info[['esp']][['plot']][['an_rad']]),
+        # an_ave_temp
+        glue::glue(label_shape_click_info[['esp']][['plot']][['an_ave_temp']]),
+        # an_prec
+        glue::glue(label_shape_click_info[['esp']][['plot']][['an_prec']])
+      )
+
+
+    } else {
+
+      sig <- tidyIFN::data_sig(
+        mod_data$ifn, ifndb, !!rlang::sym(mod_data$admin_div) == click$id
+      )
+      clima <- tidyIFN::data_clima(sig, mod_data$ifn, ifndb) %>%
+        dplyr::collect()
+      sig <- sig %>% dplyr::collect()
+
+      shiny::tagList(
+        # header
+        shiny::h4(
+          glue::glue(label_shape_click_info[['esp']][['polygon']][['header']])
+        ),
+         # explanation
+        glue::glue(label_shape_click_info[['esp']][['polygon']][['explanation']])
+      )
+
+
+    }
+
+  })
+
 }
