@@ -765,36 +765,9 @@ infopanel_plot_gen <- function(
         x_var_plot <- rlang::quo(
           !!rlang::sym(glue::glue('{tipo_grup_func}_dom_percdens'))
         )
+        fill_var_plot <- x_var_plot
         y_var_plot <- rlang::quo(!!rlang::sym(color))
-        x_var_index <- as.character(rlang::get_expr(x_var_plot))
         y_var_index <- as.character(rlang::get_expr(y_var_plot))
-        x_lab_plot <- label_infopanel_variables[['esp']][[x_var_index]]
-        y_lab_plot <- label_infopanel_variables[['esp']][[y_var_index]]
-        title_plot <- glue::glue(
-          label_infopanel_plot[['esp']][['nocd']][[scenario]][['plot']][['title']]
-        )
-        subtitle_plot <- glue::glue(
-          label_infopanel_plot[['esp']][['nocd']][[scenario]][['plot']][['subtitle']]
-        )
-
-        infopanel_plot <- data() %>%
-          ggplot2::ggplot(
-            ggplot2::aes(x = !! x_var_plot, y = !! y_var_plot)
-          ) +
-          ggplot2::geom_col() +
-          ggplot2::labs(
-            title = title_plot, subtitle = subtitle_plot,
-            x = x_lab_plot, y = y_lab_plot
-          )
-      }
-
-      if (scenario == 'scenario2') {
-
-        x_var_plot <- rlang::quo(!!rlang::sym(glue::glue('id{agg_level}')))
-        y_var_plot <- rlang::quo(!!rlang::sym(color))
-        x_var_index <- as.character(rlang::get_expr(x_var_plot))
-        y_var_index <- as.character(rlang::get_expr(y_var_plot))
-        x_lab_plot <- label_infopanel_variables[['esp']][[x_var_index]]
         y_lab_plot <- label_infopanel_variables[['esp']][[y_var_index]]
         title_plot <- glue::glue(
           label_infopanel_plot[['esp']][['nocd']][[scenario]][['plot']][['title']]
@@ -806,13 +779,40 @@ infopanel_plot_gen <- function(
         infopanel_plot <- data() %>%
           ggplot2::ggplot(
             ggplot2::aes(
-              x = !! x_var_plot, y = !! y_var_plot
+              x = !! x_var_plot, y = !! y_var_plot, fill = !! fill_var_plot
             )
           ) +
           ggplot2::geom_col() +
           ggplot2::labs(
             title = title_plot, subtitle = subtitle_plot,
-            x = x_lab_plot, y = y_lab_plot
+            x = '', y = y_lab_plot
+          )
+      }
+
+      if (scenario == 'scenario2') {
+
+        x_var_plot <- rlang::quo(!!rlang::sym(glue::glue('id{agg_level}')))
+        fill_var_plot <- x_var_plot
+        y_var_plot <- rlang::quo(!!rlang::sym(color))
+        y_var_index <- as.character(rlang::get_expr(y_var_plot))
+        y_lab_plot <- label_infopanel_variables[['esp']][[y_var_index]]
+        title_plot <- glue::glue(
+          label_infopanel_plot[['esp']][['nocd']][[scenario]][['plot']][['title']]
+        )
+        subtitle_plot <- glue::glue(
+          label_infopanel_plot[['esp']][['nocd']][[scenario]][['plot']][['subtitle']]
+        )
+
+        infopanel_plot <- data() %>%
+          ggplot2::ggplot(
+            ggplot2::aes(
+              x = !! x_var_plot, y = !! y_var_plot, fill = !! fill_var_plot
+            )
+          ) +
+          ggplot2::geom_col() +
+          ggplot2::labs(
+            title = title_plot, subtitle = subtitle_plot,
+            x = '', y = y_lab_plot
           )
       }
     } else {
@@ -821,6 +821,7 @@ infopanel_plot_gen <- function(
         x_var_plot <- rlang::quo(
           !!rlang::sym(glue::glue('{tipo_grup_func}_dom_percdens'))
         )
+        fill_var_plot <- x_var_plot
         y_var_plot <- rlang::quo(!!rlang::sym(color))
         y_var_index <- as.character(rlang::get_expr(y_var_plot))
         y_lab_plot <- label_infopanel_variables[['esp']][[y_var_index]]
@@ -833,7 +834,9 @@ infopanel_plot_gen <- function(
 
         infopanel_plot <- data() %>%
           ggplot2::ggplot(
-            ggplot2::aes(x = !! x_var_plot, y = !! y_var_plot)
+            ggplot2::aes(
+              x = !! x_var_plot, y = !! y_var_plot, fill = !! fill_var_plot
+            )
           ) +
           ggplot2::geom_boxplot() +
           ggplot2::labs(
@@ -845,6 +848,7 @@ infopanel_plot_gen <- function(
       if (scenario %in% c('scenario2', 'scenario4')) {
 
         x_var_plot <- rlang::quo(!!rlang::sym(glue::glue('id{agg_level}')))
+        fill_var_plot <- x_var_plot
         y_var_plot <- rlang::quo(!!rlang::sym(color))
         y_var_index <- as.character(rlang::get_expr(y_var_plot))
         y_lab_plot <- label_infopanel_variables[['esp']][[y_var_index]]
@@ -858,7 +862,7 @@ infopanel_plot_gen <- function(
         infopanel_plot <- data() %>%
           ggplot2::ggplot(
             ggplot2::aes(
-              x = !! x_var_plot, y = !! y_var_plot
+              x = !! x_var_plot, y = !! y_var_plot, fill = !! fill_var_plot
             )
           ) +
           ggplot2::geom_boxplot() +
