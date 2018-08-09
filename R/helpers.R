@@ -910,3 +910,55 @@ col_vis_modal <- function(failed = FALSE, ns, dictionary) {
   )
 
 }
+
+#' modifcate the table based on data inputs
+#'
+#' this returns the data object to modify the table
+#'
+#' @param data_scenario tbl_sql object
+#' @param scenario character indicating the scenario
+#' @param admin_div Input
+#' @param agg_level Input
+#'
+#' @export
+table_data_modificator <- function(
+  data_scenario,
+  scenario,
+  admin_div,
+  agg_level
+) {
+
+  # scenario 1, plots no breakdown
+  if (scenario == 'scenario1') {
+    return(data_scenario[['core']] %>% dplyr::collect())
+  }
+
+  if (scenario == 'scenario2') {
+    return(data_scenario[['core']] %>% dplyr::collect())
+  }
+
+  if (scenario == 'scenario3') {
+    # inputs needed
+    admin_div_val <- admin_div
+
+    return(
+      data_scenario[['core']] %>%
+        dplyr::collect() %>%
+        tidyIFN::summarise_polygons(polygon_group = admin_div_val)
+    )
+  }
+
+  if (scenario == 'scenario4') {
+    # inputs needed
+    admin_div_val <- admin_div
+    agg_level_val <- glue::glue('id{agg_level')
+
+    return(
+      data_scenario[['core']] %>%
+        dplyr::collect() %>%
+        tidyIFN::summarise_polygons(
+          polygon_group = admin_div_val, func_group = agg_level_val
+        )
+    )
+  }
+}

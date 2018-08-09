@@ -45,6 +45,9 @@ mod_table <- function(
 
   table_data_gen <- shiny::reactive({
 
+    browser()
+
+
     data_scenario(
       mod_data$admin_div,
       mod_data$admin_div_fil,
@@ -54,21 +57,22 @@ mod_table <- function(
       ifndb,
       mod_data$agg_level,
       diameter_classes = FALSE
-    )
-
+    ) %>%
+      table_data_modificator(
+        get_scenario(mod_data$viz_shape, mod_data$agg_level),
+        mod_data$admin_div, mod_data$agg_level
+      )
   })
 
   shiny::observeEvent(
     eventExpr = input$col_vis_button,
     handlerExpr = {
-      shiny::showModal(
-        col_vis_modal(
-          ns = session$ns,
-          dictionary = dic_color_choices[['esp']][[get_scenario(
-            mod_data$viz_shape, mod_data$agg_level
-          )]]
-        )
-      )
+
+      dictionary <- dic_col_vis_input[['esp']][[get_scenario(
+        mod_data$viz_shape, mod_data$agg_level
+      )]]
+
+      shiny::showModal(col_vis_modal(ns = session$ns, dictionary = dictionary))
     }
   )
 
@@ -77,14 +81,15 @@ mod_table <- function(
   shiny::observeEvent(
     eventExpr = input$col_vis_apply,
     handlerExpr = {
+
       if (is.null(input$col_vis_input)) {
+
+        dictionary <- dic_col_vis_input[['esp']][[get_scenario(
+          mod_data$viz_shape, mod_data$agg_level
+        )]]
+
         shiny::showModal(
-          col_vis_modal(
-            failed = TRUE, ns = session$ns,
-            dictionary = dic_color_choices[['esp']][[get_scenario(
-              mod_data$viz_shape, mod_data$agg_level
-            )]]
-          )
+          col_vis_modal(failed = TRUE, ns = session$ns, dictionary = dictionary)
         )
       } else {
         # select arguments are the variables selected
@@ -101,12 +106,10 @@ mod_table <- function(
     expr = {
 
       if (is.null(col_vis_reactive$columns)) {
-        data_table_temp <- table_data_gen()[['core']] %>%
-          dplyr::collect()
+        data_table_temp <- table_data_gen()
       } else {
-        data_table_temp <- table_data_gen()[['core']] %>%
-          dplyr::select(!!! col_vis_reactive$columns) %>%
-          dplyr::collect()
+        data_table_temp <- table_data_gen() %>%
+          dplyr::select(!!! col_vis_reactive$columns)
       }
 
       data_table_temp %>%
