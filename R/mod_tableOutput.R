@@ -58,20 +58,40 @@ mod_table <- function(
 
   })
 
-  col_vis_reactive <- shiny::eventReactive(
-    ignoreInit = FALSE, ignoreNULL = FALSE,
-    eventExpr = input$col_vis_apply,
-    valueExpr = {
+  shiny::observeEvent(
+    eventExpr = input$col_vis_button,
+    handlerExpr = {
+      shiny::showModal(
+        col_vis_modal(
+          ns = session$ns,
+          dictionary = dic_color_choices[['esp']][[get_scenario(
+            mod_data$viz_shape, mod_data$agg_level
+          )]]
+        )
+      )
+    }
+  )
 
-      if (is.null(input$col_vis_input) || all(!nzchar(input$col_vis_input))) {
-        # select argument is everything()
-        return(rlang::quo(dplyr::everything()))
+  col_vis_reactive <- shiny::reactiveValues(columns = NULL)
+
+  shiny::observeEvent(
+    eventExpr = input$col_vis_apply,
+    handlerExpr = {
+      if (is.null(input$col_vis_input)) {
+        shiny::showModal(
+          col_vis_modal(
+            failed = TRUE, ns = session$ns,
+            dictionary = dic_color_choices[['esp']][[get_scenario(
+              mod_data$viz_shape, mod_data$agg_level
+            )]]
+          )
+        )
       } else {
         # select arguments are the variables selected
-        res <- rlang::quos(
-          !!rlang::syms(input$col_vis_input)
+        col_vis_reactive$columns <-  rlang::quo(
+          dplyr::one_of(!!input$col_vis_input)
         )
-        return(res)
+        shiny::removeModal()
       }
     }
   )
@@ -79,37 +99,37 @@ mod_table <- function(
   output$ifn_table <- DT::renderDT(
     server = TRUE,
     expr = {
-      browser()
 
-      table_data_gen()[['core']] %>%
-        dplyr::select(!!! col_vis_reactive()) %>%
-        dplyr::collect() %>%
+      if (is.null(col_vis_reactive$columns)) {
+        data_table_temp <- table_data_gen()[['core']] %>%
+          dplyr::collect()
+      } else {
+        data_table_temp <- table_data_gen()[['core']] %>%
+          dplyr::select(!!! col_vis_reactive$columns) %>%
+          dplyr::collect()
+      }
+
+      data_table_temp %>%
         datatable(
           filter = list(position = 'top', clear = TRUE, plain = FALSE),
           style = 'default', rownames = FALSE,
           fillContainer = TRUE, autoHideNavigation = TRUE,
-          extensions = c('Buttons', 'Scroller'),
+          extensions = c('Scroller'),
           options = list(
-            dom = 'tBi',
-            extend = 'collection',
-            buttons = c('csv', 'colvis'),
-            text = 'Descàrrega',
+            dom = 'ti',
             autoWidth = TRUE,
             deferRender = TRUE, scrollY = '70vh', scroller = TRUE
           )
+        ) %>%
+        formatRound(
+          columns = {
+            data_table_temp %>%
+              purrr::map(is.numeric) %>%
+              purrr::flatten_lgl()
+          },
+          digits = 2
         )
-    }
-  )
 
-  shiny::observeEvent(
-    eventExpr = input$col_vis_button,
-    handlerExpr = {
-      shiny::showModal(
-        col_vis_modal(
-          ns = session$ns,
-          dictionary = dic_color_choices[['esp']][[get_scenario(mod_data$viz_shape, mod_data$agg_level)]]
-        )
-      )
     }
   )
 
