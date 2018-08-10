@@ -44,10 +44,6 @@ mod_table <- function(
 ) {
 
   table_data_gen <- shiny::reactive({
-
-    browser()
-
-
     data_scenario(
       mod_data$admin_div,
       mod_data$admin_div_fil,

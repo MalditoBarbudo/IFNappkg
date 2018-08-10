@@ -951,7 +951,7 @@ table_data_modificator <- function(
   if (scenario == 'scenario4') {
     # inputs needed
     admin_div_val <- admin_div
-    agg_level_val <- glue::glue('id{agg_level')
+    agg_level_val <- glue::glue('id{agg_level}')
 
     return(
       data_scenario[['core']] %>%
