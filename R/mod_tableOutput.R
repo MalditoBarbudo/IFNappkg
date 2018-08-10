@@ -23,7 +23,9 @@ mod_tableOutput <- function(id) {
       ),
       shiny::column(
         4,
-        shiny::actionButton(ns('col_vis_button'), 'Show/Hide Cols')
+        shiny::actionButton(ns('col_vis_button'), 'Show/Hide Cols'),
+        shiny::downloadButton(ns('dwl_csv_button'), 'Save csv'),
+        shiny::downloadButton(ns('dwl_xlsx_button'), 'Save xlsx')
       )
     )
   )
@@ -78,7 +80,7 @@ mod_table <- function(
     eventExpr = input$col_vis_apply,
     handlerExpr = {
 
-      if (is.null(input$col_vis_input)) {
+      if (is.null(input$col_vis_input) || input$col_vis_input == '') {
 
         dictionary <- dic_col_vis_input[['esp']][[get_scenario(
           mod_data$viz_shape, mod_data$agg_level
@@ -94,6 +96,38 @@ mod_table <- function(
         )
         shiny::removeModal()
       }
+    }
+  )
+
+  output$dwl_csv_button <- shiny::downloadHandler(
+    filename = function() {
+      'IFN_data.csv'
+    },
+    content = function(file) {
+      if (is.null(col_vis_reactive$columns) || col_vis_reactive$columns == '') {
+        data_res <- table_data_gen()
+      } else {
+        data_res <- table_data_gen() %>%
+          dplyr::select(!!! col_vis_reactive$columns)
+      }
+
+      readr::write_csv(data_res, file)
+    }
+  )
+
+  output$dwl_xlsx_button <- shiny::downloadHandler(
+    filename = function() {
+      'IFN_data.xlsx'
+    },
+    content = function(file) {
+      if (is.null(col_vis_reactive$columns) || col_vis_reactive$columns == '') {
+        data_res <- table_data_gen()
+      } else {
+        data_res <- table_data_gen() %>%
+          dplyr::select(!!! col_vis_reactive$columns)
+      }
+
+      writexl::write_xlsx(data_res, file)
     }
   )
 
