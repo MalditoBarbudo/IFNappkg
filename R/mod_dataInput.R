@@ -80,18 +80,42 @@ mod_dataInput <- function(id) {
         shiny::fluidRow(
           shiny::column(
             6,
-            shiny::selectInput(
+            # shiny::selectInput(
+            #   ns('admin_div_fil'), label_admin_div_fil[['esp']][['comarca']],
+            #   choices = dic_admin_div_fil_choices[["esp"]][["comarca"]],
+            #   selected = '', multiple = TRUE, width = '100%'
+            # )
+            shinyWidgets::pickerInput(
               ns('admin_div_fil'), label_admin_div_fil[['esp']][['comarca']],
               choices = dic_admin_div_fil_choices[["esp"]][["comarca"]],
-              selected = '', multiple = TRUE, width = '100%'
+              selected = '', multiple = TRUE, width = '100%',
+              options = list(
+                `actions-box` = TRUE,
+                `deselect-all-text` = 'None selected...',
+                `select-all-text` = 'All selected',
+                `selected-text-format` = 'count',
+                `count-selected-text` = "{0} divisions selected (of {1})"
+              )
             )
           ),
           shiny::column(
             6,
-            shiny::selectInput(
+            # shiny::selectInput(
+            #   ns('espai_tipus_fil'), label_espai_tipus_fil[["esp"]][['proteccio']],
+            #   choices = dic_espai_tipus_fil_choices[["esp"]][['proteccio']],
+            #   selected = '', multiple = TRUE, width = '100%'
+            # )
+            shinyWidgets::pickerInput(
               ns('espai_tipus_fil'), label_espai_tipus_fil[["esp"]][['proteccio']],
               choices = dic_espai_tipus_fil_choices[["esp"]][['proteccio']],
-              selected = '', multiple = TRUE, width = '100%'
+              selected = '', multiple = TRUE, width = '100%',
+              options = list(
+                `actions-box` = TRUE,
+                `deselect-all-text` = 'None selected...',
+                `select-all-text` = 'All selected',
+                `selected-text-format` = 'count',
+                `count-selected-text` = "{0} divisions selected (of {1})"
+              )
             )
           )
         ),
@@ -143,14 +167,28 @@ mod_dataInput <- function(id) {
               ns('agg_level'), label_agg_level[['esp']],
               choices = dic_agg_level_choices[['esp']],
               selected = 'parcela', width = '100%'
+            ),
+            shinyWidgets::prettyToggle(
+              ns('diameter_classes'),
+              label_on = label_diam_class[['esp']][['on']],
+              label_off = label_diam_class[['esp']][['off']],
+              icon_on = shiny::icon('tree'),
+              shape = 'curve', plain = TRUE
             )
           ),
           shiny::column(
-            3,
-            shiny::checkboxInput(
-              ns('diameter_classes'), label_diam_class[['esp']],
-              value = FALSE
-            )
+            3
+            # shiny::checkboxInput(
+            #   ns('diameter_classes'), label_diam_class[['esp']],
+            #   value = FALSE
+            # )
+            # shinyWidgets::prettyToggle(
+            #   ns('diameter_classes'),
+            #   label_on = label_diam_class[['esp']][['on']],
+            #   label_off = label_diam_class[['esp']][['off']],
+            #   icon_on = shiny::icon('tree'),
+            #   shape = 'curve', plain = TRUE
+            # )
           )
         )
       )
@@ -190,7 +228,13 @@ mod_data <- function(
       shinyjs::disable('admin_div_fil')
 
     } else {
-      shiny::updateSelectInput(
+      # shiny::updateSelectInput(
+      #   session, 'admin_div_fil',
+      #   label = label_admin_div_fil[["esp"]][[admin_div_sel]],
+      #   choices = dic_admin_div_fil_choices[["esp"]][[admin_div_sel]]
+      # )
+
+      shinyWidgets::updatePickerInput(
         session, 'admin_div_fil',
         label = label_admin_div_fil[["esp"]][[admin_div_sel]],
         choices = dic_admin_div_fil_choices[["esp"]][[admin_div_sel]]
@@ -203,7 +247,12 @@ mod_data <- function(
   shiny::observe({
     # get the protection level and create the choices based on the dic
     espai_tipus_sel <- input$espai_tipus
-    shiny::updateSelectInput(
+    # shiny::updateSelectInput(
+    #   session, 'espai_tipus_fil',
+    #   label = label_espai_tipus_fil[["esp"]][[espai_tipus_sel]],
+    #   choices = dic_espai_tipus_fil_choices[["esp"]][[espai_tipus_sel]]
+    # )
+    shinyWidgets::updatePickerInput(
       session, 'espai_tipus_fil',
       label = label_espai_tipus_fil[["esp"]][[espai_tipus_sel]],
       choices = dic_espai_tipus_fil_choices[["esp"]][[espai_tipus_sel]]

@@ -878,38 +878,39 @@ infopanel_plot_gen <- function(
 
 }
 
-#' Table column visibility selection modal dialog
-#'
-#' @param failed Logical
-#' @param ns session ns
-#' @param dictionary list
-#'
-#' @export
-col_vis_modal <- function(failed = FALSE, ns, dictionary) {
-
-  shiny::modalDialog(
-
-    # inputs
-    shiny::selectInput(
-      ns('col_vis_input'), 'Select the variables to show',
-      choices = dictionary, multiple = TRUE
-    ),
-
-    # check if failed
-    if (failed) {
-      shiny::div(
-        shiny::tags$b("You must select at least one column", style = "color: red;")
-      )
-    },
-
-    # footer
-    footer = shiny::tagList(
-      shiny::modalButton('Cancel'),
-      shiny::actionButton(ns('col_vis_apply'), 'Apply')
-    )
-  )
-
-}
+# Table column visibility selection modal dialog
+#
+# @param failed Logical
+# @param ns session ns
+# @param dictionary list
+#
+# @export
+# col_vis_modal <- function(failed = FALSE, ns, dictionary) {
+#
+#   shiny::modalDialog(
+#
+#     # inputs
+#     shiny::selectInput(
+#       ns('col_vis_input'), 'Select the variables to show',
+#       choices = dictionary, multiple = TRUE
+#     ),
+#
+#     # check if failed
+#     if (failed) {
+#       shiny::div(
+#         shiny::tags$b("You must select at least one column", style = "color: red;")
+#       )
+#     },
+#
+#     # footer
+#     footer = shiny::tagList(
+#       shiny::modalButton('Cancel'),
+#       shiny::actionButton(ns('col_vis_apply'), 'Apply'),
+#       shiny::actionButton(ns('col_vis_reset'), 'Res')
+#     )
+#   )
+#
+# }
 
 #' modifcate the table based on data inputs
 #'

@@ -13,6 +13,7 @@ Imports:
   shiny,
   shinycssloaders,
   shinyjs,
+  shinyWidgets,
   leaflet,
   sp,
   rgdal,

@@ -96,7 +96,10 @@ label_agg_level <- list(
 # diam_class input
 label_diam_class <- list(
   cat = '¿Desglossar per classes diametriques?',
-  esp = '¿Desglosar por clases diamétricas',
+  esp = list(
+    on = 'Desglosado por clases diamétricas',
+    off = 'Sin desglosar por clases diamétricas'
+  ),
   eng = 'Breakdown by diameter classes?'
 )
 
