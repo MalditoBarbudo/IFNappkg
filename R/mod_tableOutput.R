@@ -74,7 +74,7 @@ mod_table <- function(
     ) %>%
       table_data_modificator(
         scenario_reac(),
-        mod_data$admin_div, mod_data$agg_level
+        mod_data$admin_div, mod_data$agg_level, mod_data$diameter_classes
       )
   })
 

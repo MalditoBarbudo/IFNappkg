@@ -920,13 +920,15 @@ infopanel_plot_gen <- function(
 #' @param scenario character indicating the scenario
 #' @param admin_div Input
 #' @param agg_level Input
+#' @param diameter_classes Input
 #'
 #' @export
 table_data_modificator <- function(
   data_scenario,
   scenario,
   admin_div,
-  agg_level
+  agg_level,
+  diameter_classes
 ) {
 
   # scenario 1, plots no breakdown
@@ -945,7 +947,9 @@ table_data_modificator <- function(
     return(
       data_scenario[['core']] %>%
         dplyr::collect() %>%
-        tidyIFN::summarise_polygons(polygon_group = admin_div_val)
+        tidyIFN::summarise_polygons(
+          polygon_group = admin_div_val, cd = diameter_classes
+        )
     )
   }
 
@@ -958,7 +962,8 @@ table_data_modificator <- function(
       data_scenario[['core']] %>%
         dplyr::collect() %>%
         tidyIFN::summarise_polygons(
-          polygon_group = admin_div_val, func_group = agg_level_val
+          polygon_group = admin_div_val, func_group = agg_level_val,
+          cd = diameter_classes
         )
     )
   }
