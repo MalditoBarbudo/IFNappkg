@@ -78,17 +78,14 @@ mod_table <- function(
       )
   })
 
-  shiny::observeEvent(
-    eventExpr = scenario_reac(),
-    handlerExpr = {
+  shiny::observe({
+    cd <- ifelse(mod_data$diameter_classes, 'cd', 'nocd')
 
-      shinyWidgets::updatePickerInput(
-        session, 'col_vis_selector', 'Show/Hide columns',
-        choices = dic_col_vis_input[['esp']][[scenario_reac()]]
-      )
-
-    }
-  )
+    shinyWidgets::updatePickerInput(
+      session, 'col_vis_selector', 'Show/Hide columns',
+      choices = dic_col_vis_input[['esp']][[cd]][[scenario_reac()]]
+    )
+  })
 
 
   # shiny::observeEvent(
