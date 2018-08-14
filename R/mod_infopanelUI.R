@@ -160,8 +160,6 @@ mod_infopanel <- function(
 
     if (click$group == 'idparcela') {
 
-      browser()
-
       sig <- tidyIFN::data_sig(mod_data$ifn, ifndb, idparcela == click$id)
       clima <- tidyIFN::data_clima(sig, mod_data$ifn, ifndb) %>%
         dplyr::collect()
