@@ -4,8 +4,8 @@
 \alias{infopanel_plot_gen}
 \title{genreate the plot for the info panel}
 \usage{
-infopanel_plot_gen(data, click, color, viz_shape, agg_level, diameter_classes,
-  tipo_grup_func)
+infopanel_plot_gen(data, click, color, viz_shape, agg_level,
+  diameter_classes, tipo_grup_func)
 }
 \arguments{
 \item{data}{reactive data}

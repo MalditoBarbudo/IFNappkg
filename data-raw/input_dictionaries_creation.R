@@ -3412,3 +3412,69 @@ dic_col_vis_input <- list(
     )
   )
 )
+
+## mod_advancedFilters inputs ####
+
+# adv_fil_filters variable dictionary
+min_max_to_vec <- function(min, max) {
+
+  res <- list()
+
+  for (i in 1:length(min)) {
+    res[[i]] <- c(min[i], max[i])
+  }
+
+  return(res)
+}
+
+foo <- tidyIFN::ifn_connect('malditobarbudo')
+tbl(foo, 'ifn3_clima') %>%
+  summarise_if(is.numeric, .funs = funs(max), na.rm = TRUE) %>%
+  collect() %>%
+  gather('var', 'value_max') -> max_vars_ifn3
+
+tbl(foo, 'ifn3_clima') %>%
+  summarise_if(is.numeric, .funs = funs(min), na.rm = TRUE) %>%
+  collect() %>%
+  gather('var', 'value_min') %>%
+  full_join(max_vars, by = 'var') -> max_min_vars_ifn3
+
+tbl(foo, 'ifn2_clima') %>%
+  summarise_if(is.numeric, .funs = funs(max), na.rm = TRUE) %>%
+  collect() %>%
+  gather('var', 'value_max') -> max_vars_ifn2
+
+tbl(foo, 'ifn2_clima') %>%
+  summarise_if(is.numeric, .funs = funs(min), na.rm = TRUE) %>%
+  collect() %>%
+  gather('var', 'value_min') %>%
+  full_join(max_vars, by = 'var') %>%
+  bind_rows(max_min_vars_ifn3) %>%
+  group_by(var) %>%
+  summarise(min = min(value_min), max = max(value_max)) -> min_max_summary
+
+value <- min_max_summary %>% group_by(var) %>%
+  do(value = min_max_to_vec(.$min, .$max))
+
+final_summary <- min_max_summary %>%
+  mutate(value = value[['value']],
+         label = var)
+
+final_list <- list()
+
+for (i in 1:nrow(final_summary)) {
+  final_list[[i]] <- list(
+    min = final_summary[['min']][i],
+    max = final_summary[['max']][i],
+    label = final_summary[['label']][i],
+    value = flatten_dbl(final_summary[['value']][[i]])
+  )
+}
+
+names(final_list) <- final_summary[['var']]
+
+pool::poolClose(foo)
+
+dic_adv_fil_filters <- list(
+  esp = final_list
+)

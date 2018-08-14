@@ -7,7 +7,7 @@
 \usage{
 mod_mapUI(id)
 
-mod_map(input, output, session, mod_data, ifndb)
+mod_map(input, output, session, mod_data, mod_advancedFilters, ifndb)
 }
 \arguments{
 \item{id}{shiny id}
@@ -20,10 +20,11 @@ mod_map(input, output, session, mod_data, ifndb)
 
 \item{mod_data}{reactive with the reactive data and the data inputs}
 
+\item{mod_advancedFilters}{reactive with the reactive values from the
+advancedFilters module}
+
 \item{ifndb}{pool with database connection object}
 }
 \description{
 A shiny module to generate the data tables
-
-mod_map server function
 }

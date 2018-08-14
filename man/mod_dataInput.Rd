@@ -20,6 +20,4 @@ mod_data(input, output, session)
 }
 \description{
 A shiny module to create and populate the data inputs
-
-mod_data server function
 }

@@ -16,7 +16,7 @@ names_provincias, names_veguerias, polygons_comarques, polygons_dictionary,
 polygons_enpe, polygons_municipis, polygons_pein, polygons_provincies,
 polygons_vegueries, polygons_xn2000, label_tabpanel_visualization,
 label_infopanel_plot, label_infopanel_variables, label_shape_click_info,
-dic_col_vis_input,
+dic_col_vis_input, dic_adv_fil_filters,
 
 internal = TRUE, overwrite = TRUE
 )

@@ -48,13 +48,15 @@ mod_tableOutput <- function(id) {
 #' @param output internal
 #' @param session internal
 #' @param mod_data reactive with the reactive data and the data inputs
+#' @param mod_advancedFilters reactive with the reactive values from
+#'   advancedFilters module
 #'
 #' @export
 #'
 #' @rdname mod_tableOutput
 mod_table <- function(
   input, output, session,
-  mod_data
+  mod_data, mod_advancedFilters
 ) {
 
   scenario_reac <- shiny::reactive({
@@ -70,7 +72,8 @@ mod_table <- function(
       mod_data$ifn,
       ifndb,
       mod_data$agg_level,
-      mod_data$diameter_classes
+      mod_data$diameter_classes,
+      mod_advancedFilters$adv_fil_expressions()
     ) %>%
       table_data_modificator(
         scenario_reac(),

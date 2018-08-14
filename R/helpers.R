@@ -42,6 +42,8 @@ get_scenario <- function(viz_shape, agg_level) {
 #' @param ifndb  Database pool object
 #' @param agg_level  Input
 #' @param diameter_classes  Input
+#' @param clima_filters reactive from mod_advancedFilters with the clima filters
+#'   quos
 #'
 #' @export
 data_scenario <- function(
@@ -52,7 +54,8 @@ data_scenario <- function(
   ifn,
   ifndb,
   agg_level,
-  diameter_classes
+  diameter_classes,
+  clima_filters
 ) {
 
   ## SIG data
@@ -90,7 +93,7 @@ data_scenario <- function(
   sig <- tidyIFN::data_sig(ifn, ifndb, !!! sig_filters)
 
   ## CLIMA data
-  clima_filters <- dplyr::quo(TRUE)
+  # clima_filters <- dplyr::quo(TRUE)
   clima <- tidyIFN::data_clima(sig, ifn, ifndb, !!! clima_filters)
   clima_plots <- clima %>% dplyr::pull(idparcela)
 

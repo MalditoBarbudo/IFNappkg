@@ -20,6 +20,8 @@ mod_mapUI <- function(id) {
 #' @param session internal
 #'
 #' @param mod_data reactive with the reactive data and the data inputs
+#' @param mod_advancedFilters reactive with the reactive values from the
+#'   advancedFilters module
 #' @param ifndb pool with database connection object
 #'
 #' @export
@@ -27,7 +29,7 @@ mod_mapUI <- function(id) {
 #' @rdname mod_mapUI
 mod_map <- function(
   input, output, session,
-  mod_data, ifndb
+  mod_data, mod_advancedFilters, ifndb
 ) {
 
   # noms division
@@ -181,7 +183,8 @@ mod_map <- function(
         mod_data$ifn,
         ifndb,
         mod_data$agg_level,
-        diameter_classes = FALSE
+        diameter_classes = FALSE,
+        mod_advancedFilters$adv_fil_expressions()
       ) %>%
         map_modificator(
           input_scenario(),

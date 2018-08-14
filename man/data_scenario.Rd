@@ -5,7 +5,7 @@
 \title{Get a list woth sig, clima and core data}
 \usage{
 data_scenario(admin_div, admin_div_fil, espai_tipus, espai_tipus_fil, ifn,
-  ifndb, agg_level, diameter_classes)
+  ifndb, agg_level, diameter_classes, clima_filters)
 }
 \arguments{
 \item{admin_div}{Input}
@@ -23,6 +23,9 @@ data_scenario(admin_div, admin_div_fil, espai_tipus, espai_tipus_fil, ifn,
 \item{agg_level}{Input}
 
 \item{diameter_classes}{Input}
+
+\item{clima_filters}{reactive from mod_advancedFilters with the clima filters
+quos}
 }
 \description{
 sig, clima and core data for the corresponding agg level
