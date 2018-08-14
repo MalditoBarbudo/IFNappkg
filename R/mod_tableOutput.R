@@ -73,7 +73,7 @@ mod_table <- function(
       ifndb,
       mod_data$agg_level,
       mod_data$diameter_classes,
-      mod_advancedFilters$adv_fil_expressions()
+      mod_advancedFilters$adv_fil_clima_expressions()
     ) %>%
       table_data_modificator(
         scenario_reac(),

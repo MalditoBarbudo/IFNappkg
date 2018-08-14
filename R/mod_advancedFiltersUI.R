@@ -25,11 +25,11 @@ mod_advancedFiltersUI <- function(id) {
         shiny::h3('Filtros Avanzados'),
         shiny::fluidRow(
           shiny::column(
-            3,
+            4, offset = 2
             # picker input to select the variables to filter
             shinyWidgets::pickerInput(
-              ns('adv_fil_vars'), 'Selecciona las variables',
-              choices = names(dic_adv_fil_filters[['esp']]),
+              ns('adv_fil_clima_vars'), 'Variables climáticas',
+              choices = names(dic_adv_fil_clima_filters[['esp']]),
               multiple = TRUE,
               options = list(
                 `actions-box` = TRUE,
@@ -41,12 +41,23 @@ mod_advancedFiltersUI <- function(id) {
             )
           ),
           shiny::column(
-            9,
-            # uiOutput, we need to create the filters on the fly based on the variables
-            # selected in adv_fil_vars
-            shiny::uiOutput(ns('adv_fil_filters'))
+            4,
+            # picker input to select the variables to filter
+            shinyWidgets::pickerInput(
+              ns('adv_fil_sig_vars'), 'Variables SIG',
+              choices = names(dic_adv_fil_sig_filters[['esp']]),
+              multiple = TRUE,
+              options = list(
+                `actions-box` = TRUE,
+                `deselect-all-text` = 'None selected...',
+                `select-all-text` = 'All selected',
+                `selected-text-format` = 'count',
+                `count-selected-text` = "{0} variables selected (of {1})"
+              )
+            )
           )
-        )
+        ),
+        shiny::uiOutput(ns('adv_fil_filters'))
       )
     )
   )
@@ -68,8 +79,13 @@ mod_advancedFilters <- function(
 
   # reactive to get the variables selected, but debounced 1 sec to avoid to much
   # refreshes
-  adv_fil_variables <- shiny::reactive({
-    input$adv_fil_vars
+  adv_fil_clima_variables <- shiny::reactive({
+    input$adv_fil_clima_vars
+  }) %>%
+    shiny::debounce(1000)
+
+  adv_fil_sig_variables <- shiny::reactive({
+    input$adv_fil_sig_vars
   }) %>%
     shiny::debounce(1000)
 
@@ -80,37 +96,78 @@ mod_advancedFilters <- function(
     ns <- session$ns
 
     # we create the input list with lapply, easy peachy
-    inputs_list <- shiny::reactive({
+    clima_inputs_list <- shiny::reactive({
       lapply(
-        input$adv_fil_vars, function(var) {
+        input$adv_fil_clima_vars, function(var) {
           shinyWidgets::noUiSliderInput(
-            ns(var), label = dic_adv_fil_filters[['esp']][[var]][['label']],
-            min = dic_adv_fil_filters[['esp']][[var]][['min']],
-            max = dic_adv_fil_filters[['esp']][[var]][['max']],
-            value = dic_adv_fil_filters[['esp']][[var]][['value']],
+            ns(var), label = dic_adv_fil_clima_filters[['esp']][[var]][['label']],
+            min = dic_adv_fil_clima_filters[['esp']][[var]][['min']],
+            max = dic_adv_fil_clima_filters[['esp']][[var]][['max']],
+            value = dic_adv_fil_clima_filters[['esp']][[var]][['value']],
             orientation = 'horizontal', direction = 'ltr',
             behaviour = c('drag', 'tap'),
-            format = shinyWidgets::wNumbFormat(decimals = 1),
-            inline = TRUE
+            format = shinyWidgets::wNumbFormat(decimals = 1)
           )
         }
       )
     })
 
-    shiny::tagList(inputs_list())
+    sig_inputs_list <- shiny::reactive({
+      lapply(
+        input$adv_fil_sig_vars, function(var) {
+          shinyWidgets::noUiSliderInput(
+            ns(var), label = dic_adv_fil_sig_filters[['esp']][[var]][['label']],
+            min = dic_adv_fil_sig_filters[['esp']][[var]][['min']],
+            max = dic_adv_fil_sig_filters[['esp']][[var]][['max']],
+            value = dic_adv_fil_sig_filters[['esp']][[var]][['value']],
+            orientation = 'horizontal', direction = 'ltr',
+            behaviour = c('drag', 'tap'),
+            format = shinyWidgets::wNumbFormat(decimals = 1)
+          )
+        }
+      )
+    })
+
+    shiny::tagList(
+      shiny::fluidRow(
+        column(4, offset = 2, clima_inputs_list()),
+        column(4, sig_inputs_list())
+      )
+    )
   })
 
   # quo filter expression constructor
-  adv_fil_expressions <- reactive({
+  adv_fil_clima_expressions <- reactive({
 
-    # check if adv_fil_variables is null or empty, to avoid problems in
+    # check if adv_fil_clima_variables is null or empty, to avoid problems in
     # data_scenario helper function
-    if(is.null(adv_fil_variables()) || adv_fil_variables() == '') {
+    if(is.null(adv_fil_clima_variables()) || adv_fil_clima_variables() == '') {
       return(quo(TRUE))
     }
 
     # get the vars
-    vars <- adv_fil_variables()
+    vars <- adv_fil_clima_variables()
+    # return the list of quos to supply to tidyIFN::data_clima
+    lapply(
+      vars,
+      function(var) {
+        rlang::quo(
+          between(!!sym(var), !!input[[var]][1], !!input[[var]][2])
+        )
+      }
+    )
+  })
+
+  adv_fil_sig_expressions <- reactive({
+
+    # check if adv_fil_clima_variables is null or empty, to avoid problems in
+    # data_scenario helper function
+    if(is.null(adv_fil_sig_variables()) || adv_fil_sig_variables() == '') {
+      return(quo(TRUE))
+    }
+
+    # get the vars
+    vars <- adv_fil_sig_variables()
     # return the list of quos to supply to tidyIFN::data_clima
     lapply(
       vars,
@@ -124,7 +181,8 @@ mod_advancedFilters <- function(
 
   mod_advancedFilters_reactives <- shiny::reactiveValues()
   shiny::observe({
-    mod_advancedFilters_reactives$adv_fil_expressions <- adv_fil_expressions
+    mod_advancedFilters_reactives$adv_fil_clima_expressions <- adv_fil_clima_expressions
+    mod_advancedFilters_reactives$adv_fil_sig_expressions <- adv_fil_sig_expressions
   })
 
   return(mod_advancedFilters_reactives)

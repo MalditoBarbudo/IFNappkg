@@ -3475,6 +3475,6 @@ names(final_list) <- final_summary[['var']]
 
 pool::poolClose(foo)
 
-dic_adv_fil_filters <- list(
+dic_adv_fil_clima_filters <- list(
   esp = final_list
 )
