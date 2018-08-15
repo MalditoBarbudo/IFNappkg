@@ -25,7 +25,7 @@ mod_advancedFiltersUI <- function(id) {
         shiny::h3('Filtros Avanzados'),
         shiny::fluidRow(
           shiny::column(
-            4, offset = 2
+            4, offset = 2,
             # picker input to select the variables to filter
             shinyWidgets::pickerInput(
               ns('adv_fil_clima_vars'), 'Variables climáticas',

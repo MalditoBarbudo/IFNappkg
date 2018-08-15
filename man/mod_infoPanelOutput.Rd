@@ -4,7 +4,8 @@
 \alias{mod_infopanel}
 \title{mod_infopanel server function}
 \usage{
-mod_infopanel(input, output, session, mod_data, mod_map, ifndb)
+mod_infopanel(input, output, session, mod_data, mod_map,
+  mod_advancedFilters, ifndb)
 }
 \arguments{
 \item{input}{internal}
@@ -16,6 +17,9 @@ mod_infopanel(input, output, session, mod_data, mod_map, ifndb)
 \item{mod_data}{reactive with the reactive data and the data inputs}
 
 \item{mod_map}{reactive with the map events from the map module}
+
+\item{mod_advancedFilters}{reactive with the reactive values from
+advancedFilters module}
 
 \item{ifndb}{pool with database connection object}
 }

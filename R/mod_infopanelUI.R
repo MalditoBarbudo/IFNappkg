@@ -57,6 +57,8 @@ mod_infopanelUI <- function(id) {
 #'
 #' @param mod_data reactive with the reactive data and the data inputs
 #' @param mod_map reactive with the map events from the map module
+#' @param mod_advancedFilters reactive with the reactive values from
+#'   advancedFilters module
 #' @param ifndb pool with database connection object
 #'
 #' @export
@@ -64,7 +66,7 @@ mod_infopanelUI <- function(id) {
 #' @rdname mod_infoPanelOutput
 mod_infopanel <- function(
   input, output, session,
-  mod_data, mod_map, ifndb
+  mod_data, mod_map, mod_advancedFilters, ifndb
 ) {
 
   # hide infoPanel
@@ -112,7 +114,7 @@ mod_infopanel <- function(
       click_fil <- dplyr::quo(!!rlang::sym(click$group) == click$id)
 
      # data
-      data_scenario(
+      temp_res <- data_scenario(
         mod_data$admin_div,
         mod_data$admin_div_fil,
         mod_data$espai_tipus,
@@ -120,11 +122,26 @@ mod_infopanel <- function(
         mod_data$ifn,
         ifndb,
         mod_data$agg_level,
-        mod_data$diameter_classes
-      )[['core']] %>%
-        dplyr::filter(!!! click_fil) %>%
-        dplyr::collect()
+        mod_data$diameter_classes,
+        mod_advancedFilters$adv_fil_clima_expressions(),
+        mod_advancedFilters$adv_fil_sig_expressions()
+      )
 
+      temp_res[['core']] <- temp_res[['core']] %>%
+        dplyr::filter(!!! click_fil)
+
+      temp_res[['sig']] <- temp_res[['sig']] %>%
+        dplyr::filter(!!! click_fil)
+
+      plots <- temp_res[['sig']] %>%
+        dplyr::select(idparcela) %>%
+        dplyr::collect() %>%
+        purrr::flatten_chr()
+
+      temp_res[['clima']] <- temp_res[['clima']] %>%
+        dplyr::filter(idparcela %in% plots)
+
+      return(temp_res)
     }
   )
 
@@ -134,16 +151,19 @@ mod_infopanel <- function(
     valueExpr = {
 
       # validate that plotting is possible
+      core <- data_infopanel()[['core']] %>%
+        dplyr::collect()
+
       shiny::validate(
         shiny::need(
-          expr = !is.null(data_infopanel()[[mod_data$color]]),
+          expr = !is.null(core[[mod_data$color]]),
           message = 'Selected color variable is not available in the data'
         )
       )
 
       # create the plot
       infopanel_plot_gen(
-        data_infopanel, mod_map$map_shape_click, mod_data$color,
+        core, mod_map$map_shape_click, mod_data$color,
         mod_data$viz_shape, mod_data$agg_level, mod_data$diameter_classes,
         mod_data$tipo_grup_func
       )
@@ -160,10 +180,10 @@ mod_infopanel <- function(
 
     if (click$group == 'idparcela') {
 
-      sig <- tidyIFN::data_sig(mod_data$ifn, ifndb, idparcela == click$id)
-      clima <- tidyIFN::data_clima(sig, mod_data$ifn, ifndb) %>%
+      sig <- data_infopanel()[['sig']] %>%
         dplyr::collect()
-      sig <- sig %>% dplyr::collect()
+      clima <- data_infopanel()[['clima']] %>%
+        dplyr::collect()
 
       shiny::tagList(
         # header
@@ -194,12 +214,10 @@ mod_infopanel <- function(
 
     } else {
 
-      sig <- tidyIFN::data_sig(
-        mod_data$ifn, ifndb, !!rlang::sym(mod_data$admin_div) == click$id
-      )
-      clima <- tidyIFN::data_clima(sig, mod_data$ifn, ifndb) %>%
+      sig <- data_infopanel()[['sig']] %>%
         dplyr::collect()
-      sig <- sig %>% dplyr::collect()
+      clima <- data_infopanel()[['clima']] %>%
+        dplyr::collect()
 
       shiny::tagList(
         # header

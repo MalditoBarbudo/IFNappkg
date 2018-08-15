@@ -184,7 +184,8 @@ mod_map <- function(
         ifndb,
         mod_data$agg_level,
         diameter_classes = FALSE,
-        mod_advancedFilters$adv_fil_clima_expressions()
+        mod_advancedFilters$adv_fil_clima_expressions(),
+        mod_advancedFilters$adv_fil_sig_expressions()
       ) %>%
         map_modificator(
           input_scenario(),

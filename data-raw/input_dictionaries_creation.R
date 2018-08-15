@@ -3415,7 +3415,7 @@ dic_col_vis_input <- list(
 
 ## mod_advancedFilters inputs ####
 
-# adv_fil_filters variable dictionary
+# adv_fil_filters variable dictionaries
 min_max_to_vec <- function(min, max) {
 
   res <- list()
@@ -3427,54 +3427,107 @@ min_max_to_vec <- function(min, max) {
   return(res)
 }
 
-foo <- tidyIFN::ifn_connect('malditobarbudo')
-tbl(foo, 'ifn3_clima') %>%
+conn <- tidyIFN::ifn_connect('malditobarbudo')
+
+# clima
+tbl(conn, 'ifn3_clima') %>%
   summarise_if(is.numeric, .funs = funs(max), na.rm = TRUE) %>%
   collect() %>%
-  gather('var', 'value_max') -> max_vars_ifn3
+  gather('var', 'value_max') -> clima_max_vars_ifn3
 
-tbl(foo, 'ifn3_clima') %>%
+tbl(conn, 'ifn3_clima') %>%
   summarise_if(is.numeric, .funs = funs(min), na.rm = TRUE) %>%
   collect() %>%
   gather('var', 'value_min') %>%
-  full_join(max_vars, by = 'var') -> max_min_vars_ifn3
+  full_join(clima_max_vars_ifn3, by = 'var') -> clima_max_min_vars_ifn3
 
-tbl(foo, 'ifn2_clima') %>%
+tbl(conn, 'ifn2_clima') %>%
   summarise_if(is.numeric, .funs = funs(max), na.rm = TRUE) %>%
   collect() %>%
-  gather('var', 'value_max') -> max_vars_ifn2
+  gather('var', 'value_max') -> clima_max_vars_ifn2
 
-tbl(foo, 'ifn2_clima') %>%
+tbl(conn, 'ifn2_clima') %>%
   summarise_if(is.numeric, .funs = funs(min), na.rm = TRUE) %>%
   collect() %>%
   gather('var', 'value_min') %>%
-  full_join(max_vars, by = 'var') %>%
-  bind_rows(max_min_vars_ifn3) %>%
+  full_join(clima_max_vars_ifn2, by = 'var') %>%
+  bind_rows(clima_max_min_vars_ifn3) %>%
   group_by(var) %>%
-  summarise(min = min(value_min), max = max(value_max)) -> min_max_summary
+  summarise(min = min(value_min), max = max(value_max)) -> clima_min_max_summary
 
-value <- min_max_summary %>% group_by(var) %>%
+clima_value <- clima_min_max_summary %>% group_by(var) %>%
   do(value = min_max_to_vec(.$min, .$max))
 
-final_summary <- min_max_summary %>%
-  mutate(value = value[['value']],
+clima_final_summary <- clima_min_max_summary %>%
+  mutate(value = clima_value[['value']],
          label = var)
 
-final_list <- list()
+clima_final_list <- list()
 
-for (i in 1:nrow(final_summary)) {
-  final_list[[i]] <- list(
-    min = final_summary[['min']][i],
-    max = final_summary[['max']][i],
-    label = final_summary[['label']][i],
-    value = flatten_dbl(final_summary[['value']][[i]])
+for (i in 1:nrow(clima_final_summary)) {
+  clima_final_list[[i]] <- list(
+    min = clima_final_summary[['min']][i],
+    max = clima_final_summary[['max']][i],
+    label = clima_final_summary[['label']][i],
+    value = flatten_dbl(clima_final_summary[['value']][[i]])
   )
 }
 
-names(final_list) <- final_summary[['var']]
-
-pool::poolClose(foo)
+names(clima_final_list) <- clima_final_summary[['var']]
 
 dic_adv_fil_clima_filters <- list(
-  esp = final_list
+  esp = clima_final_list
+)
+
+# sig extra filters
+tbl(conn, 'ifn3_sig') %>%
+  summarise_if(is.numeric, .funs = funs(max), na.rm = TRUE) %>%
+  collect() %>%
+  gather('var', 'value_max') -> sig_max_vars_ifn3
+
+tbl(conn, 'ifn3_sig') %>%
+  summarise_if(is.numeric, .funs = funs(min), na.rm = TRUE) %>%
+  collect() %>%
+  gather('var', 'value_min') %>%
+  full_join(sig_max_vars_ifn3, by = 'var') -> sig_max_min_vars_ifn3
+
+tbl(conn, 'ifn2_sig') %>%
+  summarise_if(is.numeric, .funs = funs(max), na.rm = TRUE) %>%
+  collect() %>%
+  gather('var', 'value_max') -> sig_max_vars_ifn2
+
+tbl(conn, 'ifn2_sig') %>%
+  summarise_if(is.numeric, .funs = funs(min), na.rm = TRUE) %>%
+  collect() %>%
+  gather('var', 'value_min') %>%
+  full_join(sig_max_vars_ifn2, by = 'var') %>%
+  bind_rows(sig_max_min_vars_ifn3) %>%
+  group_by(var) %>%
+  summarise(min = min(value_min), max = max(value_max)) -> sig_min_max_summary
+
+sig_value <- sig_min_max_summary %>% group_by(var) %>%
+  do(value = min_max_to_vec(.$min, .$max))
+
+sig_final_summary <- sig_min_max_summary %>%
+  mutate(value = sig_value[['value']],
+         label = var) %>%
+  filter(var %in% c('altitud', 'orientacio', 'pendentgraus', 'pendentpercentatge'))
+
+sig_final_list <- list()
+
+for (i in 1:nrow(sig_final_summary)) {
+  sig_final_list[[i]] <- list(
+    min = sig_final_summary[['min']][i],
+    max = sig_final_summary[['max']][i],
+    label = sig_final_summary[['label']][i],
+    value = flatten_dbl(sig_final_summary[['value']][[i]])
+  )
+}
+
+names(sig_final_list) <- sig_final_summary[['var']]
+
+pool::poolClose(conn)
+
+dic_adv_fil_sig_filters <- list(
+  esp = sig_final_list
 )

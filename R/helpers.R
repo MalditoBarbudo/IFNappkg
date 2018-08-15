@@ -44,6 +44,8 @@ get_scenario <- function(viz_shape, agg_level) {
 #' @param diameter_classes  Input
 #' @param clima_filters reactive from mod_advancedFilters with the clima filters
 #'   quos
+#' @param sig_extra_filters reactive from mod_advancedFilters with the extra
+#'   sig filters quos
 #'
 #' @export
 data_scenario <- function(
@@ -55,13 +57,14 @@ data_scenario <- function(
   ifndb,
   agg_level,
   diameter_classes,
-  clima_filters
+  clima_filters,
+  sig_extra_filters
 ) {
 
   ## SIG data
   # admin_div filter
   if (is.null(admin_div_fil)) {
-    filter_expr_admin <- rlang::quo(TRUE)
+    filter_expr_admin <- NULL
   } else {
     filter_expr_admin <- rlang::quo(
       !!rlang::sym(admin_div) %in% !!admin_div_fil
@@ -71,7 +74,7 @@ data_scenario <- function(
   # espai tipus filter
   if (is.null(espai_tipus_fil) ||
       any(espai_tipus_fil == '')) {
-    filter_expr_espai <- rlang::quo(TRUE)
+    filter_expr_espai <- NULL
   } else {
     # here we need also to check for nomes protegits and sense proteccio
     # to be able to filter these cases
@@ -88,17 +91,22 @@ data_scenario <- function(
     }
   }
 
-  sig_filters <- list(filter_expr_admin, filter_expr_espai)
+  # get the expressions for filters and remove the nulls
+  # sig_filters <- rlang::exprs(
+  #   !!filter_expr_admin, !!filter_expr_espai, !!!sig_extra_filters
+  # ) %>%
+  #   purrr::compact()
 
-  sig <- tidyIFN::data_sig(ifn, ifndb, !!! sig_filters)
+  sig <- tidyIFN::data_sig(
+    ifn, ifndb,
+    !!! filter_expr_admin, !!! filter_expr_espai, !!! sig_extra_filters
+  )
 
   ## CLIMA data
-  # clima_filters <- dplyr::quo(TRUE)
   clima <- tidyIFN::data_clima(sig, ifn, ifndb, !!! clima_filters)
   clima_plots <- clima %>% dplyr::pull(idparcela)
 
   ## CORE data
-
   core <- tidyIFN::data_core(
     sig, ifn, agg_level, ifndb, clima_plots, diameter_classes
   )
@@ -660,7 +668,7 @@ infopanel_plot_gen <- function(
           label_infopanel_plot[['esp']][['cd']][[scenario]][['plot']][['subtitle']]
         )
 
-        infopanel_plot <- data() %>%
+        infopanel_plot <- data %>%
           ggplot2::ggplot(
             ggplot2::aes(
               x = !! x_var_plot, y = !! y_var_plot, fill = !! fill_var_plot
@@ -687,7 +695,7 @@ infopanel_plot_gen <- function(
           label_infopanel_plot[['esp']][['cd']][[scenario]][['plot']][['subtitle']]
         )
 
-        infopanel_plot <- data() %>%
+        infopanel_plot <- data %>%
           ggplot2::ggplot(
             ggplot2::aes(
               x = !! x_var_plot, y = !! y_var_plot,
@@ -718,7 +726,7 @@ infopanel_plot_gen <- function(
           label_infopanel_plot[['esp']][['cd']][[scenario]][['polygon']][['subtitle']]
         )
 
-        infopanel_plot <- data() %>%
+        infopanel_plot <- data %>%
           ggplot2::ggplot(
             ggplot2::aes(
               x = !! x_var_plot, y = !! y_var_plot, fill = !! fill_var_plot
@@ -745,7 +753,7 @@ infopanel_plot_gen <- function(
           label_infopanel_plot[['esp']][['cd']][[scenario]][['polygon']][['subtitle']]
         )
 
-        infopanel_plot <- data() %>%
+        infopanel_plot <- data %>%
           ggplot2::ggplot(
             ggplot2::aes(
               x = !! x_var_plot, y = !! y_var_plot, fill = !! fill_var_plot
@@ -779,7 +787,7 @@ infopanel_plot_gen <- function(
           label_infopanel_plot[['esp']][['nocd']][[scenario]][['plot']][['subtitle']]
         )
 
-        infopanel_plot <- data() %>%
+        infopanel_plot <- data %>%
           ggplot2::ggplot(
             ggplot2::aes(
               x = !! x_var_plot, y = !! y_var_plot, fill = !! fill_var_plot
@@ -806,7 +814,7 @@ infopanel_plot_gen <- function(
           label_infopanel_plot[['esp']][['nocd']][[scenario]][['plot']][['subtitle']]
         )
 
-        infopanel_plot <- data() %>%
+        infopanel_plot <- data %>%
           ggplot2::ggplot(
             ggplot2::aes(
               x = !! x_var_plot, y = !! y_var_plot, fill = !! fill_var_plot
@@ -835,7 +843,7 @@ infopanel_plot_gen <- function(
           label_infopanel_plot[['esp']][['nocd']][[scenario]][['polygon']][['subtitle']]
         )
 
-        infopanel_plot <- data() %>%
+        infopanel_plot <- data %>%
           ggplot2::ggplot(
             ggplot2::aes(
               x = !! x_var_plot, y = !! y_var_plot, fill = !! fill_var_plot
@@ -862,7 +870,7 @@ infopanel_plot_gen <- function(
           label_infopanel_plot[['esp']][['nocd']][[scenario]][['polygon']][['subtitle']]
         )
 
-        infopanel_plot <- data() %>%
+        infopanel_plot <- data %>%
           ggplot2::ggplot(
             ggplot2::aes(
               x = !! x_var_plot, y = !! y_var_plot, fill = !! fill_var_plot
