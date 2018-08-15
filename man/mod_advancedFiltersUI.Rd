@@ -7,7 +7,7 @@
 \usage{
 mod_advancedFiltersUI(id)
 
-mod_advancedFilters(input, output, session)
+mod_advancedFilters(input, output, session, mod_data)
 }
 \arguments{
 \item{id}{shiny id}
@@ -17,6 +17,9 @@ mod_advancedFilters(input, output, session)
 \item{output}{internal}
 
 \item{session}{internal}
+
+\item{mod_data}{mod_data reactives, to get when button to show advanced
+filters is pressed}
 }
 \description{
 A shiny module to process the advanced filters

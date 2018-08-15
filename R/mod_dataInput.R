@@ -139,8 +139,15 @@ mod_dataInput <- function(id) {
         shiny::fluidRow(
           shiny::column(
             4, offset = 2,
-            shiny::actionButton(
-              ns('show_adv_fils'), label_show_adv_fils[['esp']], width = '100%'
+            # shiny::actionButton(
+            #   ns('show_adv_fils'), label_show_adv_fils[['esp']], width = '100%'
+            # )
+            shinyWidgets::actionBttn(
+              ns('show_adv_fils'), label_show_adv_fils[['esp']],
+              icon = icon('eye'),
+              style = "material-flat",
+              block = TRUE,
+              size = 'sm'
             )
           ),
 
@@ -269,6 +276,7 @@ mod_data <- function(
     data_reactives$espai_tipus <- input$espai_tipus
     data_reactives$admin_div_fil <- input$admin_div_fil
     data_reactives$espai_tipus_fil <- input$espai_tipus_fil
+    data_reactives$show_adv_fils <- input$show_adv_fils
     data_reactives$apply_filters <- input$apply_filters
     data_reactives$agg_level <- input$agg_level
     data_reactives$diameter_classes <- input$diameter_classes

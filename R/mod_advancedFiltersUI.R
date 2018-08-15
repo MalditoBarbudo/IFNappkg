@@ -13,51 +13,64 @@ mod_advancedFiltersUI <- function(id) {
   # ui
   shiny::tagList(
 
-    shiny::absolutePanel(
-      # panel settings
-      id = 'advancedFiltersControls', class = 'panel panel-default',
-      fixed = TRUE, draggable = TRUE, width = '80%', height = 'auto',
-      top = '10%', right = '10%', left = 'auto', bottom = 'auto',
+    shinyjs::hidden(
+      shiny::absolutePanel(
+        # panel settings
+        id = ns('advancedFiltersControls'), class = 'panel panel-default',
+        fixed = TRUE, draggable = TRUE, width = '80%', height = 'auto',
+        top = '10%', right = '10%', left = 'auto', bottom = 'auto',
 
-      shiny::div(
-        id = 'advFil',
+        shiny::div(
+          id = 'advFil',
 
-        shiny::h3('Filtros Avanzados'),
-        shiny::fluidRow(
-          shiny::column(
-            4, offset = 2,
-            # picker input to select the variables to filter
-            shinyWidgets::pickerInput(
-              ns('adv_fil_clima_vars'), 'Variables climáticas',
-              choices = names(dic_adv_fil_clima_filters[['esp']]),
-              multiple = TRUE,
-              options = list(
-                `actions-box` = TRUE,
-                `deselect-all-text` = 'None selected...',
-                `select-all-text` = 'All selected',
-                `selected-text-format` = 'count',
-                `count-selected-text` = "{0} variables selected (of {1})"
+          shiny::fluidRow(
+            shiny::column(
+              4, shiny::h3('Filtros Avanzados')
+            ),
+            shiny::column(
+              1, offset = 7,
+              shinyWidgets::circleButton(
+                ns('close_adv_fils'), icon = icon('times'),
+                status = 'danger', size = 'sm'
               )
             )
           ),
-          shiny::column(
-            4,
-            # picker input to select the variables to filter
-            shinyWidgets::pickerInput(
-              ns('adv_fil_sig_vars'), 'Variables SIG',
-              choices = names(dic_adv_fil_sig_filters[['esp']]),
-              multiple = TRUE,
-              options = list(
-                `actions-box` = TRUE,
-                `deselect-all-text` = 'None selected...',
-                `select-all-text` = 'All selected',
-                `selected-text-format` = 'count',
-                `count-selected-text` = "{0} variables selected (of {1})"
+          shiny::fluidRow(
+            shiny::column(
+              4, offset = 2,
+              # picker input to select the variables to filter
+              shinyWidgets::pickerInput(
+                ns('adv_fil_clima_vars'), 'Variables climáticas',
+                choices = names(dic_adv_fil_clima_filters[['esp']]),
+                multiple = TRUE,
+                options = list(
+                  `actions-box` = TRUE,
+                  `deselect-all-text` = 'None selected...',
+                  `select-all-text` = 'All selected',
+                  `selected-text-format` = 'count',
+                  `count-selected-text` = "{0} variables selected (of {1})"
+                )
+              )
+            ),
+            shiny::column(
+              4,
+              # picker input to select the variables to filter
+              shinyWidgets::pickerInput(
+                ns('adv_fil_sig_vars'), 'Variables SIG',
+                choices = names(dic_adv_fil_sig_filters[['esp']]),
+                multiple = TRUE,
+                options = list(
+                  `actions-box` = TRUE,
+                  `deselect-all-text` = 'None selected...',
+                  `select-all-text` = 'All selected',
+                  `selected-text-format` = 'count',
+                  `count-selected-text` = "{0} variables selected (of {1})"
+                )
               )
             )
-          )
-        ),
-        shiny::uiOutput(ns('adv_fil_filters'))
+          ),
+          shiny::uiOutput(ns('adv_fil_filters'))
+        )
       )
     )
   )
@@ -67,6 +80,8 @@ mod_advancedFiltersUI <- function(id) {
 #' @param input internal
 #' @param output internal
 #' @param session internal
+#' @param mod_data mod_data reactives, to get when button to show advanced
+#'   filters is pressed
 #'
 #' @export
 #'
@@ -74,8 +89,25 @@ mod_advancedFiltersUI <- function(id) {
 #'
 #' @rdname mod_advancedFiltersUI
 mod_advancedFilters <- function(
-  input, output, session
+  input, output, session,
+  mod_data
 ) {
+
+  # show the panel when the button is pressed
+  shiny::observeEvent(
+    eventExpr = mod_data$show_adv_fils,
+    handlerExpr = {
+      shinyjs::showElement(id = 'advancedFiltersControls')
+    }
+  )
+
+  # toggle the panel when close button is pressed
+  shiny::observeEvent(
+    eventExpr = input$close_adv_fils,
+    handlerExpr = {
+      shinyjs::hideElement(id = 'advancedFiltersControls')
+    }
+  )
 
   # reactive to get the variables selected, but debounced 1 sec to avoid to much
   # refreshes
