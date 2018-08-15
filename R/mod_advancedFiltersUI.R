@@ -17,8 +17,8 @@ mod_advancedFiltersUI <- function(id) {
       shiny::absolutePanel(
         # panel settings
         id = ns('advancedFiltersControls'), class = 'panel panel-default',
-        fixed = TRUE, draggable = TRUE, width = '80%', height = 'auto',
-        top = '10%', right = '10%', left = 'auto', bottom = 'auto',
+        fixed = TRUE, draggable = FALSE, width = '50%', height = 'auto',
+        top = 'auto', right = '25%', left = 'auto', bottom = '2px',
 
         shiny::div(
           id = 'advFil',
@@ -37,7 +37,7 @@ mod_advancedFiltersUI <- function(id) {
           ),
           shiny::fluidRow(
             shiny::column(
-              4, offset = 2,
+              6,
               # picker input to select the variables to filter
               shinyWidgets::pickerInput(
                 ns('adv_fil_clima_vars'), 'Variables climáticas',
@@ -53,7 +53,7 @@ mod_advancedFiltersUI <- function(id) {
               )
             ),
             shiny::column(
-              4,
+              6,
               # picker input to select the variables to filter
               shinyWidgets::pickerInput(
                 ns('adv_fil_sig_vars'), 'Variables SIG',
@@ -162,8 +162,8 @@ mod_advancedFilters <- function(
 
     shiny::tagList(
       shiny::fluidRow(
-        column(4, offset = 2, clima_inputs_list()),
-        column(4, sig_inputs_list())
+        column(6, clima_inputs_list()),
+        column(6, sig_inputs_list())
       )
     )
   })
