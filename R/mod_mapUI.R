@@ -199,7 +199,6 @@ mod_map <- function(
           mod_data$admin_div,
           mod_data$agg_level
         )
-
     }
   )
 

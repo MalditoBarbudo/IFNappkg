@@ -104,7 +104,14 @@ data_scenario <- function(
 
   ## CLIMA data
   clima <- tidyIFN::data_clima(sig, ifn, ifndb, !!! clima_filters)
-  clima_plots <- clima %>% dplyr::pull(idparcela)
+  clima_plots <- try(clima %>% dplyr::pull(idparcela))
+
+  # if no clima data because of filters, pull is gonna fail. This way return
+  # an empty character vector for clima plots, resulting in an empty core data
+  # also, win-win
+  if (class(clima_plots) == 'try-error') {
+    clima_plots <- ''
+  }
 
   ## CORE data
   core <- tidyIFN::data_core(
