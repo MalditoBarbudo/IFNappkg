@@ -64,7 +64,7 @@ mod_table <- function(
   })
 
   table_data_gen <- shiny::reactive({
-    data_scenario(
+    data_scenario_table <- data_scenario(
       mod_data$admin_div,
       mod_data$admin_div_fil,
       mod_data$espai_tipus,
@@ -75,11 +75,32 @@ mod_table <- function(
       mod_data$diameter_classes,
       mod_advancedFilters$adv_fil_clima_expressions(),
       mod_advancedFilters$adv_fil_sig_expressions()
-    ) %>%
-      table_data_modificator(
-        scenario_reac(),
-        mod_data$admin_div, mod_data$agg_level, mod_data$diameter_classes
+    )
+
+    # check data integrity (zero rows)
+    if (
+      {
+        data_scenario_table[['clima']] %>%
+          collect() %>%
+          nrow()
+      } < 1
+    ) {
+
+      shinyWidgets::sendSweetAlert(
+        session, title = 'Sin datos',
+        text = 'Con los filtros actuales activados no hay parcelas que cumplan los requisitos',
+        type = 'warning'
       )
+
+      return(NULL)
+
+    } else {
+      data_scenario_table %>%
+        table_data_modificator(
+          scenario_reac(),
+          mod_data$admin_div, mod_data$agg_level, mod_data$diameter_classes
+        )
+    }
   })
 
   shiny::observe({
@@ -187,6 +208,10 @@ mod_table <- function(
   output$ifn_table <- DT::renderDT(
     server = TRUE,
     expr = {
+
+      shiny::validate(
+        need(table_data_gen(), 'No hay datos')
+      )
 
       if (is.null(input$col_vis_selector)) {
         data_table_temp <- table_data_gen()
