@@ -175,7 +175,7 @@ mod_map <- function(
     },
     valueExpr = {
 
-      data_scenario(
+      data_scenario_map <- data_scenario(
         mod_data$admin_div,
         mod_data$admin_div_fil,
         mod_data$espai_tipus,
@@ -186,19 +186,40 @@ mod_map <- function(
         diameter_classes = FALSE,
         mod_advancedFilters$adv_fil_clima_expressions(),
         mod_advancedFilters$adv_fil_sig_expressions()
-      ) %>%
-        map_modificator(
-          input_scenario(),
-          mod_data$ifn,
-          mod_data$inverse_pal,
-          mod_data$color,
-          mod_data$mida,
-          mod_data$tipo_grup_func,
-          mod_data$grup_func,
-          mod_data$statistic,
-          mod_data$admin_div,
-          mod_data$agg_level
+      )
+
+      # check data integrity (zero rows)
+      if (
+        {
+          data_scenario_map[['clima']] %>%
+            collect() %>%
+            nrow()
+        } < 1
+      ) {
+
+        shinyWidgets::sendSweetAlert(
+          session, title = 'Sin datos',
+          text = 'Con los filtros actuales activados no hay parcelas que cumplan los requisitos',
+          type = 'warning'
         )
+
+        return()
+
+      } else {
+        data_scenario_map %>%
+          map_modificator(
+            input_scenario(),
+            mod_data$ifn,
+            mod_data$inverse_pal,
+            mod_data$color,
+            mod_data$mida,
+            mod_data$tipo_grup_func,
+            mod_data$grup_func,
+            mod_data$statistic,
+            mod_data$admin_div,
+            mod_data$agg_level
+          )
+      }
     }
   )
 
