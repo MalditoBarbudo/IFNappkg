@@ -127,6 +127,15 @@ mod_infopanel <- function(
         mod_advancedFilters$adv_fil_sig_expressions()
       )
 
+      shiny::validate(
+        shiny::need(
+          {temp_res[['clima']] %>%
+              collect() %>%
+              nrow()} > 0,
+          'No hay datos'
+        )
+      )
+
       temp_res[['core']] <- temp_res[['core']] %>%
         dplyr::filter(!!! click_fil)
 
