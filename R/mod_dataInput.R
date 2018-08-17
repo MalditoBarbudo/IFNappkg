@@ -33,7 +33,7 @@ mod_dataInput <- function(id) {
         shiny::fluidRow(
           shiny::column(
             4,
-            shiny::selectInput(
+            shinyWidgets::pickerInput(
               ns('ifn'),
               label = label_ifn[['esp']],
               choices = dic_ifn_choices[["esp"]],
@@ -42,10 +42,14 @@ mod_dataInput <- function(id) {
           ),
           shiny::column(
             6, offset = 2,
-            shiny::radioButtons(
+            shinyWidgets::radioGroupButtons(
               ns('viz_shape'), label_viz_shape[['esp']],
-              choices = dic_viz_shape_choices[["esp"]],
-              selected = 'polygon', inline = TRUE
+              choices = dic_viz_shape_choices[["esp"]], selected = 'polygon',
+              status = 'info', size = 'sm', justified = TRUE,
+              checkIcon = list(
+                yes = icon("check"),
+                no = icon("times",)
+              )
             )
           )
         ),
@@ -53,14 +57,14 @@ mod_dataInput <- function(id) {
         shiny::fluidRow(
           shiny::column(
             6,
-            shiny::selectInput(
+            shinyWidgets::pickerInput(
               ns('admin_div'), label_admin_div[['esp']],
               dic_admin_div_choices[["esp"]], selected = 'comarca'
             )
           ),
           shiny::column(
             6,
-            shiny::selectInput(
+            shinyWidgets::pickerInput(
               ns('espai_tipus'), label_espai_tipus[['esp']],
               dic_espai_tipus_choices[["esp"]], selected = 'proteccio'
             )
@@ -153,8 +157,12 @@ mod_dataInput <- function(id) {
 
           shiny::column(
             4, offset = 2,
-            shiny::actionButton(
-              ns('apply_filters'), label_apply_filters[['esp']], width = '100%'
+            shinyWidgets::actionBttn(
+              ns('apply_filters'), label_apply_filters[['esp']],
+              icon = icon('check'),
+              style = "material-flat",
+              block = TRUE,
+              size = 'sm'
             )
           )
         )
@@ -170,17 +178,21 @@ mod_dataInput <- function(id) {
         shiny::fluidRow(
           shiny::column(
             9,
-            shiny::selectInput(
+            shinyWidgets::pickerInput(
               ns('agg_level'), label_agg_level[['esp']],
               choices = dic_agg_level_choices[['esp']],
               selected = 'parcela', width = '100%'
             ),
-            shinyWidgets::prettyToggle(
+            # shinyWidgets::prettyToggle(
+            #   ns('diameter_classes'),
+            #   label_on = label_diam_class[['esp']][['on']],
+            #   label_off = label_diam_class[['esp']][['off']],
+            #   icon_on = shiny::icon('tree'),
+            #   shape = 'curve', plain = TRUE
+            # )
+            shinyWidgets::awesomeCheckbox(
               ns('diameter_classes'),
-              label_on = label_diam_class[['esp']][['on']],
-              label_off = label_diam_class[['esp']][['off']],
-              icon_on = shiny::icon('tree'),
-              shape = 'curve', plain = TRUE
+              label = label_diam_class[['esp']][['on']], status = 'info'
             )
           ),
           shiny::column(
