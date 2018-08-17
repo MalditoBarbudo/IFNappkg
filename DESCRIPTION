@@ -22,5 +22,6 @@ Imports:
   ggplot2,
   stringr,
   purrr,
-  tidyIFN
+  tidyIFN,
+  writexl
 RoxygenNote: 6.1.0
