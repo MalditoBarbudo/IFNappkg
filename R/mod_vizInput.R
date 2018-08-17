@@ -35,9 +35,10 @@ mod_vizInput <- function(id) {
             width = '100%'
           )
         ),
-        shiny::selectInput(
+        shinyWidgets::pickerInput(
           ns('tipo_grup_func'), label_tipo_grup_func[['esp']],
-          choices = dic_tipo_grup_func_choices[['esp']], width = '100%'
+          choices = dic_tipo_grup_func_choices[['esp']],
+          selected = 'cadesccon', width = '100%'
         ),
         shiny::selectInput(
           ns('grup_func'), label_grup_func[['esp']][['scenario3']][['especie']],
