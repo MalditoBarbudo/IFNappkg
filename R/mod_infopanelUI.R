@@ -6,48 +6,9 @@
 #'
 #' @export
 mod_infopanelUI <- function(id) {
-
   # ns
   ns <- shiny::NS(id)
-
-  # UI elements
-  shiny::tagList(
-
-    shinyjs::disabled(
-      shinyjs::hidden(
-        shiny::div(
-          id = ns('hiddeable_pan'),
-          shiny::absolutePanel(
-            # panel settings
-            id = 'infoPanel', class = 'panel panel-default', fixed = TRUE,
-            draggable = TRUE, width = 640, height = 'auto',
-            top = 'auto', left = 'auto', bottom = 0, right = 15,
-
-            # panel contents
-            shiny::tabsetPanel(
-              id = 'infoPanel_tabs', type = 'pills',
-
-              shiny::tabPanel(
-                'Info',
-                shiny::uiOutput(ns('shape_click_info')),
-                'Aquí va la info de la parcela o del polígono clickado'
-              ),
-
-              shiny::tabPanel(
-                label_tabpanel_visualization[['esp']],
-                shiny::plotOutput(
-                  ns('shape_click_plot'), width = 600, height = 350
-                ) %>%
-                  shinycssloaders::withSpinner(
-                    type = 4, color = '#D2527F'
-                  )
-              )
-            )
-          )
-        )
-      )
-    )
-  )
+  return()
 }
 
 #' mod_infopanel server function
@@ -68,41 +29,6 @@ mod_infopanel <- function(
   input, output, session,
   mod_data, mod_map, mod_advancedFilters, ifndb
 ) {
-
-  # hide infoPanel
-  shiny::observeEvent(
-    eventExpr = {
-      # all the inputs
-      # data inputs
-      mod_data$ifn
-      mod_data$viz_shape
-      mod_data$admin_div
-      mod_data$espai_tipus
-      mod_data$apply_filters
-      mod_data$agg_level
-      mod_data$diameter_classes
-      # viz inputs
-      mod_data$color
-      mod_data$mida
-      mod_data$inverse_pal
-      mod_data$tipo_grup_func
-      mod_data$grup_func
-      mod_data$statistic
-    },
-    handlerExpr = {
-      shinyjs::disable('hiddeable_pan')
-      shinyjs::hide('hiddeable_pan')
-    }
-  )
-
-  # observeEvent to show the panel when a shape is clicked
-  shiny::observeEvent(
-    mod_map$map_shape_click,
-    {
-      shinyjs::enable('hiddeable_pan')
-      shinyjs::show('hiddeable_pan')
-    }
-  )
 
   # data reactive
   data_infopanel <- shiny::eventReactive(
@@ -262,4 +188,24 @@ mod_infopanel <- function(
 
   })
 
+  # observer to create the sweet alert
+  shiny::observeEvent(
+    eventExpr = mod_map$map_shape_click,
+    handlerExpr = {
+      ns <- session$ns
+      shinyWidgets::sendSweetAlert(
+        session = session,
+        title = 'Vamos a ver...',
+        text = shiny::tags$div(
+          shiny::plotOutput(
+            ns('shape_click_plot')
+          ) %>%
+            shinycssloaders::withSpinner(
+              type = 4, color = '#D2527F'
+            )
+        ),
+        html = TRUE, btn_labels = 'Dismiss'
+      )
+    }
+  )
 }
