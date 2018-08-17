@@ -20,16 +20,16 @@ mod_vizInput <- function(id) {
 
       shiny::wellPanel(
         shiny::h3('Visualització'),
-        shiny::selectInput(
+        shinyWidgets::pickerInput(
           ns('color'), 'Color',
           dic_color_choices[['esp']][['scenario3']],
           width = '100%'
         ),
-        shiny::checkboxInput(
-          ns('inverse_pal'), 'Invertir colors', value = FALSE
+        shinyWidgets::awesomeCheckbox(
+          ns('inverse_pal'), 'Invertir colors', value = FALSE, status = 'info'
         ),
         shinyjs::hidden(
-          shiny::selectInput(
+          shinyWidgets::pickerInput(
             ns('mida'), label_mida[['esp']],
             dic_mida_choices[['esp']][['scenario1']],
             width = '100%'
@@ -40,12 +40,12 @@ mod_vizInput <- function(id) {
           choices = dic_tipo_grup_func_choices[['esp']],
           selected = 'cadesccon', width = '100%'
         ),
-        shiny::selectInput(
+        shinyWidgets::pickerInput(
           ns('grup_func'), label_grup_func[['esp']][['scenario3']][['especie']],
           choices = dic_grup_func_choices[['esp']][['scenario3']][['especie']],
           width = '100%'
         ),
-        shiny::selectInput(
+        shinyWidgets::pickerInput(
           ns('statistic'), label = label_statistic[['esp']],
           choices = dic_statistic_choices[['esp']],
           width = '100%'
@@ -79,7 +79,7 @@ mod_viz <- function(
     eventExpr = input_scenario(),
     handlerExpr = {
       # update the needed inputs
-      shiny::updateSelectInput(
+      shinyWidgets::updatePickerInput(
         session, 'color', label = 'Color',
         choices = dic_color_choices[["esp"]][[input_scenario()]]
       )
@@ -97,7 +97,7 @@ mod_viz <- function(
       # scenarios 1 and 2 (parecelas con y sin desglose)
       if (input_scenario() %in% c('scenario1', 'scenario2')) {
 
-        shiny::updateSelectInput(
+        shinyWidgets::updatePickerInput(
           session, 'mida', label = label_mida[['esp']],
           choices = dic_mida_choices[["esp"]][[input_scenario()]]
         )
@@ -140,7 +140,7 @@ mod_viz <- function(
       # de tipo_grup_funcional en 1 y 3 y de los datos en 2 y 4
       if (input_scenario() == 'scenario1') {
 
-        shiny::updateSelectInput(
+        shinyWidgets::updatePickerInput(
           session, 'grup_func',
           label = label_grup_func[['esp']][['scenario1']][[input$tipo_grup_func]],
           choices = dic_grup_func_choices[['esp']][['scenario1']][[input$tipo_grup_func]]
@@ -149,7 +149,7 @@ mod_viz <- function(
       } else {
         if (input_scenario() %in% c('scenario2', 'scenario4')) {
 
-          shiny::updateSelectInput(
+          shinyWidgets::updatePickerInput(
             session, 'grup_func',
             label = label_grup_func[['esp']][[input_scenario()]][[mod_data$agg_level]],
             choices = dic_grup_func_choices[['esp']][[input_scenario()]][[mod_data$agg_level]]
@@ -158,7 +158,7 @@ mod_viz <- function(
         } else {
           if (input_scenario() == 'scenario3') {
 
-            shiny::updateSelectInput(
+            shinyWidgets::updatePickerInput(
               session, 'grup_func',
               label = label_grup_func[['esp']][['scenario3']][[input$tipo_grup_func]],
               choices = dic_grup_func_choices[['esp']][['scenario3']][[input$tipo_grup_func]]
