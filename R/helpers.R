@@ -896,6 +896,47 @@ infopanel_plot_gen <- function(
 
 }
 
+#' generate the plot for the info panel, in climatic mode
+#'
+#' @param data list with clima data, filtered and no filtered (for plots)
+#' @param color input
+#' @param click input
+#'
+#' @export
+infopanel_climaplot_gen <- function(data, color, click) {
+
+  if (click$group == 'idparcela') {
+
+    data_plot <- data[['clima_nf']] %>%
+      collect()
+
+    point_data <- data_plot %>%
+      dplyr::filter(idparcela == click$id) %>%
+      dplyr::select(idparcela, !!rlang::sym(color))
+    x_var_plot <- 'plot'
+    y_var_plot <- rlang::quo(!!rlang::sym(color))
+
+    infopanel_plot <- data_plot %>%
+      ggplot2::ggplot(ggplot2::aes(x = x_var_plot, y = !!y_var_plot)) +
+      ggplot2::geom_violin() +
+      ggplot2::geom_point(
+        ggplot2::aes(x = x_var_plot, y = !!y_var_plot), data = point_data,
+        color = 'red', size = 5, alpha = 0.8
+      )
+  } else {
+
+    data_plot <- data[['clima']] %>%
+      collect()
+    y_var_plot <- rlang::quo(!!rlang::sym(color))
+
+    infopanel_plot <- data_plot %>%
+      ggplot2::ggplot(ggplot2::aes(y = !!y_var_plot)) +
+      ggplot2::geom_boxplot()
+  }
+
+  return(infopanel_plot)
+}
+
 # Table column visibility selection modal dialog
 #
 # @param failed Logical

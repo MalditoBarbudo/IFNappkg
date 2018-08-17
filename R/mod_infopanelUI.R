@@ -147,6 +147,8 @@ mod_infopanel <- function(
         dplyr::collect() %>%
         purrr::flatten_chr()
 
+      temp_res[['clima_nf']] <- temp_res[['clima']]
+
       temp_res[['clima']] <- temp_res[['clima']] %>%
         dplyr::filter(idparcela %in% plots)
 
@@ -162,20 +164,38 @@ mod_infopanel <- function(
       # validate that plotting is possible
       core <- data_infopanel()[['core']] %>%
         dplyr::collect()
+      clima <- data_infopanel()[['clima']] %>%
+        dplyr::collect()
 
+      # validate the reactive
       shiny::validate(
         shiny::need(
-          expr = !is.null(core[[mod_data$color]]),
+          expr = !all(
+            is.null(core[[mod_data$color]]), is.null(clima[[mod_data$color]])
+          ),
           message = 'Selected color variable is not available in the data'
         )
       )
 
-      # create the plot
-      infopanel_plot_gen(
-        core, mod_map$map_shape_click, mod_data$color,
-        mod_data$viz_shape, mod_data$agg_level, mod_data$diameter_classes,
-        mod_data$tipo_grup_func
+      clima_vars <- c(
+        'radiacioanual', "temperaturaminimaanual", "temperaturamitjanaanual",
+        "temperaturamaximaanual", "precipitacioanual", "npp_s"
       )
+
+      # create the plot
+      if (mod_data$color %in% clima_vars) {
+        # plot for climate
+        infopanel_climaplot_gen(
+          data_infopanel(), mod_data$color, mod_map$map_shape_click
+        )
+      } else {
+        # plot for core vars
+        infopanel_plot_gen(
+          core, mod_map$map_shape_click, mod_data$color,
+          mod_data$viz_shape, mod_data$agg_level, mod_data$diameter_classes,
+          mod_data$tipo_grup_func
+        )
+      }
     }
   )
 
