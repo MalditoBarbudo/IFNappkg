@@ -70,6 +70,7 @@ mod_table <- function(
   })
 
   table_data_gen <- shiny::reactive({
+
     data_scenario_table <- data_scenario(
       mod_data$admin_div,
       mod_data$admin_div_fil,
@@ -150,15 +151,16 @@ mod_table <- function(
     }
   )
 
+  # get the columns selected in the table , but for real (remember, DT start
+  # col indexes in zero)
+  col_selected_react <- shiny::reactive({
+    input$ifn_table_columns_selected + 1
+  })
+
   output$col_filter <- shiny::renderUI({
 
     # get the session ns to be able to tag the inputs with correct id
     ns <- session$ns
-
-    # get the columns selected in the table
-    col_selected_react <- shiny::reactive({
-      input$ifn_table_columns_selected + 1
-    })
 
     # diameter classes
     cd <- ifelse(mod_data$diameter_classes, 'cd', 'nocd')
@@ -176,7 +178,8 @@ mod_table <- function(
           }
 
           shiny::sliderInput(
-            ns(var_index), label = names(data_temp)[[var_index]],
+            ns(names(data_temp)[[var_index]]),
+            label = names(data_temp)[[var_index]],
             min = round(min(data_temp[[var_index]], na.rm = TRUE), 1),
             max = round(max(data_temp[[var_index]], na.rm = TRUE), 1),
             value = c(
@@ -191,9 +194,46 @@ mod_table <- function(
 
     # tag list to return for the UI
     shiny::tagList(
-      col_filter_inputs()
+      col_filter_inputs(),
+      shinyWidgets::actionBttn(
+        ns('apply_table_filters'), 'Aplicar filtros',
+        icon = shiny::icon('eye'),
+        style = "material-flat",
+        block = TRUE,
+        size = 'sm'
+      )
     )
   })
+
+  # quo filter expression constructor
+  col_filter_expressions <- shiny::eventReactive(
+    ignoreInit = FALSE, ignoreNULL = FALSE,
+    eventExpr = input$apply_table_filters,
+    valueExpr = {
+
+      browser()
+
+      # check if adv_fil_clima_variables is null or empty, to avoid problems in
+      # data_scenario helper function
+      if (length(col_selected_react()) < 1) {
+        return(rlang::quos())
+      } else {
+        data_temp <- table_data_gen()
+
+        # get the vars
+        vars <- names(data_temp)[col_selected_react()]
+        # return the list of quos to supply to tidyIFN::data_clima
+        lapply(
+          vars,
+          function(var) {
+            rlang::quo(
+              between(!!rlang::sym(var), !!input[[var]][1], !!input[[var]][2])
+            )
+          }
+        )
+      }
+    }
+  )
 
   output$ifn_table <- DT::renderDT(
     server = TRUE,
@@ -204,10 +244,26 @@ mod_table <- function(
       )
 
       if (is.null(input$col_vis_selector)) {
-        data_table_temp <- table_data_gen()
+        data_table_temp <- table_data_gen() %>%
+          dplyr::filter(!!! col_filter_expressions())
+
+        shiny::validate(
+          need(
+            nrow(data_table_temp) > 0,
+            'Con los filtros actuales no se pueden mostrar datos'
+          )
+        )
       } else {
         data_table_temp <- table_data_gen() %>%
-          dplyr::select(dplyr::one_of(input$col_vis_selector))
+          dplyr::select(dplyr::one_of(input$col_vis_selector)) %>%
+          dplyr::filter(!!! col_filter_expressions())
+
+        shiny::validate(
+          need(
+            nrow(data_table_temp) > 0,
+            'Con los filtros actuales no se pueden mostrar datos'
+          )
+        )
       }
 
       data_table_temp %>%
