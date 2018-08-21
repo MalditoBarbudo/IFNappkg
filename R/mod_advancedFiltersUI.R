@@ -162,8 +162,8 @@ mod_advancedFilters <- function(
 
     shiny::tagList(
       shiny::fluidRow(
-        column(6, clima_inputs_list()),
-        column(6, sig_inputs_list())
+        shiny::column(6, clima_inputs_list()),
+        shiny::column(6, sig_inputs_list())
       )
     )
   })

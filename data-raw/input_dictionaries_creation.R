@@ -3427,7 +3427,7 @@ min_max_to_vec <- function(min, max) {
   return(res)
 }
 
-conn <- tidyIFN::ifn_connect('malditobarbudo')
+conn <- tidyIFN::ifn_connect('guest', 'guest')
 
 # clima
 tbl(conn, 'ifn3_clima') %>%

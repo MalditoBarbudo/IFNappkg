@@ -25,4 +25,6 @@ advancedFilters module}
 }
 \description{
 A shiny module to generate the base IFN plots table
+
+mod_table server function
 }

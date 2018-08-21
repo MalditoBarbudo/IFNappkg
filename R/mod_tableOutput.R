@@ -31,7 +31,6 @@ mod_tableOutput <- function(id) {
           ns('dwl_xlsx_button'), 'Save xlsx',
           color = 'primary', size = 'sm', block = FALSE, style = 'material-flat'
         ),
-        shiny::br(),
         shinyWidgets::pickerInput(
           ns('col_vis_selector'), 'Show/Hide columns',
           choices = '', multiple = TRUE,
@@ -42,7 +41,8 @@ mod_tableOutput <- function(id) {
             `selected-text-format` = 'count',
             `count-selected-text` = "{0} variables selected (of {1})"
           )
-        )
+        ),
+        shiny::uiOutput(ns('col_filter'))
 
       )
     )
@@ -150,6 +150,51 @@ mod_table <- function(
     }
   )
 
+  output$col_filter <- shiny::renderUI({
+
+    # get the session ns to be able to tag the inputs with correct id
+    ns <- session$ns
+
+    # get the columns selected in the table
+    col_selected_react <- shiny::reactive({
+      input$ifn_table_columns_selected + 1
+    })
+
+    # diameter classes
+    cd <- ifelse(mod_data$diameter_classes, 'cd', 'nocd')
+
+    # we create the input list with lapply, easy peachy
+    col_filter_inputs <- shiny::reactive({
+
+      data_temp <- table_data_gen()
+
+      lapply(
+        col_selected_react(), function(var_index) {
+
+          if (!is.numeric(data_temp[[var_index]])) {
+            return()
+          }
+
+          shiny::sliderInput(
+            ns(var_index), label = names(data_temp)[[var_index]],
+            min = round(min(data_temp[[var_index]], na.rm = TRUE), 1),
+            max = round(max(data_temp[[var_index]], na.rm = TRUE), 1),
+            value = c(
+              min(data_temp[[var_index]], na.rm = TRUE),
+              max(data_temp[[var_index]], na.rm = TRUE)
+            ),
+            round = 1
+          )
+        }
+      )
+    })
+
+    # tag list to return for the UI
+    shiny::tagList(
+      col_filter_inputs()
+    )
+  })
+
   output$ifn_table <- DT::renderDT(
     server = TRUE,
     expr = {
@@ -167,14 +212,15 @@ mod_table <- function(
 
       data_table_temp %>%
         datatable(
-          filter = list(position = 'top', clear = TRUE, plain = FALSE),
+          # filter = list(position = 'top', clear = FALSE, plain = TRUE),
+          selection = list(target = 'column'),
           style = 'default', rownames = FALSE,
           fillContainer = TRUE, autoHideNavigation = TRUE,
           extensions = c('Scroller'),
           options = list(
-            dom = 'ti',
             autoWidth = TRUE,
-            deferRender = TRUE, scrollY = '70vh', scroller = TRUE
+            deferRender = TRUE, scrollY = '70vh', scroller = TRUE,
+            dom = 'ti'
           )
         ) %>%
         formatRound(
