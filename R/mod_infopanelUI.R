@@ -56,7 +56,7 @@ mod_infopanel <- function(
       shiny::validate(
         shiny::need(
           {temp_res[['clima']] %>%
-              collect() %>%
+              dplyr::collect() %>%
               nrow()} > 0,
           'No hay datos'
         )

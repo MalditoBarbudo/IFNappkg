@@ -32,7 +32,7 @@ mod_map <- function(
   mod_data, mod_advancedFilters, ifndb
 ) {
 
-  # noms division
+  # noms division (we need for the polygon dictionary call later on)
   nom_provincies <- as.character(polygons_provincies@data$NOM_PROV)
   nom_vegueries <- as.character(polygons_vegueries@data$NOMVEGUE)
   nom_comarques <- as.character(polygons_comarques@data$NOM_COMAR)
@@ -192,7 +192,7 @@ mod_map <- function(
       if (
         {
           data_scenario_map[['clima']] %>%
-            collect() %>%
+            dplyr::collect() %>%
             nrow()
         } < 1
       ) {

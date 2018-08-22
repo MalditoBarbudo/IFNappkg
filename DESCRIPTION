@@ -21,6 +21,7 @@ Imports:
   tidyr,
   ggplot2,
   stringr,
+  pool,
   purrr,
   tidyIFN,
   writexl

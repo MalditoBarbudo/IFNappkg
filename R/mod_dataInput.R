@@ -47,8 +47,8 @@ mod_dataInput <- function(id) {
               choices = dic_viz_shape_choices[["esp"]], selected = 'polygon',
               status = 'info', size = 'sm', justified = TRUE,
               checkIcon = list(
-                yes = icon("check"),
-                no = icon("times",)
+                yes = shiny::icon("check"),
+                no = shiny::icon("times")
               )
             )
           )
@@ -148,7 +148,7 @@ mod_dataInput <- function(id) {
             # )
             shinyWidgets::actionBttn(
               ns('show_adv_fils'), label_show_adv_fils[['esp']],
-              icon = icon('eye'),
+              icon = shiny::icon('eye'),
               style = "material-flat",
               block = TRUE,
               size = 'sm'
@@ -159,7 +159,7 @@ mod_dataInput <- function(id) {
             4, offset = 2,
             shinyWidgets::actionBttn(
               ns('apply_filters'), label_apply_filters[['esp']],
-              icon = icon('check'),
+              icon = shiny::icon('check'),
               style = "material-flat",
               block = TRUE,
               size = 'sm'

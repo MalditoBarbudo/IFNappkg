@@ -30,7 +30,7 @@ mod_advancedFiltersUI <- function(id) {
             shiny::column(
               1, offset = 7,
               shinyWidgets::circleButton(
-                ns('close_adv_fils'), icon = icon('times'),
+                ns('close_adv_fils'), icon = shiny::icon('times'),
                 status = 'danger', size = 'sm'
               )
             )
@@ -188,7 +188,7 @@ mod_advancedFilters <- function(
     # check if adv_fil_clima_variables is null or empty, to avoid problems in
     # data_scenario helper function
     if (is.null(adv_fil_clima_variables()) || adv_fil_clima_variables() == '') {
-      return(quo(TRUE))
+      return(rlang::quo(TRUE))
     }
 
     # get the vars
@@ -198,7 +198,7 @@ mod_advancedFilters <- function(
       vars,
       function(var) {
         rlang::quo(
-          between(!!sym(var), !!input[[var]][1], !!input[[var]][2])
+          dplyr::between(!!rlang::sym(var), !!input[[var]][1], !!input[[var]][2])
         )
       }
     )
@@ -209,7 +209,7 @@ mod_advancedFilters <- function(
     # check if adv_fil_clima_variables is null or empty, to avoid problems in
     # data_scenario helper function
     if (is.null(adv_fil_sig_variables()) || adv_fil_sig_variables() == '') {
-      return(quo(TRUE))
+      return(rlang::quo(TRUE))
     }
 
     # get the vars

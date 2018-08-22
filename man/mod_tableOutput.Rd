@@ -7,7 +7,7 @@
 \usage{
 mod_tableOutput(id)
 
-mod_table(input, output, session, mod_data, mod_advancedFilters)
+mod_table(input, output, session, mod_data, mod_advancedFilters, ifndb)
 }
 \arguments{
 \item{id}{shiny id}
@@ -22,6 +22,8 @@ mod_table(input, output, session, mod_data, mod_advancedFilters)
 
 \item{mod_advancedFilters}{reactive with the reactive values from
 advancedFilters module}
+
+\item{ifndb}{db pool}
 }
 \description{
 A shiny module to generate the base IFN plots table

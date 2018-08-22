@@ -2,6 +2,7 @@
 
 export(data_scenario)
 export(get_scenario)
+export(ifn_app)
 export(infopanel_climaplot_gen)
 export(infopanel_plot_gen)
 export(map_modificator)
@@ -19,3 +20,4 @@ export(mod_viz)
 export(mod_vizInput)
 export(table_data_modificator)
 importFrom(dplyr,between)
+importFrom(magrittr,"%>%")

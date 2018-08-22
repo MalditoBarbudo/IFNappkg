@@ -74,13 +74,14 @@ mod_tableOutput <- function(id) {
 #' @param mod_data reactive with the reactive data and the data inputs
 #' @param mod_advancedFilters reactive with the reactive values from
 #'   advancedFilters module
+#' @param ifndb db pool
 #'
 #' @export
 #'
 #' @rdname mod_tableOutput
 mod_table <- function(
   input, output, session,
-  mod_data, mod_advancedFilters
+  mod_data, mod_advancedFilters, ifndb
 ) {
 
   scenario_reac <- shiny::reactive({
@@ -106,7 +107,7 @@ mod_table <- function(
     if (
       {
         data_scenario_table[['clima']] %>%
-          collect() %>%
+          dplyr::collect() %>%
           nrow()
       } < 1
     ) {
@@ -253,7 +254,7 @@ mod_table <- function(
       }
 
       data_table_temp %>%
-        datatable(
+        DT::datatable(
           # filter = list(position = 'top', clear = FALSE, plain = TRUE),
           selection = list(target = 'column'),
           style = 'default', rownames = FALSE,
@@ -265,7 +266,7 @@ mod_table <- function(
             dom = 'ti'
           )
         ) %>%
-        formatRound(
+        DT::formatRound(
           columns = {
             data_table_temp %>%
               purrr::map(is.numeric) %>%
