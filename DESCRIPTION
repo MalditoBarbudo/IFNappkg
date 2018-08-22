@@ -26,3 +26,6 @@ Imports:
   tidyIFN,
   writexl
 RoxygenNote: 6.1.0
+Suggests:
+  testthat,
+  shinytest

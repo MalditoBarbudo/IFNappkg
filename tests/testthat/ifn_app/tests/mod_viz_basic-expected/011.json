@@ -1,0 +1,105 @@
+{
+  "input": {
+    "mod_advancedFiltersUI-adv_fil_clima_vars": null,
+    "mod_advancedFiltersUI-adv_fil_sig_vars": null,
+    "mod_advancedFiltersUI-close_adv_fils": 0,
+    "mod_dataInput-admin_div": "comarca",
+    "mod_dataInput-admin_div_fil": null,
+    "mod_dataInput-agg_level": "planifconif",
+    "mod_dataInput-apply_filters": 0,
+    "mod_dataInput-diameter_classes": true,
+    "mod_dataInput-espai_tipus": "proteccio",
+    "mod_dataInput-espai_tipus_fil": null,
+    "mod_dataInput-ifn": "ifn3",
+    "mod_dataInput-mod_vizInput-color": "radiacioanual",
+    "mod_dataInput-mod_vizInput-grup_func": "Planifoli",
+    "mod_dataInput-mod_vizInput-inverse_pal": false,
+    "mod_dataInput-mod_vizInput-mida": "",
+    "mod_dataInput-mod_vizInput-statistic": "_min",
+    "mod_dataInput-mod_vizInput-tipo_grup_func": "especie",
+    "mod_dataInput-show_adv_fils": 0,
+    "mod_dataInput-viz_shape": "parcela",
+    "mod_mapUI-map_bounds": {
+      "north": 43.0969719080247,
+      "east": 3.526611328125,
+      "south": 40.2124407182865,
+      "west": -1.922607421875
+    },
+    "mod_mapUI-map_center": {
+      "lng": 0.8,
+      "lat": 41.67
+    },
+    "mod_mapUI-map_groups": [
+      "comarca",
+      "idparcela"
+    ],
+    "mod_mapUI-map_zoom": 8,
+    "mod_tableOutput-col_filter_selector": null,
+    "mod_tableOutput-col_vis_selector": null,
+    "mod_tableOutput-dwl_csv_button_bttn": 0,
+    "mod_tableOutput-dwl_xlsx_button_bttn": 0,
+    "nav": "Mapa interactiu"
+  },
+  "output": {
+    "mod_mapUI-map": {
+      "x": {
+        "options": {
+          "crs": {
+            "crsClass": "L.CRS.EPSG3857",
+            "code": null,
+            "proj4def": null,
+            "projectedBounds": null,
+            "options": {
+
+            }
+          }
+        },
+        "setView": [
+          [
+            41.67,
+            0.8
+          ],
+          8,
+          [
+
+          ]
+        ],
+        "calls": [
+          {
+            "method": "createMapPane",
+            "args": [
+              "admin_divs",
+              410
+            ]
+          },
+          {
+            "method": "createMapPane",
+            "args": [
+              "proteccions",
+              405
+            ]
+          },
+          {
+            "method": "createMapPane",
+            "args": [
+              "parceles",
+              420
+            ]
+          }
+        ]
+      },
+      "evals": [
+
+      ],
+      "jsHooks": [
+
+      ],
+      "deps": [
+
+      ]
+    }
+  },
+  "export": {
+
+  }
+}

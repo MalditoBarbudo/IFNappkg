@@ -135,7 +135,7 @@ ifn_app <- function() {
   }
 
   # Run the application
-  ifn_app <- shiny::shinyApp(
+  ifn_app_res <- shiny::shinyApp(
     ui = ui, server = server,
     onStart = function() {
 
@@ -146,6 +146,7 @@ ifn_app <- function() {
     }
   )
 
-  shiny::runApp(ifn_app)
+  # shiny::runApp(ifn_app)
+  return(ifn_app_res)
 
 }
