@@ -63,7 +63,8 @@ data_scenario <- function(
 
   ## SIG data
   # admin_div filter
-  if (is.null(admin_div_fil)) {
+  if (is.null(admin_div_fil) ||
+      any(admin_div_fil == '')) {
     filter_expr_admin <- NULL
   } else {
     filter_expr_admin <- rlang::quo(
