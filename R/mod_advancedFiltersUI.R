@@ -131,14 +131,21 @@ mod_advancedFilters <- function(
     clima_inputs_list <- shiny::reactive({
       lapply(
         input$adv_fil_clima_vars, function(var) {
-          shinyWidgets::noUiSliderInput(
+          # shinyWidgets::noUiSliderInput(
+          #   ns(var), label = dic_adv_fil_clima_filters[['esp']][[var]][['label']],
+          #   min = dic_adv_fil_clima_filters[['esp']][[var]][['min']],
+          #   max = dic_adv_fil_clima_filters[['esp']][[var]][['max']],
+          #   value = dic_adv_fil_clima_filters[['esp']][[var]][['value']],
+          #   orientation = 'horizontal', direction = 'ltr',
+          #   behaviour = c('drag', 'tap'),
+          #   format = shinyWidgets::wNumbFormat(decimals = 1)
+          # )
+          shiny::sliderInput(
             ns(var), label = dic_adv_fil_clima_filters[['esp']][[var]][['label']],
             min = dic_adv_fil_clima_filters[['esp']][[var]][['min']],
             max = dic_adv_fil_clima_filters[['esp']][[var]][['max']],
             value = dic_adv_fil_clima_filters[['esp']][[var]][['value']],
-            orientation = 'horizontal', direction = 'ltr',
-            behaviour = c('drag', 'tap'),
-            format = shinyWidgets::wNumbFormat(decimals = 1)
+            round = 1
           )
         }
       )
@@ -147,14 +154,21 @@ mod_advancedFilters <- function(
     sig_inputs_list <- shiny::reactive({
       lapply(
         input$adv_fil_sig_vars, function(var) {
-          shinyWidgets::noUiSliderInput(
+          # shinyWidgets::noUiSliderInput(
+          #   ns(var), label = dic_adv_fil_sig_filters[['esp']][[var]][['label']],
+          #   min = dic_adv_fil_sig_filters[['esp']][[var]][['min']],
+          #   max = dic_adv_fil_sig_filters[['esp']][[var]][['max']],
+          #   value = dic_adv_fil_sig_filters[['esp']][[var]][['value']],
+          #   orientation = 'horizontal', direction = 'ltr',
+          #   behaviour = c('drag', 'tap'),
+          #   format = shinyWidgets::wNumbFormat(decimals = 1)
+          # )
+          shiny::sliderInput(
             ns(var), label = dic_adv_fil_sig_filters[['esp']][[var]][['label']],
             min = dic_adv_fil_sig_filters[['esp']][[var]][['min']],
             max = dic_adv_fil_sig_filters[['esp']][[var]][['max']],
             value = dic_adv_fil_sig_filters[['esp']][[var]][['value']],
-            orientation = 'horizontal', direction = 'ltr',
-            behaviour = c('drag', 'tap'),
-            format = shinyWidgets::wNumbFormat(decimals = 1)
+            round = 1
           )
         }
       )
@@ -169,11 +183,11 @@ mod_advancedFilters <- function(
   })
 
   # quo filter expression constructor
-  adv_fil_clima_expressions <- reactive({
+  adv_fil_clima_expressions <- shiny::reactive({
 
     # check if adv_fil_clima_variables is null or empty, to avoid problems in
     # data_scenario helper function
-    if(is.null(adv_fil_clima_variables()) || adv_fil_clima_variables() == '') {
+    if (is.null(adv_fil_clima_variables()) || adv_fil_clima_variables() == '') {
       return(quo(TRUE))
     }
 
@@ -190,11 +204,11 @@ mod_advancedFilters <- function(
     )
   })
 
-  adv_fil_sig_expressions <- reactive({
+  adv_fil_sig_expressions <- shiny::reactive({
 
     # check if adv_fil_clima_variables is null or empty, to avoid problems in
     # data_scenario helper function
-    if(is.null(adv_fil_sig_variables()) || adv_fil_sig_variables() == '') {
+    if (is.null(adv_fil_sig_variables()) || adv_fil_sig_variables() == '') {
       return(quo(TRUE))
     }
 
