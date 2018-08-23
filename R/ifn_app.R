@@ -34,9 +34,11 @@ ifn_app <- function() {
             # custom css
             shiny::includeCSS(
               system.file('resources', 'ifn.css', package = 'IFNappkg')
-            )
+            ),
             # custom scripts
-            # includeScript("resources/gomap.js")
+            shiny::tags$script(
+              src = "https://rawgit.com/rowanwins/leaflet-easyPrint/gh-pages/dist/bundle.js"
+            )
           ),
 
           ########################################################### debug ####
@@ -67,6 +69,9 @@ ifn_app <- function() {
 
           ## mod_advancedFilters ####
           mod_advancedFiltersUI('mod_advancedFiltersUI'),
+
+          ## mod_buttons ####
+          mod_buttonsInput('mod_buttonsInput'),
 
           ## cite div ####
           shiny::tags$div(
@@ -109,6 +114,12 @@ ifn_app <- function() {
     map_reactives <- shiny::callModule(
       mod_map, 'mod_mapUI',
       data_reactives, advancedFIlters_reactives, ifndb
+    )
+
+    # buttons
+    shiny::callModule(
+      mod_buttons, 'mod_buttonsInput',
+      map_reactives
     )
 
     # info panel

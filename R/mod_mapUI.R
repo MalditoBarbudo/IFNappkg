@@ -44,13 +44,26 @@ mod_map <- function(
 
   # basic map
   # here we only set the view, zoom and the panes for managing the zIndex)
-  output$map <- leaflet::renderLeaflet({
-
+  base_map <- shiny::reactive({
     leaflet::leaflet() %>%
       leaflet::setView(0.8, 41.67, zoom = 8) %>%
       leaflet::addMapPane('admin_divs', zIndex = 410) %>%
       leaflet::addMapPane('proteccions', zIndex = 405) %>%
-      leaflet::addMapPane('parceles', zIndex = 420)
+      leaflet::addMapPane('parceles', zIndex = 420) %>%
+      htmlwidgets::onRender(
+        "function(el, x) {
+        L.easyPrint({
+        title: '',
+        sizeModes: ['A4Landscape', 'A4Portrait'],
+        filename: 'IFNmap',
+        exportOnly: true,
+        hideControlContainer: false
+        }).addTo(this);
+        }"
+      )
+  })
+  output$map <- leaflet::renderLeaflet({
+    base_map()
   })
 
   # observer for admin divs polygons. We use this instead of add polygons
@@ -235,6 +248,8 @@ mod_map <- function(
 
   shiny::observe({
     map_reactives$map_shape_click <- input$map_shape_click
+    map_reactives$base_map <- base_map
+    map_reactives$input_map <- input_map
     # map_reactives$shape_mouseover <- input$map_shape_mouseover
     # map_reactives$shape_mouseout <- input$map_shape_mouseout
     # map_reactives$map_click <- input$map_click
