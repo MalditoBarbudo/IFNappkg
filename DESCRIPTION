@@ -15,7 +15,6 @@ Imports:
   shinyjs,
   shinyWidgets,
   leaflet,
-  mapview,
   sp,
   rgdal,
   dplyr,
