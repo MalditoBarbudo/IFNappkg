@@ -36,6 +36,7 @@ ifn_app <- function() {
               system.file('resources', 'ifn.css', package = 'IFNappkg')
             ),
             # custom scripts
+            ## easyPrint leaflet plugin
             shiny::tags$script(
               src = "https://rawgit.com/rowanwins/leaflet-easyPrint/gh-pages/dist/bundle.js"
             )
