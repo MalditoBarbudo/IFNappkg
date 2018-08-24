@@ -909,7 +909,7 @@ infopanel_climaplot_gen <- function(data, color, click) {
   if (click$group == 'idparcela') {
 
     data_plot <- data[['clima_nf']] %>%
-      collect()
+      dplyr::collect()
 
     point_data <- data_plot %>%
       dplyr::filter(idparcela == click$id) %>%
@@ -927,7 +927,7 @@ infopanel_climaplot_gen <- function(data, color, click) {
   } else {
 
     data_plot <- data[['clima']] %>%
-      collect()
+      dplyr::collect()
     y_var_plot <- rlang::quo(!!rlang::sym(color))
 
     infopanel_plot <- data_plot %>%

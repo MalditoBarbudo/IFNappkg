@@ -15,6 +15,7 @@ Imports:
   shinyjs,
   shinyWidgets,
   leaflet,
+  leaflet.extras,
   sp,
   rgdal,
   dplyr,
@@ -28,4 +29,5 @@ Imports:
 RoxygenNote: 6.1.0
 Suggests:
   testthat,
-  shinytest
+  shinytest,
+  rmapshaper

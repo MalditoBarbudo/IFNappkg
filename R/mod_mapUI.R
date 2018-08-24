@@ -50,6 +50,17 @@ mod_map <- function(
       leaflet::addMapPane('admin_divs', zIndex = 410) %>%
       leaflet::addMapPane('proteccions', zIndex = 405) %>%
       leaflet::addMapPane('parceles', zIndex = 420) %>%
+      # leaflet.extras r package plugins
+      leaflet.extras::addDrawToolbar(
+        targetGroup = 'custom_poly',
+        position = 'topleft',
+        polylineOptions = FALSE, circleOptions = FALSE, rectangleOptions = FALSE,
+        markerOptions = FALSE, circleMarkerOptions = FALSE,
+        polygonOptions = leaflet.extras::drawPolygonOptions(
+          shapeOptions = leaflet.extras::drawShapeOptions()
+        )
+      ) %>%
+      # raw easyPrint plugin
       htmlwidgets::onRender(
         "function(el, x) {
         L.easyPrint({
