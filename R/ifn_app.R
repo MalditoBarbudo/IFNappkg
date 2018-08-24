@@ -43,17 +43,17 @@ ifn_app <- function() {
           ),
 
           ########################################################### debug ####
-          # absolutePanel(
-          #   id = 'debug', class = 'panel panel-default', fixed = TRUE,
-          #   draggable = TRUE, width = 640, height = 'auto',
-          #   # top = 100, left = 100, rigth = 'auto', bottom = 'auto',
-          #   # top = 'auto', left = 'auto', right = 100, bottom = 100,
-          #   top = 60, left = 'auto', right = 50, bottom = 'auto',
-          #
-          #   textOutput('debug1'),
-          #   textOutput('debug2'),
-          #   textOutput('debug3')
-          # ),
+          shiny::absolutePanel(
+            id = 'debug', class = 'panel panel-default', fixed = TRUE,
+            draggable = TRUE, width = 640, height = 'auto',
+            # top = 100, left = 100, rigth = 'auto', bottom = 'auto',
+            # top = 'auto', left = 'auto', right = 100, bottom = 100,
+            top = 60, left = 'auto', right = 50, bottom = 'auto',
+
+            shiny::textOutput('debug1'),
+            shiny::textOutput('debug2'),
+            shiny::textOutput('debug3')
+          ),
           ####################################################### end debug ####
 
           ## mod_data ####
@@ -135,15 +135,15 @@ ifn_app <- function() {
     )
 
     ## debug #####
-    # output$debug1 <- renderPrint({
-    #   data_reactives$show_adv_fils
-    # })
-    # output$debug2 <- renderPrint({
-    #   get_scenario(data_reactives$viz_shape, data_reactives$agg_level)
-    # })
-    # output$debug3 <- renderPrint({
-    #   data_reactives$espai_tipus_fil
-    # })
+    output$debug1 <- shiny::renderPrint({
+      map_reactives$map_draw_start
+    })
+    output$debug2 <- shiny::renderPrint({
+      map_reactives$map_draw_stop
+    })
+    output$debug3 <- shiny::renderPrint({
+      map_reactives$map_draw_new_feature
+    })
   }
 
   # Run the application

@@ -46,6 +46,8 @@ get_scenario <- function(viz_shape, agg_level) {
 #'   quos
 #' @param sig_extra_filters reactive from mod_advancedFilters with the extra
 #'   sig filters quos
+#' @param custom_polygon input from map module to capture the custom polygon
+#'   if any
 #'
 #' @export
 data_scenario <- function(
@@ -58,7 +60,8 @@ data_scenario <- function(
   agg_level,
   diameter_classes,
   clima_filters,
-  sig_extra_filters
+  sig_extra_filters,
+  custom_polygon = NULL
 ) {
 
   ## SIG data
@@ -102,6 +105,42 @@ data_scenario <- function(
     ifn, ifndb,
     !!! filter_expr_admin, !!! filter_expr_espai, !!! sig_extra_filters
   )
+
+  # is there any custom polygon?? beacuse if it is we need to change sig
+  if (!is.null(custom_polygon)) {
+
+    browser()
+
+    tmp <- custom_polygon[['geometry']][['coordinates']] %>%
+      purrr::flatten() %>%
+      purrr::set_names(nm = 1:length(.)) %>%
+      purrr::modify_depth(1, purrr::set_names, nm = c('long', 'lat')) %>%
+      dplyr::bind_rows() %>%
+      sp::Polygon()
+
+    tmp <- sp::SpatialPolygons(list(sp::Polygons(list(tmp), 'custom_polygon')))
+
+    sig %>%
+      dplyr::select(longitude, latitude) %>%
+      dplyr::collect() %>%
+      sp::SpatialPoints() %>%
+      sp::over(tmp) %>%
+      as.vector() -> is_in_poly_col
+    is_in_poly_col <- dplyr::case_when(
+      is_in_poly_col == 1 ~ 'in',
+        TRUE ~ 'out'
+      )
+
+    sig <- sig %>%
+      dplyr::mutate(polygon_filter = case_when(
+        is_in_poly_col == 'in' ~ 'in',
+        is_in_poly_col == 'out' ~ 'out',
+        TRUE ~ 'out'
+      )) %>%
+      dplyr::filter(is_in_poly_col == 'in')
+
+  }
+
 
   ## CLIMA data
   clima <- tidyIFN::data_clima(sig, ifn, ifndb, !!! clima_filters)

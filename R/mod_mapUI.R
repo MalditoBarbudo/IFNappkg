@@ -58,7 +58,11 @@ mod_map <- function(
         markerOptions = FALSE, circleMarkerOptions = FALSE,
         polygonOptions = leaflet.extras::drawPolygonOptions(
           shapeOptions = leaflet.extras::drawShapeOptions()
-        )
+        ),
+        editOptions = leaflet.extras::editToolbarOptions(
+          edit = FALSE, remove = TRUE
+        ),
+        singleFeature = TRUE
       ) %>%
       # raw easyPrint plugin
       htmlwidgets::onRender(
@@ -187,6 +191,7 @@ mod_map <- function(
     input_reactives$agg_level <- mod_data$agg_level
     input_reactives$viz_shape <- mod_data$viz_shape
     input_reactives$apply_filters <- mod_data$apply_filters
+    input_reactives$map_draw_new_feature <- input$map_draw_new_feature
 
     return(input_reactives)
   }) %>%
@@ -209,7 +214,8 @@ mod_map <- function(
         mod_data$agg_level,
         diameter_classes = FALSE,
         mod_advancedFilters$adv_fil_clima_expressions(),
-        mod_advancedFilters$adv_fil_sig_expressions()
+        mod_advancedFilters$adv_fil_sig_expressions(),
+        input$map_draw_new_feature
       )
 
       # check data integrity (zero rows)
@@ -254,6 +260,22 @@ mod_map <- function(
    }
  )
 
+ # debug draw polygon
+ # shiny::observe({
+ #   tmp <- input$map_draw_new_feature[['geometry']][['coordinates']] %>%
+ #     purrr::flatten() %>%
+ #     purrr::set_names(nm = 1:length(.)) %>%
+ #     purrr::modify_depth(1, purrr::set_names, nm = c('long', 'lat')) %>%
+ #     dplyr::bind_rows() %>%
+ #     sp::Polygon()
+ #
+ #   tmp <- sp::SpatialPolygons(list(sp::Polygons(list(tmp), 'tmp')))
+ #
+ #
+ #
+ #   browser()
+ # })
+
   # reactive with the map events
   map_reactives <- shiny::reactiveValues()
 
@@ -261,6 +283,12 @@ mod_map <- function(
     map_reactives$map_shape_click <- input$map_shape_click
     map_reactives$base_map <- base_map
     map_reactives$input_map <- input_map
+    map_reactives$map_draw_start <- input$map_draw_start
+    map_reactives$map_draw_stop <- input$map_draw_stop
+    map_reactives$map_draw_new_feature <- input$map_draw_new_feature
+    map_reactives$map_draw_edited_features <- input$map_draw_edited_features
+    map_reactives$map_draw_deleted_features <- input$map_draw_deleted_features
+    map_reactives$map_draw_all_features <- input$map_draw_all_features
     # map_reactives$shape_mouseover <- input$map_shape_mouseover
     # map_reactives$shape_mouseout <- input$map_shape_mouseout
     # map_reactives$map_click <- input$map_click
