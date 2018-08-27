@@ -74,6 +74,7 @@ mod_tableOutput <- function(id) {
 #' @param mod_data reactive with the reactive data and the data inputs
 #' @param mod_advancedFilters reactive with the reactive values from
 #'   advancedFilters module
+#' @param mod_map reactive with the mod_map inputs
 #' @param ifndb db pool
 #'
 #' @export
@@ -81,7 +82,7 @@ mod_tableOutput <- function(id) {
 #' @rdname mod_tableOutput
 mod_table <- function(
   input, output, session,
-  mod_data, mod_advancedFilters, ifndb
+  mod_data, mod_advancedFilters, mod_map, ifndb
 ) {
 
   scenario_reac <- shiny::reactive({
@@ -100,7 +101,8 @@ mod_table <- function(
       mod_data$agg_level,
       mod_data$diameter_classes,
       mod_advancedFilters$adv_fil_clima_expressions(),
-      mod_advancedFilters$adv_fil_sig_expressions()
+      mod_advancedFilters$adv_fil_sig_expressions(),
+      mod_map$custom_polygon()
     )
 
     # check data integrity (zero rows)

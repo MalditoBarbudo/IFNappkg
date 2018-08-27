@@ -7,7 +7,7 @@
 \usage{
 mod_tableOutput(id)
 
-mod_table(input, output, session, mod_data, mod_advancedFilters, ifndb)
+mod_table(input, output, session, mod_data, mod_advancedFilters, mod_map, ifndb)
 }
 \arguments{
 \item{id}{shiny id}
@@ -22,6 +22,8 @@ mod_table(input, output, session, mod_data, mod_advancedFilters, ifndb)
 
 \item{mod_advancedFilters}{reactive with the reactive values from
 advancedFilters module}
+
+\item{mod_map}{reactive with the mod_map inputs}
 
 \item{ifndb}{db pool}
 }

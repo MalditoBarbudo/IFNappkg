@@ -131,7 +131,7 @@ ifn_app <- function() {
 
     shiny::callModule(
       mod_table, 'mod_tableOutput',
-      data_reactives, advancedFIlters_reactives, ifndb
+      data_reactives, advancedFIlters_reactives, map_reactives, ifndb
     )
 
     ## debug #####

@@ -50,7 +50,8 @@ mod_infopanel <- function(
         mod_data$agg_level,
         mod_data$diameter_classes,
         mod_advancedFilters$adv_fil_clima_expressions(),
-        mod_advancedFilters$adv_fil_sig_expressions()
+        mod_advancedFilters$adv_fil_sig_expressions(),
+        mod_map$custom_polygon()
       )
 
       shiny::validate(
@@ -67,6 +68,15 @@ mod_infopanel <- function(
 
       temp_res[['sig']] <- temp_res[['sig']] %>%
         dplyr::filter(!!! click_fil)
+
+      shiny::validate(
+        shiny::need(
+          {temp_res[['sig']] %>%
+              dplyr::collect() %>%
+              nrow()} > 0,
+          'No hay datos'
+        )
+      )
 
       plots <- temp_res[['sig']] %>%
         dplyr::select(idparcela) %>%

@@ -282,28 +282,12 @@ mod_map <- function(
     }
   )
 
- shiny::observeEvent(
-   eventExpr = input_map(),
-   handlerExpr = {
-     input_map()
-   }
- )
-
- # debug draw polygon
- # shiny::observe({
- #   tmp <- input$map_draw_new_feature[['geometry']][['coordinates']] %>%
- #     purrr::flatten() %>%
- #     purrr::set_names(nm = 1:length(.)) %>%
- #     purrr::modify_depth(1, purrr::set_names, nm = c('long', 'lat')) %>%
- #     dplyr::bind_rows() %>%
- #     sp::Polygon()
- #
- #   tmp <- sp::SpatialPolygons(list(sp::Polygons(list(tmp), 'tmp')))
- #
- #
- #
- #   browser()
- # })
+  shiny::observeEvent(
+    eventExpr = input_map(),
+    handlerExpr = {
+      input_map()
+    }
+  )
 
   # reactive with the map events
   map_reactives <- shiny::reactiveValues()
