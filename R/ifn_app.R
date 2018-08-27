@@ -136,7 +136,7 @@ ifn_app <- function() {
 
     ## debug #####
     output$debug1 <- shiny::renderPrint({
-      map_reactives$map_draw_start
+      map_reactives$map_draw_deleted_features
     })
     output$debug2 <- shiny::renderPrint({
       map_reactives$map_draw_stop

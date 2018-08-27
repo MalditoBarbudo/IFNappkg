@@ -109,8 +109,6 @@ data_scenario <- function(
   # is there any custom polygon?? beacuse if it is we need to change sig
   if (!is.null(custom_polygon)) {
 
-    browser()
-
     tmp <- custom_polygon[['geometry']][['coordinates']] %>%
       purrr::flatten() %>%
       purrr::set_names(nm = 1:length(.)) %>%
@@ -120,24 +118,24 @@ data_scenario <- function(
 
     tmp <- sp::SpatialPolygons(list(sp::Polygons(list(tmp), 'custom_polygon')))
 
-    sig %>%
+    sig_collected <- sig %>%
+      dplyr::collect()
+
+    # is in poly
+    is_in_poly_col <- sig_collected %>%
       dplyr::select(longitude, latitude) %>%
-      dplyr::collect() %>%
       sp::SpatialPoints() %>%
       sp::over(tmp) %>%
-      as.vector() -> is_in_poly_col
+      as.vector()
     is_in_poly_col <- dplyr::case_when(
-      is_in_poly_col == 1 ~ 'in',
-        TRUE ~ 'out'
+      is_in_poly_col == 1 ~ TRUE,
+        TRUE ~ FALSE
       )
 
+    plots_codes <- sig_collected[['idparcela']][is_in_poly_col]
+
     sig <- sig %>%
-      dplyr::mutate(polygon_filter = case_when(
-        is_in_poly_col == 'in' ~ 'in',
-        is_in_poly_col == 'out' ~ 'out',
-        TRUE ~ 'out'
-      )) %>%
-      dplyr::filter(is_in_poly_col == 'in')
+      dplyr::filter(idparcela %in% !! plots_codes)
 
   }
 

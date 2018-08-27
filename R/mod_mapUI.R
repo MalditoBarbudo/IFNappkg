@@ -192,10 +192,39 @@ mod_map <- function(
     input_reactives$viz_shape <- mod_data$viz_shape
     input_reactives$apply_filters <- mod_data$apply_filters
     input_reactives$map_draw_new_feature <- input$map_draw_new_feature
+    input_reactives$map_draw_deleted_features <- input$map_draw_deleted_features
 
     return(input_reactives)
   }) %>%
     shiny::debounce(millis = 500)
+
+
+  custom_polygon <- shiny::reactive({
+
+    # When removing the features (custom polygon) the input$map_draw_new_feature
+    # is not cleared, so is always filtering the sites, even after removing. For
+    # that we need to control when the removed feature equals the new, that's it,
+    # when we removed the last one
+
+    res <- input$map_draw_new_feature
+    removed_id <- input$map_draw_deleted_features$features[[1]]$properties$`_leaflet_id`
+    res_id <- input$map_draw_new_feature$properties$`_leaflet_id`
+
+    # some iferation
+    if (is.null(res)) {
+      return(NULL)
+    } else {
+      if (is.null(removed_id)) {
+        return(res)
+      } else {
+        if (removed_id == res_id) {
+          return(NULL)
+        } else {
+          return(res)
+        }
+      }
+    }
+  })
 
   input_map <- shiny::eventReactive(
     ignoreInit = TRUE,
@@ -215,7 +244,7 @@ mod_map <- function(
         diameter_classes = FALSE,
         mod_advancedFilters$adv_fil_clima_expressions(),
         mod_advancedFilters$adv_fil_sig_expressions(),
-        input$map_draw_new_feature
+        custom_polygon()
       )
 
       # check data integrity (zero rows)
@@ -289,6 +318,7 @@ mod_map <- function(
     map_reactives$map_draw_edited_features <- input$map_draw_edited_features
     map_reactives$map_draw_deleted_features <- input$map_draw_deleted_features
     map_reactives$map_draw_all_features <- input$map_draw_all_features
+    map_reactives$custom_polygon <- custom_polygon
     # map_reactives$shape_mouseover <- input$map_shape_mouseover
     # map_reactives$shape_mouseout <- input$map_shape_mouseout
     # map_reactives$map_click <- input$map_click
