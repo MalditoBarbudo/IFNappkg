@@ -43,17 +43,17 @@ ifn_app <- function() {
           ),
 
           ########################################################### debug ####
-          shiny::absolutePanel(
-            id = 'debug', class = 'panel panel-default', fixed = TRUE,
-            draggable = TRUE, width = 640, height = 'auto',
-            # top = 100, left = 100, rigth = 'auto', bottom = 'auto',
-            # top = 'auto', left = 'auto', right = 100, bottom = 100,
-            top = 60, left = 'auto', right = 50, bottom = 'auto',
-
-            shiny::textOutput('debug1'),
-            shiny::textOutput('debug2'),
-            shiny::textOutput('debug3')
-          ),
+          # shiny::absolutePanel(
+          #   id = 'debug', class = 'panel panel-default', fixed = TRUE,
+          #   draggable = TRUE, width = 640, height = 'auto',
+          #   # top = 100, left = 100, rigth = 'auto', bottom = 'auto',
+          #   # top = 'auto', left = 'auto', right = 100, bottom = 100,
+          #   top = 60, left = 'auto', right = 50, bottom = 'auto',
+          #
+          #   shiny::textOutput('debug1'),
+          #   shiny::textOutput('debug2'),
+          #   shiny::textOutput('debug3')
+          # ),
           ####################################################### end debug ####
 
           ## mod_data ####
@@ -100,15 +100,21 @@ ifn_app <- function() {
   server <- function(input, output, session) {
 
     ## module calling ####
+
+    # buttons
+    buttons_reactives <- shiny::callModule(
+      mod_buttons, 'mod_buttonsInput'
+    )
+
     # data
     data_reactives <- shiny::callModule(
-      mod_data, 'mod_dataInput'
+      mod_data, 'mod_dataInput', buttons_reactives
     )
 
     # advancedFilters
     advancedFIlters_reactives <- shiny::callModule(
       mod_advancedFilters, 'mod_advancedFiltersUI',
-      data_reactives
+      buttons_reactives
     )
 
     # map
@@ -117,33 +123,28 @@ ifn_app <- function() {
       data_reactives, advancedFIlters_reactives, ifndb
     )
 
-    # buttons
-    shiny::callModule(
-      mod_buttons, 'mod_buttonsInput',
-      map_reactives
-    )
-
     # info panel
     shiny::callModule(
       mod_infopanel, 'mod_infopanelUI',
       data_reactives, map_reactives, advancedFIlters_reactives, ifndb
     )
 
+    # table
     shiny::callModule(
       mod_table, 'mod_tableOutput',
       data_reactives, advancedFIlters_reactives, map_reactives, ifndb
     )
 
     ## debug #####
-    output$debug1 <- shiny::renderPrint({
-      map_reactives$map_draw_deleted_features
-    })
-    output$debug2 <- shiny::renderPrint({
-      map_reactives$map_draw_stop
-    })
-    output$debug3 <- shiny::renderPrint({
-      map_reactives$map_draw_new_feature
-    })
+    # output$debug1 <- shiny::renderPrint({
+    #   map_reactives$map_draw_deleted_features
+    # })
+    # output$debug2 <- shiny::renderPrint({
+    #   map_reactives$map_draw_stop
+    # })
+    # output$debug3 <- shiny::renderPrint({
+    #   map_reactives$map_draw_new_feature
+    # })
   }
 
   # Run the application

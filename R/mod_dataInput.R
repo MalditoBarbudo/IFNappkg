@@ -28,7 +28,7 @@ mod_dataInput <- function(id) {
       shiny::div(
         id = 'dataSel',
 
-        shiny::h3('Selecció i filtrat'),
+        shiny::h3('Datos'),
 
         shiny::fluidRow(
           shiny::column(
@@ -75,139 +75,94 @@ mod_dataInput <- function(id) {
       # 2. data filtering (div and id is for shinyjs later application)
       #   (this inputs are created empty and filled later on in the server based
       #   on the section 1. inputs)
-      shiny::div(
-        id = 'dataFil',
+      shinyjs::hidden(
+        shiny::div(
+          id = ns('dataFil'),
 
-        # horizontal rule to separate
-        shiny::hr(),
+          # horizontal rule to separate
+          shiny::hr(),
 
-        shiny::fluidRow(
-          shiny::column(
-            6,
-            # shiny::selectInput(
-            #   ns('admin_div_fil'), label_admin_div_fil[['esp']][['comarca']],
-            #   choices = dic_admin_div_fil_choices[["esp"]][["comarca"]],
-            #   selected = '', multiple = TRUE, width = '100%'
-            # )
-            shinyWidgets::pickerInput(
-              ns('admin_div_fil'), label_admin_div_fil[['esp']][['comarca']],
-              choices = dic_admin_div_fil_choices[["esp"]][["comarca"]],
-              selected = '', multiple = TRUE, width = '100%',
-              options = list(
-                `actions-box` = TRUE,
-                `deselect-all-text` = 'None selected...',
-                `select-all-text` = 'All selected',
-                `selected-text-format` = 'count',
-                `count-selected-text` = "{0} divisions selected (of {1})"
-              )
-            )
-          ),
-          shiny::column(
-            6,
-            # shiny::selectInput(
-            #   ns('espai_tipus_fil'), label_espai_tipus_fil[["esp"]][['proteccio']],
-            #   choices = dic_espai_tipus_fil_choices[["esp"]][['proteccio']],
-            #   selected = '', multiple = TRUE, width = '100%'
-            # )
-            shinyWidgets::pickerInput(
-              ns('espai_tipus_fil'), label_espai_tipus_fil[["esp"]][['proteccio']],
-              choices = dic_espai_tipus_fil_choices[["esp"]][['proteccio']],
-              selected = '', multiple = TRUE, width = '100%',
-              options = list(
-                `actions-box` = TRUE,
-                `deselect-all-text` = 'None selected...',
-                `select-all-text` = 'All selected',
-                `selected-text-format` = 'count',
-                `count-selected-text` = "{0} divisions selected (of {1})"
-              )
-            )
-          )
-        ),
-
-        # here in the middle must be the advanced fiters, hidden and showed when
-        # a button is pressed
-        shinyjs::hidden(
-          shiny::div(
-            id = 'advancedFils',
-            shiny::hr(),
-            shiny::fluidRow(
-              shiny::column(
-                12,
-                'Aquí los filtros avanzados (TODO)'
+          shiny::fluidRow(
+            shiny::column(
+              6,
+              shinyWidgets::pickerInput(
+                ns('admin_div_fil'), label_admin_div_fil[['esp']][['comarca']],
+                choices = dic_admin_div_fil_choices[["esp"]][["comarca"]],
+                selected = '', multiple = TRUE, width = '100%',
+                options = list(
+                  `actions-box` = TRUE,
+                  `deselect-all-text` = 'None selected...',
+                  `select-all-text` = 'All selected',
+                  `selected-text-format` = 'count',
+                  `count-selected-text` = "{0} divisions selected (of {1})"
+                )
               )
             ),
-            shiny::hr()
-          )
-        ),
-
-        shiny::fluidRow(
-          shiny::column(
-            4, offset = 2,
-            # shiny::actionButton(
-            #   ns('show_adv_fils'), label_show_adv_fils[['esp']], width = '100%'
-            # )
-            shinyWidgets::actionBttn(
-              ns('show_adv_fils'), label_show_adv_fils[['esp']],
-              icon = shiny::icon('eye'),
-              style = "material-flat",
-              block = TRUE,
-              size = 'sm'
+            shiny::column(
+              6,
+              shinyWidgets::pickerInput(
+                ns('espai_tipus_fil'),
+                label_espai_tipus_fil[["esp"]][['proteccio']],
+                choices = dic_espai_tipus_fil_choices[["esp"]][['proteccio']],
+                selected = '', multiple = TRUE, width = '100%',
+                options = list(
+                  `actions-box` = TRUE,
+                  `deselect-all-text` = 'None selected...',
+                  `select-all-text` = 'All selected',
+                  `selected-text-format` = 'count',
+                  `count-selected-text` = "{0} divisions selected (of {1})"
+                )
+              )
             )
           ),
 
-          shiny::column(
-            4, offset = 2,
-            shinyWidgets::actionBttn(
-              ns('apply_filters'), label_apply_filters[['esp']],
-              icon = shiny::icon('check'),
-              style = "material-flat",
-              block = TRUE,
-              size = 'sm'
+          shiny::fluidRow(
+            shiny::column(
+              4, offset = 2,
+              shinyWidgets::actionBttn(
+                ns('show_adv_fils'), label_show_adv_fils[['esp']],
+                icon = shiny::icon('eye'),
+                style = "material-flat",
+                block = TRUE,
+                size = 'sm'
+              )
+            ),
+
+            shiny::column(
+              4, offset = 2,
+              shinyWidgets::actionBttn(
+                ns('apply_filters'), label_apply_filters[['esp']],
+                icon = shiny::icon('check'),
+                style = "material-flat",
+                block = TRUE,
+                size = 'sm'
+              )
             )
           )
         )
       ),
 
       # 3. data aggregation level (div and id is for shinyjs later application)
-      shiny::div(
-        id = 'dataAgg',
+      shinyjs::hidden(
+        shiny::div(
+          id = ns('dataAgg'),
 
-        # horizontal rule to separate
-        shiny::hr(),
+          # horizontal rule to separate
+          shiny::hr(),
 
-        shiny::fluidRow(
-          shiny::column(
-            9,
-            shinyWidgets::pickerInput(
-              ns('agg_level'), label_agg_level[['esp']],
-              choices = dic_agg_level_choices[['esp']],
-              selected = 'parcela', width = '100%'
-            ),
-            # shinyWidgets::prettyToggle(
-            #   ns('diameter_classes'),
-            #   label_on = label_diam_class[['esp']][['on']],
-            #   label_off = label_diam_class[['esp']][['off']],
-            #   icon_on = shiny::icon('tree'),
-            #   shape = 'curve', plain = TRUE
-            # )
-            shinyWidgets::awesomeCheckbox(
-              ns('diameter_classes'),
-              label = label_diam_class[['esp']][['on']], status = 'info'
+          shiny::fluidRow(
+            shiny::column(
+              9,
+              shinyWidgets::pickerInput(
+                ns('agg_level'), label_agg_level[['esp']],
+                choices = dic_agg_level_choices[['esp']],
+                selected = 'parcela', width = '100%'
+              ),
+              shinyWidgets::awesomeCheckbox(
+                ns('diameter_classes'),
+                label = label_diam_class[['esp']][['on']], status = 'info'
+              )
             )
-          ),
-          shiny::column(
-            3
-            # shiny::checkboxInput(
-            #   ns('diameter_classes'), label_diam_class[['esp']],
-            #   value = FALSE
-            # )
-            # shinyWidgets::prettyToggle(
-            #   ns('diameter_classes'),
-            #   label_on = label_diam_class[['esp']][['on']],
-            #   label_off = label_diam_class[['esp']][['off']],
-            #   icon_on = shiny::icon('tree'),
-            #   shape = 'curve', plain = TRUE
-            # )
           )
         )
       )
@@ -230,11 +185,14 @@ mod_dataInput <- function(id) {
 #' @param output internal
 #' @param session internal
 #'
+#' @param mod_buttons reactives from the mod_buttons module
+#'
 #' @export
 #'
 #' @rdname mod_dataInput
 mod_data <- function(
-  input, output, session
+  input, output, session,
+  mod_buttons
 ) {
 
   # observers to update the dataFil inputs
@@ -300,6 +258,21 @@ mod_data <- function(
   viz_reactives <- shiny::callModule(
     mod_viz, 'mod_vizInput',
     data_reactives
+  )
+
+  # observers to show the hidden panels
+  shiny::observeEvent(
+    eventExpr = mod_buttons$show_filter_def,
+    handlerExpr = {
+      shinyjs::toggleElement(id = 'dataFil')
+    }
+  )
+
+  shiny::observeEvent(
+    eventExpr = mod_buttons$show_agg,
+    handlerExpr = {
+      shinyjs::toggleElement(id = 'dataAgg')
+    }
   )
 
   shiny::observe({

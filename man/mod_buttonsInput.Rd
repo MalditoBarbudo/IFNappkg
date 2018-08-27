@@ -7,7 +7,7 @@
 \usage{
 mod_buttonsInput(id)
 
-mod_buttons(input, output, session, mod_map)
+mod_buttons(input, output, session)
 }
 \arguments{
 \item{id}{shiny id}
@@ -17,8 +17,6 @@ mod_buttons(input, output, session, mod_map)
 \item{output}{internal}
 
 \item{session}{internal}
-
-\item{mod_map}{reactives from the mod_map module}
 }
 \description{
 A shiny module to create and populate the buttons inputs

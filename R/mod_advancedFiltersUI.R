@@ -80,7 +80,7 @@ mod_advancedFiltersUI <- function(id) {
 #' @param input internal
 #' @param output internal
 #' @param session internal
-#' @param mod_data mod_data reactives, to get when button to show advanced
+#' @param mod_buttons mod_buttons reactives, to get when button to show advanced
 #'   filters is pressed
 #'
 #' @export
@@ -90,14 +90,14 @@ mod_advancedFiltersUI <- function(id) {
 #' @rdname mod_advancedFiltersUI
 mod_advancedFilters <- function(
   input, output, session,
-  mod_data
+  mod_buttons
 ) {
 
   # show the panel when the button is pressed
   shiny::observeEvent(
-    eventExpr = mod_data$show_adv_fils,
+    eventExpr = mod_buttons$show_filter_adv,
     handlerExpr = {
-      shinyjs::showElement(id = 'advancedFiltersControls')
+      shinyjs::toggleElement(id = 'advancedFiltersControls')
     }
   )
 

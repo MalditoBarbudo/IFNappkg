@@ -7,7 +7,7 @@
 \usage{
 mod_advancedFiltersUI(id)
 
-mod_advancedFilters(input, output, session, mod_data)
+mod_advancedFilters(input, output, session, mod_buttons)
 }
 \arguments{
 \item{id}{shiny id}
@@ -18,7 +18,7 @@ mod_advancedFilters(input, output, session, mod_data)
 
 \item{session}{internal}
 
-\item{mod_data}{mod_data reactives, to get when button to show advanced
+\item{mod_buttons}{mod_buttons reactives, to get when button to show advanced
 filters is pressed}
 }
 \description{
