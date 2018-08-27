@@ -72,7 +72,32 @@ mod_dataInput <- function(id) {
         )
       ),
 
-      # 2. data filtering (div and id is for shinyjs later application)
+      # 2. data aggregation level (div and id is for shinyjs later application)
+      shinyjs::hidden(
+        shiny::div(
+          id = ns('dataAgg'),
+
+          # horizontal rule to separate
+          shiny::hr(),
+
+          shiny::fluidRow(
+            shiny::column(
+              9,
+              shinyWidgets::pickerInput(
+                ns('agg_level'), label_agg_level[['esp']],
+                choices = dic_agg_level_choices[['esp']],
+                selected = 'parcela', width = '100%'
+              ),
+              shinyWidgets::awesomeCheckbox(
+                ns('diameter_classes'),
+                label = label_diam_class[['esp']][['on']], status = 'info'
+              )
+            )
+          )
+        )
+      ),
+
+      # 3. data filtering (div and id is for shinyjs later application)
       #   (this inputs are created empty and filled later on in the server based
       #   on the section 1. inputs)
       shinyjs::hidden(
@@ -118,49 +143,13 @@ mod_dataInput <- function(id) {
 
           shiny::fluidRow(
             shiny::column(
-              4, offset = 2,
-              shinyWidgets::actionBttn(
-                ns('show_adv_fils'), label_show_adv_fils[['esp']],
-                icon = shiny::icon('eye'),
-                style = "material-flat",
-                block = TRUE,
-                size = 'sm'
-              )
-            ),
-
-            shiny::column(
-              4, offset = 2,
+              4, offset = 6,
               shinyWidgets::actionBttn(
                 ns('apply_filters'), label_apply_filters[['esp']],
                 icon = shiny::icon('check'),
                 style = "material-flat",
                 block = TRUE,
                 size = 'sm'
-              )
-            )
-          )
-        )
-      ),
-
-      # 3. data aggregation level (div and id is for shinyjs later application)
-      shinyjs::hidden(
-        shiny::div(
-          id = ns('dataAgg'),
-
-          # horizontal rule to separate
-          shiny::hr(),
-
-          shiny::fluidRow(
-            shiny::column(
-              9,
-              shinyWidgets::pickerInput(
-                ns('agg_level'), label_agg_level[['esp']],
-                choices = dic_agg_level_choices[['esp']],
-                selected = 'parcela', width = '100%'
-              ),
-              shinyWidgets::awesomeCheckbox(
-                ns('diameter_classes'),
-                label = label_diam_class[['esp']][['on']], status = 'info'
               )
             )
           )
@@ -257,7 +246,7 @@ mod_data <- function(
   # viz controls
   viz_reactives <- shiny::callModule(
     mod_viz, 'mod_vizInput',
-    data_reactives
+    data_reactives, mod_buttons
   )
 
   # observers to show the hidden panels

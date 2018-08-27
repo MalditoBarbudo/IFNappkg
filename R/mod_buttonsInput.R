@@ -37,6 +37,10 @@ mod_buttonsInput <- function(id) {
     shinyWidgets::actionBttn(
       ns('show_agg'), 'Ag',
       style = 'material-circle', size = 'sm'
+    ),
+    shinyWidgets::actionBttn(
+      ns('show_viz'), 'Viz',
+      style = 'material-circle', size = 'sm'
     )
 
   )
@@ -61,6 +65,7 @@ mod_buttons <- function(
     mod_buttons_reactives$show_filter_def <- input$show_filter_def
     mod_buttons_reactives$show_filter_adv <- input$show_filter_adv
     mod_buttons_reactives$show_agg <- input$show_agg
+    mod_buttons_reactives$show_viz <- input$show_viz
   })
 
   return(mod_buttons_reactives)

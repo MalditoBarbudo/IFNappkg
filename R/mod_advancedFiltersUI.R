@@ -198,7 +198,7 @@ mod_advancedFilters <- function(
       vars,
       function(var) {
         rlang::quo(
-          dplyr::between(!!rlang::sym(var), !!input[[var]][1], !!input[[var]][2])
+          between(!!rlang::sym(var), !!input[[var]][1], !!input[[var]][2])
         )
       }
     )
@@ -219,7 +219,7 @@ mod_advancedFilters <- function(
       vars,
       function(var) {
         rlang::quo(
-          between(!!sym(var), !!input[[var]][1], !!input[[var]][2])
+          between(!!rlang::sym(var), !!input[[var]][1], !!input[[var]][2])
         )
       }
     )
