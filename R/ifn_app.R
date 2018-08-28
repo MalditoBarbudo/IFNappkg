@@ -68,12 +68,6 @@ ifn_app <- function() {
           # mod_infoPanel, it includes the map events info panel
           mod_infopanelUI('mod_infopanelUI'),
 
-          ## mod_advancedFilters ####
-          mod_advancedFiltersUI('mod_advancedFiltersUI'),
-
-          ## mod_buttons ####
-          mod_buttonsInput('mod_buttonsInput'),
-
           ## cite div ####
           shiny::tags$div(
             id = 'cite',
@@ -101,38 +95,27 @@ ifn_app <- function() {
 
     ## module calling ####
 
-    # buttons
-    buttons_reactives <- shiny::callModule(
-      mod_buttons, 'mod_buttonsInput'
-    )
-
     # data
     data_reactives <- shiny::callModule(
-      mod_data, 'mod_dataInput', buttons_reactives
-    )
-
-    # advancedFilters
-    advancedFIlters_reactives <- shiny::callModule(
-      mod_advancedFilters, 'mod_advancedFiltersUI',
-      buttons_reactives
+      mod_data, 'mod_dataInput'
     )
 
     # map
     map_reactives <- shiny::callModule(
       mod_map, 'mod_mapUI',
-      data_reactives, advancedFIlters_reactives, ifndb
+      data_reactives, data_reactives$advancedFIlters_reactives, ifndb
     )
 
     # info panel
     shiny::callModule(
       mod_infopanel, 'mod_infopanelUI',
-      data_reactives, map_reactives, advancedFIlters_reactives, ifndb
+      data_reactives, map_reactives, data_reactives$advancedFIlters_reactives, ifndb
     )
 
     # table
     shiny::callModule(
       mod_table, 'mod_tableOutput',
-      data_reactives, advancedFIlters_reactives, map_reactives, ifndb
+      data_reactives, data_reactives$advancedFIlters_reactives, map_reactives, ifndb
     )
 
     ## debug #####

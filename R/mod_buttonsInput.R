@@ -11,38 +11,20 @@ mod_buttonsInput <- function(id) {
   ns <- shiny::NS(id)
 
   # Buttons
-  shiny::absolutePanel(
-    # panel settings
-    id = 'dataControls', class = 'panel panel-default', fixed = TRUE,
-    draggable = TRUE, width = 240, height = 'auto',
-    # top = 100, left = 100, rigth = 'auto', bottom = 'auto',
-    # top = 'auto', left = 'auto', right = 100, bottom = 100,
-    top = 500, right = 'auto', left = 50, bottom = 'auto',
-
-    # save map button
-    # shinyWidgets::actionBttn(
-    #   ns('save_map_bttn'), 'Save the map',
-    #   icon = shiny::icon('download'), style = 'material-circle', size = 'sm'
-    # )
-
-    # ... other buttons, to develop
-    shinyWidgets::actionBttn(
-      ns('show_filter_def'), 'F',
-      style = 'material-circle', size = 'sm'
-    ),
-    shinyWidgets::actionBttn(
-      ns('show_filter_adv'), 'A-F',
-      style = 'material-circle', size = 'sm'
-    ),
-    shinyWidgets::actionBttn(
-      ns('show_agg'), 'Ag',
-      style = 'material-circle', size = 'sm'
-    ),
-    shinyWidgets::actionBttn(
-      ns('show_viz'), 'Viz',
-      style = 'material-circle', size = 'sm'
+  shiny::fluidRow(
+    shiny::column(
+      12,
+      shinyWidgets::actionGroupButtons(
+        inputIds = c(
+          ns('show_filter_def'), ns('show_agg'), ns('show_viz')
+        ),
+        labels = c(
+          'Filtros', 'Agregación', 'Visualización'
+        ),
+        status = 'danger', size = 'sm', direction = 'horizontal', fullwidth = TRUE
+      )
+      # ... other buttons, to develop
     )
-
   )
 }
 

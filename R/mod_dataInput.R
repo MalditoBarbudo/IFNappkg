@@ -69,7 +69,10 @@ mod_dataInput <- function(id) {
               dic_espai_tipus_choices[["esp"]], selected = 'proteccio'
             )
           )
-        )
+        ),
+
+        # buttons module
+        mod_buttonsInput(ns('mod_buttonsInput'))
       ),
 
       # 2. data aggregation level (div and id is for shinyjs later application)
@@ -79,6 +82,8 @@ mod_dataInput <- function(id) {
 
           # horizontal rule to separate
           shiny::hr(),
+
+          shiny::h4('Agregación'),
 
           shiny::fluidRow(
             shiny::column(
@@ -106,6 +111,8 @@ mod_dataInput <- function(id) {
 
           # horizontal rule to separate
           shiny::hr(),
+
+          shiny::h4('Filtros'),
 
           shiny::fluidRow(
             shiny::column(
@@ -141,9 +148,18 @@ mod_dataInput <- function(id) {
             )
           ),
 
+          # hidden div for advanced filters
+          mod_advancedFiltersUI(ns('mod_advancedFiltersUI')),
+          # shinyjs::hidden(
+          #   shiny::div(
+          #     id = ns('advancedFiltersControls'),
+          #     mod_advancedFiltersUI(ns('mod_advancedFiltersUI'))
+          #   )
+          # ),
+
           shiny::fluidRow(
             shiny::column(
-              4, offset = 6,
+              6, offset = 3,
               shinyWidgets::actionBttn(
                 ns('apply_filters'), label_apply_filters[['esp']],
                 icon = shiny::icon('check'),
@@ -158,14 +174,17 @@ mod_dataInput <- function(id) {
     ), # absolute panel end
 
     ## vizControls ####
-    shiny::absolutePanel(
-      id = 'vizControls', class = 'panel panel-default', fixed = TRUE,
-      draggable = TRUE, width = 320, height = 'auto',
-      top = 60, right = 'auto', left = 700, bottom = 'auto',
-
+    shiny::div(
+      id = ns('vizInputs'),
       mod_vizInput(ns('mod_vizInput'))
     )
 
+    # shinyjs::hidden(
+    #   shiny::div(
+    #     id = ns('vizInputs'),
+    #     mod_vizInput(ns('mod_vizInput'))
+    #   )
+    # )
   ) # end of tagList
 }
 
@@ -174,14 +193,11 @@ mod_dataInput <- function(id) {
 #' @param output internal
 #' @param session internal
 #'
-#' @param mod_buttons reactives from the mod_buttons module
-#'
 #' @export
 #'
 #' @rdname mod_dataInput
 mod_data <- function(
-  input, output, session,
-  mod_buttons
+  input, output, session
 ) {
 
   # observers to update the dataFil inputs
@@ -243,24 +259,53 @@ mod_data <- function(
 
   })
 
+  # buttons
+  buttons_reactives <- shiny::callModule(
+    mod_buttons, 'mod_buttonsInput'
+  )
+
   # viz controls
   viz_reactives <- shiny::callModule(
     mod_viz, 'mod_vizInput',
-    data_reactives, mod_buttons
+    data_reactives
   )
+
+  # advancedFilters
+  advancedFIlters_reactives <- shiny::callModule(
+    mod_advancedFilters, 'mod_advancedFiltersUI',
+    buttons_reactives
+  )
+
+
 
   # observers to show the hidden panels
   shiny::observeEvent(
-    eventExpr = mod_buttons$show_filter_def,
+    eventExpr = buttons_reactives$show_filter_def,
     handlerExpr = {
       shinyjs::toggleElement(id = 'dataFil')
     }
   )
 
   shiny::observeEvent(
-    eventExpr = mod_buttons$show_agg,
+    eventExpr = buttons_reactives$show_agg,
     handlerExpr = {
       shinyjs::toggleElement(id = 'dataAgg')
+    }
+  )
+
+  # show the panel when the button is pressed
+  # shiny::observeEvent(
+  #   eventExpr = buttons_reactives$show_filter_adv,
+  #   handlerExpr = {
+  #     shinyjs::toggleElement(id = 'advancedFiltersControls')
+  #   }
+  # )
+
+  # observer to show the panel when teh button is pressed
+  shiny::observeEvent(
+    eventExpr = buttons_reactives$show_viz,
+    handlerExpr = {
+      shinyjs::toggleElement('vizInputs')
     }
   )
 
@@ -272,6 +317,9 @@ mod_data <- function(
     data_reactives$tipo_grup_func <- viz_reactives$tipo_grup_func
     data_reactives$grup_func <- viz_reactives$grup_func
     data_reactives$statistic <- viz_reactives$statistic
+
+    # advanced_filtes
+    data_reactives$advancedFIlters_reactives <- advancedFIlters_reactives
   })
 
   return(data_reactives)

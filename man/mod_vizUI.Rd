@@ -4,7 +4,7 @@
 \alias{mod_viz}
 \title{mod_viz server function}
 \usage{
-mod_viz(input, output, session, mod_data, mod_buttons)
+mod_viz(input, output, session, mod_data)
 }
 \arguments{
 \item{input}{internal}
@@ -14,8 +14,6 @@ mod_viz(input, output, session, mod_data, mod_buttons)
 \item{session}{internal}
 
 \item{mod_data}{reactive with the reactive data and the data inputs}
-
-\item{mod_buttons}{reactive with the reactives from the buttons module}
 }
 \description{
 mod_viz server function

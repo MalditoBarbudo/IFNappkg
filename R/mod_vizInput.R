@@ -11,46 +11,44 @@ mod_vizInput <- function(id) {
   ns <- shiny::NS(id)
 
   # UI
-  shiny::tagList(
+  shiny::absolutePanel(
+    id = 'vizControls', class = 'panel panel-default', fixed = TRUE,
+    draggable = TRUE, width = 320, height = 'auto',
+    top = 60, right = 'auto', left = 700, bottom = 'auto',
 
-    # div and id is for later use of shinyjs. Inputs will be empty and
-    # populated later on with the data in the server side
-    shinyjs::hidden(
-      shiny::div(
-        id = ns('vizInputs'),
+    shiny::tagList(
 
-        shiny::wellPanel(
-          shiny::h3('Visualización'),
+      shiny::wellPanel(
+        shiny::h3('Visualización'),
+        shinyWidgets::pickerInput(
+          ns('color'), 'Color',
+          dic_color_choices[['esp']][['scenario3']],
+          width = '100%'
+        ),
+        shinyWidgets::awesomeCheckbox(
+          ns('inverse_pal'), 'Invertir colors', value = FALSE, status = 'info'
+        ),
+        shinyjs::hidden(
           shinyWidgets::pickerInput(
-            ns('color'), 'Color',
-            dic_color_choices[['esp']][['scenario3']],
-            width = '100%'
-          ),
-          shinyWidgets::awesomeCheckbox(
-            ns('inverse_pal'), 'Invertir colors', value = FALSE, status = 'info'
-          ),
-          shinyjs::hidden(
-            shinyWidgets::pickerInput(
-              ns('mida'), label_mida[['esp']],
-              dic_mida_choices[['esp']][['scenario1']],
-              width = '100%'
-            )
-          ),
-          shinyWidgets::pickerInput(
-            ns('tipo_grup_func'), label_tipo_grup_func[['esp']],
-            choices = dic_tipo_grup_func_choices[['esp']],
-            selected = 'cadesccon', width = '100%'
-          ),
-          shinyWidgets::pickerInput(
-            ns('grup_func'), label_grup_func[['esp']][['scenario3']][['especie']],
-            choices = dic_grup_func_choices[['esp']][['scenario3']][['especie']],
-            width = '100%'
-          ),
-          shinyWidgets::pickerInput(
-            ns('statistic'), label = label_statistic[['esp']],
-            choices = dic_statistic_choices[['esp']],
+            ns('mida'), label_mida[['esp']],
+            dic_mida_choices[['esp']][['scenario1']],
             width = '100%'
           )
+        ),
+        shinyWidgets::pickerInput(
+          ns('tipo_grup_func'), label_tipo_grup_func[['esp']],
+          choices = dic_tipo_grup_func_choices[['esp']],
+          selected = 'cadesccon', width = '100%'
+        ),
+        shinyWidgets::pickerInput(
+          ns('grup_func'), label_grup_func[['esp']][['scenario3']][['especie']],
+          choices = dic_grup_func_choices[['esp']][['scenario3']][['especie']],
+          width = '100%'
+        ),
+        shinyWidgets::pickerInput(
+          ns('statistic'), label = label_statistic[['esp']],
+          choices = dic_statistic_choices[['esp']],
+          width = '100%'
         )
       )
     )
@@ -63,14 +61,13 @@ mod_vizInput <- function(id) {
 #' @param session internal
 #'
 #' @param mod_data reactive with the reactive data and the data inputs
-#' @param mod_buttons reactive with the reactives from the buttons module
 #'
 #' @export
 #'
 #' @rdname mod_vizUI
 mod_viz <- function(
   input, output, session,
-  mod_data, mod_buttons
+  mod_data
 ) {
 
   input_scenario <- shiny::reactive({
@@ -188,14 +185,6 @@ mod_viz <- function(
         shinyjs::hide('statistic')
       }
 
-    }
-  )
-
-  # observer to show the panel when teh button is pressed
-  shiny::observeEvent(
-    eventExpr = mod_buttons$show_viz,
-    handlerExpr = {
-      shinyjs::toggleElement('vizInputs')
     }
   )
 

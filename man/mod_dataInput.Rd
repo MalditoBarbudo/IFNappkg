@@ -7,7 +7,7 @@
 \usage{
 mod_dataInput(id)
 
-mod_data(input, output, session, mod_buttons)
+mod_data(input, output, session)
 }
 \arguments{
 \item{id}{shiny id}
@@ -17,8 +17,6 @@ mod_data(input, output, session, mod_buttons)
 \item{output}{internal}
 
 \item{session}{internal}
-
-\item{mod_buttons}{reactives from the mod_buttons module}
 }
 \description{
 A shiny module to create and populate the data inputs
