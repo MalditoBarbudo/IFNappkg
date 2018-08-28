@@ -168,37 +168,7 @@ mod_map <- function(
     }
   )
 
-  # update inputs with variables present in data. We have four input scenarios
-  # so we build a reactive to know which scenario we have using the get_scenario
-  # function from global.R
-  input_scenario <- shiny::reactive({
-    get_scenario(mod_data$viz_shape, mod_data$agg_level)
-  })
-
-  input_reactives <- shiny::reactive({
-    input_reactives <- list()
-    input_reactives$admin_div <- mod_data$admin_div
-    # input_reactives$admin_div_fil <- mod_data$admin_div_fil
-    input_reactives$espai_tipus <- mod_data$espai_tipus
-    # input_reactives$espai_tipus_fil <- mod_data$espai_tipus_fil
-    input_reactives$ifn <- mod_data$ifn
-    input_reactives$inverse_pal <- mod_data$inverse_pal
-    input_reactives$color <- mod_data$color
-    input_reactives$mida <- mod_data$mida
-    input_reactives$tipo_grup_func <- mod_data$tipo_grup_func
-    input_reactives$grup_func <- mod_data$grup_func
-    input_reactives$statistic <- mod_data$statistic
-    input_reactives$agg_level <- mod_data$agg_level
-    input_reactives$viz_shape <- mod_data$viz_shape
-    input_reactives$apply_filters <- mod_data$apply_filters
-    input_reactives$map_draw_new_feature <- input$map_draw_new_feature
-    input_reactives$map_draw_deleted_features <- input$map_draw_deleted_features
-
-    return(input_reactives)
-  }) %>%
-    shiny::debounce(millis = 500)
-
-
+  # capture the custom polygon (if any) to use it later
   custom_polygon <- shiny::reactive({
 
     # When removing the features (custom polygon) the input$map_draw_new_feature
@@ -226,11 +196,76 @@ mod_map <- function(
     }
   })
 
-  input_map <- shiny::eventReactive(
-    ignoreInit = TRUE,
-    eventExpr = {
-      input_reactives()
-    },
+  # update inputs with variables present in data. We have four input scenarios
+  # so we build a reactive to know which scenario we have using the get_scenario
+  # function from global.R
+  input_scenario <- shiny::reactive({
+    get_scenario(mod_data$viz_shape, mod_data$agg_level)
+  })
+
+  # inputs to monitorize
+  # input_reactives <- shiny::reactive({
+  #   input_reactives <- list()
+  #   input_reactives$admin_div <- mod_data$admin_div
+  #   # input_reactives$admin_div_fil <- mod_data$admin_div_fil
+  #   input_reactives$espai_tipus <- mod_data$espai_tipus
+  #   # input_reactives$espai_tipus_fil <- mod_data$espai_tipus_fil
+  #   input_reactives$ifn <- mod_data$ifn
+  #   input_reactives$inverse_pal <- mod_data$inverse_pal
+  #   input_reactives$color <- mod_data$color
+  #   input_reactives$mida <- mod_data$mida
+  #   input_reactives$tipo_grup_func <- mod_data$tipo_grup_func
+  #   input_reactives$grup_func <- mod_data$grup_func
+  #   input_reactives$statistic <- mod_data$statistic
+  #   input_reactives$agg_level <- mod_data$agg_level
+  #   input_reactives$viz_shape <- mod_data$viz_shape
+  #   input_reactives$apply_filters <- mod_data$apply_filters
+  #   input_reactives$map_draw_new_feature <- input$map_draw_new_feature
+  #   input_reactives$map_draw_deleted_features <- input$map_draw_deleted_features
+  #
+  #   return(input_reactives)
+  # }) %>%
+  #   shiny::debounce(millis = 500)
+
+  base_data_reactives <- shiny::reactive({
+    base_data_reactives <- list()
+    base_data_reactives$admin_div <- mod_data$admin_div
+    # base_data_reactives$admin_div_fil <- mod_data$admin_div_fil
+    base_data_reactives$espai_tipus <- mod_data$espai_tipus
+    # base_data_reactives$espai_tipus_fil <- mod_data$espai_tipus_fil
+    base_data_reactives$ifn <- mod_data$ifn
+    base_data_reactives$agg_level <- mod_data$agg_level
+    base_data_reactives$apply_filters <- mod_data$apply_filters
+    base_data_reactives$map_draw_new_feature <- input$map_draw_new_feature
+    base_data_reactives$map_draw_deleted_features <- input$map_draw_deleted_features
+
+    return(base_data_reactives)
+  }) %>%
+    shiny::debounce(millis = 500)
+
+  base_data_modifs_reactives <- shiny::reactive({
+    base_data_modifs_reactives <- list()
+    base_data_modifs_reactives$ifn <- mod_data$ifn
+    base_data_modifs_reactives$admin_div <- mod_data$admin_div
+    base_data_modifs_reactives$inverse_pal <- mod_data$inverse_pal
+    base_data_modifs_reactives$color <- mod_data$color
+    base_data_modifs_reactives$mida <- mod_data$mida
+    base_data_modifs_reactives$tipo_grup_func <- mod_data$tipo_grup_func
+    base_data_modifs_reactives$grup_func <- mod_data$grup_func
+    base_data_modifs_reactives$statistic <- mod_data$statistic
+    base_data_modifs_reactives$agg_level <- mod_data$agg_level
+    base_data_modifs_reactives$viz_shape <- mod_data$viz_shape
+    base_data_modifs_reactives$apply_filters <- mod_data$apply_filters
+    base_data_modifs_reactives$map_draw_new_feature <- input$map_draw_new_feature
+    base_data_modifs_reactives$map_draw_deleted_features <- input$map_draw_deleted_features
+
+    return(base_data_modifs_reactives)
+  }) %>%
+    shiny::debounce(millis = 500)
+
+  map_base_data <- shiny::eventReactive(
+    ignoreInit = FALSE,
+    eventExpr = base_data_reactives(),
     valueExpr = {
 
       data_scenario_map <- data_scenario(
@@ -265,29 +300,97 @@ mod_map <- function(
         return()
 
       } else {
-        data_scenario_map %>%
-          map_modificator(
-            input_scenario(),
-            mod_data$ifn,
-            mod_data$inverse_pal,
-            mod_data$color,
-            mod_data$mida,
-            mod_data$tipo_grup_func,
-            mod_data$grup_func,
-            mod_data$statistic,
-            mod_data$admin_div,
-            mod_data$agg_level
-          )
+        return(data_scenario_map)
       }
     }
   )
 
-  shiny::observeEvent(
-    eventExpr = input_map(),
-    handlerExpr = {
-      input_map()
+  map_base_data_modifs <- shiny::eventReactive(
+    ignoreInit = TRUE,
+    eventExpr = base_data_modifs_reactives(),
+    valueExpr = {
+      map_base_data() %>%
+        map_modificator(
+          input_scenario(),
+          mod_data$ifn,
+          mod_data$inverse_pal,
+          mod_data$color,
+          mod_data$mida,
+          mod_data$tipo_grup_func,
+          mod_data$grup_func,
+          mod_data$statistic,
+          mod_data$admin_div,
+          mod_data$agg_level
+        )
     }
   )
+
+  shiny::observeEvent(
+    ignoreInit = TRUE,
+    eventExpr = map_base_data_modifs(),
+    handlerExpr = {
+      map_base_data_modifs()
+    }
+  )
+
+
+  # input_map <- shiny::eventReactive(
+  #   ignoreInit = TRUE,
+  #   eventExpr = {
+  #     input_reactives()
+  #   },
+  #   valueExpr = {
+  #
+  #     data_scenario_map <- data_scenario(
+  #       mod_data$admin_div,
+  #       mod_data$admin_div_fil,
+  #       mod_data$espai_tipus,
+  #       mod_data$espai_tipus_fil,
+  #       mod_data$ifn,
+  #       ifndb,
+  #       mod_data$agg_level,
+  #       diameter_classes = FALSE,
+  #       mod_advancedFilters$adv_fil_clima_expressions(),
+  #       mod_advancedFilters$adv_fil_sig_expressions(),
+  #       custom_polygon()
+  #     )
+  #
+  #     # check data integrity (zero rows)
+  #     if (
+  #       {
+  #         data_scenario_map[['clima']] %>%
+  #           dplyr::collect() %>%
+  #           nrow()
+  #       } < 1
+  #     ) {
+  #
+  #       shinyWidgets::sendSweetAlert(
+  #         session, title = 'Sin datos',
+  #         text = 'Con los filtros actuales activados no hay parcelas que cumplan los requisitos',
+  #         type = 'warning'
+  #       )
+  #
+  #       return()
+  #
+  #     } else {
+  #       data_scenario_map %>%
+  #         map_modificator(
+  #           input_scenario(),
+  #           mod_data$ifn,
+  #           mod_data$inverse_pal,
+  #           mod_data$color,
+  #           mod_data$mida,
+  #           mod_data$tipo_grup_func,
+  #           mod_data$grup_func,
+  #           mod_data$statistic,
+  #           mod_data$admin_div,
+  #           mod_data$agg_level
+  #         )
+  #     }
+  #   }
+  # )
+
+
 
   # reactive with the map events
   map_reactives <- shiny::reactiveValues()
@@ -295,7 +398,7 @@ mod_map <- function(
   shiny::observe({
     map_reactives$map_shape_click <- input$map_shape_click
     map_reactives$base_map <- base_map
-    map_reactives$input_map <- input_map
+    map_reactives$input_map <- map_base_data_modifs
     map_reactives$map_draw_start <- input$map_draw_start
     map_reactives$map_draw_stop <- input$map_draw_stop
     map_reactives$map_draw_new_feature <- input$map_draw_new_feature

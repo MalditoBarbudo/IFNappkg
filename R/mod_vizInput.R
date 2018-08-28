@@ -14,7 +14,7 @@ mod_vizInput <- function(id) {
   shiny::absolutePanel(
     id = 'vizControls', class = 'panel panel-default', fixed = TRUE,
     draggable = TRUE, width = 320, height = 'auto',
-    top = 60, right = 'auto', left = 700, bottom = 'auto',
+    top = 'auto', right = 60, left = 'auto', bottom = 150,
 
     shiny::tagList(
 
