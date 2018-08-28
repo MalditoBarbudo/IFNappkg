@@ -13,8 +13,8 @@ mod_vizInput <- function(id) {
   # UI
   shiny::absolutePanel(
     id = 'vizControls', class = 'panel panel-default', fixed = TRUE,
-    draggable = TRUE, width = 320, height = 'auto',
-    top = 'auto', right = 60, left = 'auto', bottom = 150,
+    draggable = TRUE, width = 380, height = 'auto',
+    top = 60, right = 400, left = 'auto', bottom = 'auto',
 
     shiny::tagList(
 
@@ -36,6 +36,11 @@ mod_vizInput <- function(id) {
           )
         ),
         shinyWidgets::pickerInput(
+          ns('statistic'), label = label_statistic[['esp']],
+          choices = dic_statistic_choices[['esp']],
+          width = '100%'
+        ),
+        shinyWidgets::pickerInput(
           ns('tipo_grup_func'), label_tipo_grup_func[['esp']],
           choices = dic_tipo_grup_func_choices[['esp']],
           selected = 'cadesccon', width = '100%'
@@ -43,11 +48,6 @@ mod_vizInput <- function(id) {
         shinyWidgets::pickerInput(
           ns('grup_func'), label_grup_func[['esp']][['scenario3']][['especie']],
           choices = dic_grup_func_choices[['esp']][['scenario3']][['especie']],
-          width = '100%'
-        ),
-        shinyWidgets::pickerInput(
-          ns('statistic'), label = label_statistic[['esp']],
-          choices = dic_statistic_choices[['esp']],
           width = '100%'
         )
       )

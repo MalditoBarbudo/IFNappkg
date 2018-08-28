@@ -309,6 +309,17 @@ mod_map <- function(
     ignoreInit = TRUE,
     eventExpr = base_data_modifs_reactives(),
     valueExpr = {
+
+      # create a progress object to indicate the user this will take time
+      progress <- shiny::Progress$new()
+      progress$set(value = 0, message = 'Procesando el mapa...')
+      on.exit(progress$close())
+
+      updateProgress <- function(value = NULL, detail = NULL) {
+        progress$set(value = value, detail = detail)
+      }
+
+
       map_base_data() %>%
         map_modificator(
           input_scenario(),
@@ -320,7 +331,8 @@ mod_map <- function(
           mod_data$grup_func,
           mod_data$statistic,
           mod_data$admin_div,
-          mod_data$agg_level
+          mod_data$agg_level,
+          updateProgress = updateProgress
         )
     }
   )

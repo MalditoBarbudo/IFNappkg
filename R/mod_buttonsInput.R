@@ -16,12 +16,13 @@ mod_buttonsInput <- function(id) {
       12,
       shinyWidgets::actionGroupButtons(
         inputIds = c(
-          ns('show_filter_def'), ns('show_agg'), ns('show_viz')
+          ns('show_agg'), ns('show_filter_def'), ns('show_viz')
         ),
         labels = c(
-          'Filtros', 'Agregación', 'Visualización'
+          'Agregación', 'Filtros', 'Visualización'
         ),
-        status = 'danger', size = 'sm', direction = 'horizontal', fullwidth = TRUE
+        status = 'success', size = 'sm',
+        direction = 'horizontal', fullwidth = TRUE
       )
       # ... other buttons, to develop
     )

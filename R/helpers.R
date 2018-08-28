@@ -177,6 +177,7 @@ data_scenario <- function(
 #' @param tipo_grup_func Input
 #' @param grup_func Input
 #' @param statistic Input
+#' @param updateProgress progress function to monitorize the map drawing
 #'
 #' @export
 map_modificator <- function(
@@ -190,7 +191,8 @@ map_modificator <- function(
   grup_func,
   statistic,
   admin_div,
-  agg_level
+  agg_level,
+  updateProgress = NULL
 ) {
 
   # noms division
@@ -206,6 +208,14 @@ map_modificator <- function(
   # scenario 1, plots no breakdown
   if (scenario == 'scenario1') {
 
+    # updateProgress setup
+    if (is.function(updateProgress)) {
+      updateProgress(
+        value = 0.33,
+        detail = 'Procesando datos'
+      )
+    }
+
     # viz_inputs needed
     color_val <- color
     mida_val <- mida
@@ -214,8 +224,7 @@ map_modificator <- function(
     inverse_pal_val <- inverse_pal
     admin_div_val <- admin_div
 
-    # debug
-    # browser()
+
 
     # vars to select
     vars_to_sel <- c(
@@ -290,6 +299,14 @@ map_modificator <- function(
 
     mida_vector[is.na(color_vector)] <- 250
 
+    # updateProgress setup
+    if (is.function(updateProgress)) {
+      updateProgress(
+        value = 0.72,
+        detail = 'Creando el mapa'
+      )
+    }
+
     # update map
     return({
       leaflet::leafletProxy('map', data = data_map) %>%
@@ -335,6 +352,14 @@ map_modificator <- function(
   }
 
   if (scenario == 'scenario2') {
+
+    # updateProgress setup
+    if (is.function(updateProgress)) {
+      updateProgress(
+        value = 0.33,
+        detail = 'Procesando datos'
+      )
+    }
 
     # viz_inputs needed
     color_val <- color
@@ -429,6 +454,14 @@ map_modificator <- function(
 
     mida_vector[is.na(color_vector)] <- 250
 
+    # updateProgress setup
+    if (is.function(updateProgress)) {
+      updateProgress(
+        value = 0.72,
+        detail = 'Creando el mapa'
+      )
+    }
+
     # update map
     return({
       leaflet::leafletProxy('map', data = data_map) %>%
@@ -469,6 +502,14 @@ map_modificator <- function(
   }
 
   if (scenario == 'scenario3') {
+
+    # updateProgress setup
+    if (is.function(updateProgress)) {
+      updateProgress(
+        value = 0.33,
+        detail = 'Procesando datos'
+      )
+    }
 
     # viz_inputs needed
     color_val <- color
@@ -535,6 +576,14 @@ map_modificator <- function(
       }
     }
 
+    # updateProgress setup
+    if (is.function(updateProgress)) {
+      updateProgress(
+        value = 0.72,
+        detail = 'Creando el mapa'
+      )
+    }
+
     if (admin_div_val == '') {
       return({
         leaflet::leafletProxy('map') %>%
@@ -577,6 +626,14 @@ map_modificator <- function(
   }
 
   if (scenario == 'scenario4') {
+
+    # updateProgress setup
+    if (is.function(updateProgress)) {
+      updateProgress(
+        value = 0.33,
+        detail = 'Procesando datos'
+      )
+    }
 
     # viz_inputs needed
     color_val <- color
@@ -630,6 +687,14 @@ map_modificator <- function(
       } else {
         pal <- leaflet::colorFactor('viridis', color_vector, reverse = inverse_pal_val)
       }
+    }
+
+    # updateProgress setup
+    if (is.function(updateProgress)) {
+      updateProgress(
+        value = 0.72,
+        detail = 'Creando el mapa'
+      )
     }
 
     if (admin_div_val == '') {

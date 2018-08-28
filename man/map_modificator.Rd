@@ -5,7 +5,8 @@
 \title{modifcate the map based on vis inputs}
 \usage{
 map_modificator(data_scenario, scenario, ifn, inverse_pal, color, mida,
-  tipo_grup_func, grup_func, statistic, admin_div, agg_level)
+  tipo_grup_func, grup_func, statistic, admin_div, agg_level,
+  updateProgress = NULL)
 }
 \arguments{
 \item{data_scenario}{tbl_sql object}
@@ -25,6 +26,8 @@ map_modificator(data_scenario, scenario, ifn, inverse_pal, color, mida,
 \item{grup_func}{Input}
 
 \item{statistic}{Input}
+
+\item{updateProgress}{progress function to monitorize the map drawing}
 }
 \description{
 this returns the leaflet proxy object to modify the map
