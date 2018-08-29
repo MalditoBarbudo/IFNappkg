@@ -579,7 +579,7 @@ dic_agg_level_choices <- list(
     'Desglossat per Conífera/Planifoli' = 'planifconif'
   ),
   esp = c(
-    'Agregado o Total???' = 'parcela',
+    'Total por parcela' = 'parcela',
     'Desglosado por Especie' = 'especie',
     'Desglosado por Especie simplificada' = 'especiesimp',
     'Desglosado por Género' = 'genere',

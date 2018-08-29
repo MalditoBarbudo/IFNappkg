@@ -14,19 +14,19 @@ mod_vizInput <- function(id) {
   shiny::absolutePanel(
     id = 'vizControls', class = 'panel panel-default', fixed = TRUE,
     draggable = TRUE, width = 380, height = 'auto',
-    top = 60, right = 400, left = 'auto', bottom = 'auto',
+    top = 400, right = 60, left = 'auto', bottom = 'auto',
 
     shiny::tagList(
 
       shiny::wellPanel(
         shiny::h3('Visualización'),
         shinyWidgets::pickerInput(
-          ns('color'), 'Color',
+          ns('color'), 'Selecciona la variable para colorear',
           dic_color_choices[['esp']][['scenario3']],
           width = '100%'
         ),
         shinyWidgets::awesomeCheckbox(
-          ns('inverse_pal'), 'Invertir colors', value = FALSE, status = 'info'
+          ns('inverse_pal'), '¿Invertir paleta?', value = FALSE, status = 'info'
         ),
         shinyjs::hidden(
           shinyWidgets::pickerInput(

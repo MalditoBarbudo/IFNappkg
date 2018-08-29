@@ -14,6 +14,9 @@ mod_buttonsInput <- function(id) {
   shiny::fluidRow(
     shiny::column(
       12,
+      # title
+      shiny::tags$strong('Muestra/oculta controles adicionales'),
+      # buttons
       shinyWidgets::actionGroupButtons(
         inputIds = c(
           ns('show_agg'), ns('show_filter_def'), ns('show_viz')

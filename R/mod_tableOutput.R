@@ -35,6 +35,10 @@ mod_tableOutput <- function(id) {
             style = 'minimal'
           )
         ),
+
+        shiny::br(),
+        shiny::br(),
+
         shiny::fluidRow(
           shinyWidgets::pickerInput(
             ns('col_vis_selector'), 'Show/Hide columns',
@@ -187,11 +191,13 @@ mod_table <- function(
     # tag list to return for the UI
     shiny::tagList(
       col_filter_inputs(),
+      shiny::br(),
+      shiny::br(),
       shinyWidgets::actionBttn(
         ns('apply_table_filters'), 'Aplicar filtros',
         icon = shiny::icon('eye'),
         style = "material-flat",
-        block = TRUE,
+        block = FALSE,
         size = 'sm'
       )
     )

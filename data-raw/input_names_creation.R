@@ -111,14 +111,14 @@ label_diam_class <- list(
 # mida input (size)
 label_mida <- list(
   cat = 'Mida',
-  esp = 'Tamaño',
+  esp = 'Selecciona la variable para modificar el tamaño de la parcela',
   eng = 'Size'
 )
 
 # tipo_grup_func input
 label_tipo_grup_func <- list(
   cat = 'Tipus grup funcional dominant',
-  esp = 'Tipo de grupo funcional dominante',
+  esp = 'Elige el tipo de grupo funcional dominante a visualizar',
   eng = 'Dominant functional group type'
 )
 
@@ -142,18 +142,18 @@ label_grup_func <- list(
   ),
   esp = list(
     scenario1 = list(
-      especie = 'Muestra la especie dominante en densidad',
-      especiesimp = 'Muestra la especie simplificada dominante en densidad',
-      genere = 'Muestra el género dominante en densidad',
-      cadesccon = 'Muestra la Caducifolia/Esclerofila/Conífera dominante en densidad',
-      planifconif = 'Muestra la Planifolia/Conífera dominante en densidad'
+      especie = 'Elige la especie dominante en densidad a mostrar',
+      especiesimp = 'Elige la especie simplificada dominante en densidad a mostrar',
+      genere = 'Elige el género dominante en densidad a mostrar',
+      cadesccon = 'Elige la Caducifolia/Esclerofila/Conífera dominante en densidad a mostrar',
+      planifconif = 'Elige la Planifolia/Conífera dominante en densidad a mostrar'
     ),
     scenario2 = list(
-      especie = 'Selecciona la especie a visualizar',
-      especiesimp = 'Selecciona la especie simplificada a visualizar',
-      genere = 'Selecciona el género a visualizar',
-      cadesccon = 'Selecciona la Caducifolia/Esclerofila/Conífera a visualizar',
-      planifconif = 'Selecciona la Planifolia/Conífera a visualizar'
+      especie = 'Elige la especie a mostrar',
+      especiesimp = 'Elige la especie simplificada a mostrar',
+      genere = 'Elige el género a mostrar',
+      cadesccon = 'Elige la Caducifolia/Esclerofila/Conífera a mostrar',
+      planifconif = 'Elige la Planifolia/Conífera a mostrar'
     )
   ),
   eng = list(
@@ -184,7 +184,7 @@ label_grup_func$eng$scenario4 <- label_grup_func$eng$scenario2
 # statistic input
 label_statistic <- list(
   cat = 'Mètrica',
-  esp = 'Métrica',
+  esp = 'Métrica a visualizar',
   eng = 'Metric'
 )
 
