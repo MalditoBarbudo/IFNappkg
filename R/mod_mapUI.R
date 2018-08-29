@@ -319,21 +319,55 @@ mod_map <- function(
         progress$set(value = value, detail = detail)
       }
 
+      # map_modificator takes some serious time (that's the reason behind the
+      # progress function, to inform the user). But it also makes unresponsive
+      # the app when calculating the map and this can be a problem with
+      # concurrent users. So, let's try to build a future and use the async
+      # capability of future, promises and shiny.
+      # For this, we need to collect the inputs before calling the future
+      ifn_val <- mod_data$ifn
+      inverse_pal_val <- mod_data$inverse_pal
+      color_val <- mod_data$color
+      mida_val <- mod_data$mida
+      tipo_grup_func_val <- mod_data$tipo_grup_func
+      grup_func_val <- mod_data$grup_func
+      statistic_val <- mod_data$statistic
+      admin_div_val <- mod_data$admin_div
+      agg_level_val <- mod_data$agg_level
+      input_scenario_val <- input_scenario()
+      map_base_data_val <- map_base_data()
 
-      map_base_data() %>%
-        map_modificator(
-          input_scenario(),
-          mod_data$ifn,
-          mod_data$inverse_pal,
-          mod_data$color,
-          mod_data$mida,
-          mod_data$tipo_grup_func,
-          mod_data$grup_func,
-          mod_data$statistic,
-          mod_data$admin_div,
-          mod_data$agg_level,
-          updateProgress = updateProgress
-        )
+      future::future({
+        map_base_data_val %>%
+          map_modificator(
+            input_scenario_val,
+            ifn_val,
+            inverse_pal_val,
+            color_val,
+            mida_val,
+            tipo_grup_func_val,
+            grup_func_val,
+            statistic_val,
+            admin_div_val,
+            agg_level_val,
+            updateProgress = updateProgress
+          )
+      })
+      # original non async function
+      # map_base_data() %>%
+      #   map_modificator(
+      #     input_scenario(),
+      #     mod_data$ifn,
+      #     mod_data$inverse_pal,
+      #     mod_data$color,
+      #     mod_data$mida,
+      #     mod_data$tipo_grup_func,
+      #     mod_data$grup_func,
+      #     mod_data$statistic,
+      #     mod_data$admin_div,
+      #     mod_data$agg_level,
+      #     updateProgress = updateProgress
+      #   )
     }
   )
 
