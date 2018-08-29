@@ -15,14 +15,7 @@ mod_tableOutput <- function(id) {
 
     shiny::fluidRow(
       shiny::column(
-        8,
-        DT::DTOutput(ns('ifn_table')) %>%
-          shinycssloaders::withSpinner(
-            type = 4, color = '#D2527F'
-          )
-      ),
-      shiny::column(
-        4,
+        2,
         shiny::fluidRow(
           shinyWidgets::downloadBttn(
             ns('dwl_csv_button'), 'Save csv',
@@ -66,6 +59,14 @@ mod_tableOutput <- function(id) {
           ),
           shiny::uiOutput(ns('col_filter'))
         )
+      ),
+      shiny::column(
+        10,
+        # DT::DTOutput(ns('ifn_table')) %>%
+        formattable::formattableOutput(ns('ifn_table')) %>%
+          shinycssloaders::withSpinner(
+            type = 4, color = '#D2527F'
+          )
       )
     )
   )
@@ -229,8 +230,9 @@ mod_table <- function(
     }
   )
 
-  output$ifn_table <- DT::renderDT(
-    server = TRUE,
+  # output$ifn_table <- DT::renderDT(
+  output$ifn_table <- formattable::renderFormattable(
+    # server = TRUE,
     expr = {
 
       shiny::validate(
@@ -261,27 +263,47 @@ mod_table <- function(
         )
       }
 
+      # data_table_temp %>%
+      #   DT::datatable(
+      #     # filter = list(position = 'top', clear = FALSE, plain = TRUE),
+      #     selection = list(target = 'column'),
+      #     style = 'default', rownames = FALSE,
+      #     fillContainer = TRUE, autoHideNavigation = TRUE,
+      #     extensions = c('Scroller'),
+      #     options = list(
+      #       autoWidth = TRUE,
+      #       deferRender = TRUE, scrollY = '70vh', scroller = TRUE,
+      #       dom = 'ti'
+      #     )
+      #   ) %>%
+      #   DT::formatRound(
+      #     columns = {
+      #       data_table_temp %>%
+      #         purrr::map(is.numeric) %>%
+      #         purrr::flatten_lgl()
+      #     },
+      #     digits = 2
+      #   )
+
+      # formattable accepts the format in a list with column names as list
+      # names. So we need to create this list outside the formattable function
+      # because we don't know the column names or indexes a priori
+      num_cols_names <- data_table_temp %>%
+        dplyr::select_if(is.numeric) %>%
+        names()
+
+      formattable_options <- lapply(
+        num_cols_names, function(x) {
+          formattable::color_tile('#C8F7C5', '#26A65B')
+        }
+      )
+
+      names(formattable_options) <- num_cols_names
+
+      # formattable
       data_table_temp %>%
-        DT::datatable(
-          # filter = list(position = 'top', clear = FALSE, plain = TRUE),
-          selection = list(target = 'column'),
-          style = 'default', rownames = FALSE,
-          fillContainer = TRUE, autoHideNavigation = TRUE,
-          extensions = c('Scroller'),
-          options = list(
-            autoWidth = TRUE,
-            deferRender = TRUE, scrollY = '70vh', scroller = TRUE,
-            dom = 'ti'
-          )
-        ) %>%
-        DT::formatRound(
-          columns = {
-            data_table_temp %>%
-              purrr::map(is.numeric) %>%
-              purrr::flatten_lgl()
-          },
-          digits = 2
-        )
+        dplyr::mutate_if(is.numeric, round, 2) %>%
+        formattable::formattable(formattable_options)
 
     }
   )

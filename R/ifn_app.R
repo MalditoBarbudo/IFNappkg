@@ -80,7 +80,10 @@ ifn_app <- function() {
       shiny::tabPanel(
         "Explora les dades",
 
-        mod_tableOutput('mod_tableOutput')
+        shiny::div(
+          class = 'inner',
+          mod_tableOutput('mod_tableOutput')
+        )
       ),
 
       # Alometrias tab
