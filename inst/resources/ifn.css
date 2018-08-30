@@ -20,6 +20,17 @@ div.outer {
   padding: 0;
 }
 
+/* table container */
+div.inner {
+  position: fixed;
+  top: 45px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 50px;
+  overflow: auto;
+}
+
 /* Position and style citation */
 #cite {
   position: absolute;
