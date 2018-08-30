@@ -29,6 +29,30 @@ mod_tableOutput <- function(id) {
           )
         ),
 
+        shiny::hr(),
+        shiny::fluidRow(
+          shinyjs::hidden(
+            shiny::div(
+              id = ns('sigclima_checkboxes'),
+              shinyWidgets::awesomeCheckbox(
+                ns('SIG_CLIMA'), 'Añadir datos SIG y CLIMA a la descarga',
+                value = FALSE, status = 'info'
+              )
+            )
+          ),
+          shinyjs::hidden(
+            shiny::div(
+              id = ns('sigclima_buttons'),
+              shinyWidgets::downloadBttn(
+                ns('SIG_CLIMA_download'), 'Descargar datos SIG y Clima',
+                color = 'primary', size = 'sm', block = FALSE,
+                style = 'minimal'
+              )
+            )
+          )
+        ),
+        shiny::hr(),
+
         shiny::br(),
         shiny::br(),
 
@@ -61,7 +85,7 @@ mod_tableOutput <- function(id) {
           shiny::br(),
           shiny::br(),
           shinyWidgets::actionBttn(
-            ns('apply_table_filters'), 'Aplicar filtros',
+            ns('apply_table_filters'), 'Aplicar columnas y filtros',
             icon = shiny::icon('eye'),
             style = "material-flat",
             block = FALSE,
@@ -71,8 +95,8 @@ mod_tableOutput <- function(id) {
       ),
       shiny::column(
         10,
-        # DT::DTOutput(ns('ifn_table')) %>%
-        formattable::formattableOutput(ns('ifn_table')) %>%
+        DT::DTOutput(ns('ifn_table')) %>%
+        # formattable::formattableOutput(ns('ifn_table')) #%>%
           shinycssloaders::withSpinner(
             type = 4, color = '#D2527F'
           )
@@ -123,6 +147,7 @@ mod_table <- function(
   base_data_reactives <- shiny::reactive({
     base_data_reactives <- list()
     base_data_reactives$admin_div <- mod_data$admin_div
+    base_data_reactives$viz_shape <- mod_data$viz_shape
     # base_data_reactives$admin_div_fil <- mod_data$admin_div_fil
     base_data_reactives$espai_tipus <- mod_data$espai_tipus
     # base_data_reactives$espai_tipus_fil <- mod_data$espai_tipus_fil
@@ -134,11 +159,10 @@ mod_table <- function(
     base_data_reactives$map_draw_deleted_features <- mod_map$map_draw_deleted_features
 
     return(base_data_reactives)
-  }) %>%
-    shiny::debounce(millis = 500)
+  })
 
   # base data from data_scenario
-  table_base_data <- shiny::eventReactive(
+  table_base_data_raw <- shiny::eventReactive(
     ignoreInit = FALSE,
     eventExpr = base_data_reactives(),
     valueExpr = {
@@ -175,14 +199,84 @@ mod_table <- function(
         return(NULL)
 
       } else {
-        data_scenario_table %>%
-          table_data_modificator(
-            scenario_reac(),
-            mod_data$admin_div, mod_data$agg_level, mod_data$diameter_classes
-          )
+        return(data_scenario_table)
       }
     }
   )
+
+  table_base_data <- shiny::reactive({
+    table_base_data_raw() %>%
+      table_data_modificator(
+        scenario_reac(),
+        mod_data$admin_div, mod_data$agg_level, mod_data$diameter_classes
+      )
+  })
+
+  # output$sig_and_clima_opts <- shiny::renderUI({
+  #   # get the session ns to be able to tag the inputs with correct id
+  #   ns <- session$ns
+  #
+  #   # we create all, and hidden
+  #   shiny::tagList(
+  #     shinyjs::hidden(
+  #       shiny::div(
+  #         id = ns('sigclima_checkboxes'),
+  #         shinyWidgets::awesomeCheckbox(
+  #           ns('SIG_CLIMA'), 'Añadir datos SIG y CLIMA a la descarga',
+  #           value = FALSE, status = 'info'
+  #         )
+  #       )
+  #     ),
+  #     shinyjs::hidden(
+  #       shiny::div(
+  #         id = ns('sigclima_buttons'),
+  #         shinyWidgets::downloadBttn(
+  #           ns('SIG_CLIMA_download'), 'Descargar datos SIG y Clima',
+  #           color = 'primary', size = 'sm', block = FALSE,
+  #           style = 'minimal'
+  #         )
+  #       )
+  #     )
+  #   )
+  #
+  #   # # depending on scenario, build the buttons or the checkboxes
+  #   # if (scenario_reac() %in% c('scenario1', 'scenario2')) {
+  #   #   shiny::tagList(
+  #   #     shinyWidgets::awesomeCheckbox(
+  #   #       ns('SIG_CLIMA'), 'Añadir datos SIG y CLIMA a la descarga',
+  #   #       value = FALSE, status = 'info'
+  #   #     )
+  #   #   )
+  #   # } else {
+  #   #   shiny::tagList(
+  #   #     shinyWidgets::downloadBttn(
+  #   #       ns('SIG_CLIMA_download'), 'Descargar datos SIG y Clima',
+  #   #       color = 'primary', size = 'sm', block = FALSE,
+  #   #       style = 'minimal'
+  #   #     )
+  #   #   )
+  #   # }
+  # })
+
+  # depending on the scenario, we need to show/enable and hide/disable the
+  # SIGCLIMA download helpers inputs
+  shiny::observe({
+    if (scenario_reac() %in% c('scenario1', 'scenario2')) {
+      # show/enable
+      shinyjs::enable('SIG_CLIMA')
+      shinyjs::showElement('sigclima_checkboxes')
+      # hide/disable
+      shinyjs::disable('SIG_CLIMA_download')
+      shinyjs::hideElement('sigclima_buttons')
+    } else {
+      # hide/disable
+      shinyjs::disable('SIG_CLIMA')
+      shinyjs::hideElement('sigclima_checkboxes')
+      # show/enable
+      shinyjs::enable('SIG_CLIMA_download')
+      shinyjs::showElement('sigclima_buttons')
+    }
+  })
 
   output$col_filter <- shiny::renderUI({
 
@@ -253,7 +347,7 @@ mod_table <- function(
   base_data_modifs_reactives <- shiny::reactive({
     base_data_modifs_reactives <- list()
     base_data_modifs_reactives$table_base_data <- table_base_data()
-    base_data_modifs_reactives$col_vis_selector <- input$col_vis_selector
+    # base_data_modifs_reactives$col_vis_selector <- input$col_vis_selector
     base_data_modifs_reactives$apply_table_filters <- input$apply_table_filters
   })
 
@@ -314,25 +408,35 @@ mod_table <- function(
     }
   )
 
-  # output$ifn_table <- DT::renderDT(
-  output$ifn_table <- formattable::renderFormattable(
-    # server = TRUE,
+  output$ifn_table <- DT::renderDT(
+  # output$ifn_table <- formattable::renderFormattable(
+    server = TRUE,
     expr = {
 
-      table_base_data_modifs()
+      table_base_data_modifs() %>%
+      formattable::as.datatable(
+        style = 'default', rownames = FALSE,
+        fillContainer = TRUE, autoHideNavigation = TRUE,
+        extensions = c('Scroller'),
+        options = list(
+          autoWidth = TRUE,
+          deferRender = TRUE, scrollY = '70vh', scroller = TRUE,
+          dom = 'ti'
+        )
+      )
 
       # data_table_temp %>%
       #   DT::datatable(
       #     # filter = list(position = 'top', clear = FALSE, plain = TRUE),
-      #     selection = list(target = 'column'),
-      #     style = 'default', rownames = FALSE,
-      #     fillContainer = TRUE, autoHideNavigation = TRUE,
-      #     extensions = c('Scroller'),
-      #     options = list(
-      #       autoWidth = TRUE,
-      #       deferRender = TRUE, scrollY = '70vh', scroller = TRUE,
-      #       dom = 'ti'
-      #     )
+          # selection = list(target = 'column'),
+          # style = 'default', rownames = FALSE,
+          # fillContainer = TRUE, autoHideNavigation = TRUE,
+          # extensions = c('Scroller'),
+          # options = list(
+          #   autoWidth = TRUE,
+          #   deferRender = TRUE, scrollY = '70vh', scroller = TRUE,
+          #   dom = 'ti'
+          # )
       #   ) %>%
       #   DT::formatRound(
       #     columns = {
@@ -350,9 +454,25 @@ mod_table <- function(
       'IFN_data.csv'
     },
     content = function(file) {
-      table_base_data_modifs() %>%
-        dplyr::as_data_frame() %>%
-        readr::write_csv(file)
+
+      if (input$SIG_CLIMA) {
+
+        sig_clima <- dplyr::left_join(
+          table_base_data_raw()[['sig']], table_base_data_raw()[['clima']],
+          by = 'idparcela'
+        ) %>%
+          dplyr::collect()
+
+        table_base_data_modifs() %>%
+          as.data.frame() %>%
+          dplyr::left_join(sig_clima, by = 'idparcela') %>%
+          readr::write_csv(file)
+      } else {
+
+        table_base_data_modifs() %>%
+          as.data.frame() %>%
+          readr::write_csv(file)
+      }
     }
   )
 
@@ -361,9 +481,38 @@ mod_table <- function(
       'IFN_data.xlsx'
     },
     content = function(file) {
-      table_base_data_modifs() %>%
-        dplyr::as_data_frame() %>%
-        writexl::write_xlsx(file)
+
+      if (input$SIG_CLIMA) {
+
+        sig_clima <- dplyr::left_join(
+          table_base_data_raw()[['sig']], table_base_data_raw()[['clima']],
+          by = 'idparcela'
+        ) %>%
+          dplyr::collect()
+
+        table_base_data_modifs() %>%
+          dplyr::as_data_frame() %>%
+          dplyr::left_join(sig_clima, by = 'idparcela') %>%
+          writexl::write_xlsx(file)
+      } else {
+        table_base_data_modifs() %>%
+          dplyr::as_data_frame() %>%
+          writexl::write_xlsx(file)
+      }
+    }
+  )
+
+  output$SIG_CLIMA_download <- shiny::downloadHandler(
+    filename = function() {
+      'IFN_sig_and_clima.csv'
+    },
+    content = function(file) {
+      dplyr::left_join(
+        table_base_data_raw()[['sig']], table_base_data_raw()[['clima']],
+        by = 'idparcela'
+      ) %>%
+        dplyr::collect() %>%
+        readr::write_csv(file)
     }
   )
 
