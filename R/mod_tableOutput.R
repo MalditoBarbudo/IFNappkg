@@ -115,6 +115,8 @@ mod_tableOutput <- function(id) {
 #' @param mod_map reactive with the mod_map inputs
 #' @param ifndb db pool
 #'
+#' @importFrom magrittr %T>%
+#'
 #' @export
 #'
 #' @rdname mod_tableOutput
@@ -167,6 +169,15 @@ mod_table <- function(
     eventExpr = base_data_reactives(),
     valueExpr = {
 
+      # create a progress object to indicate the user this will take time
+      progress <- shiny::Progress$new(min = 0, max = 0.32)
+      progress$set(value = 0, message = 'Retrieving data...')
+      on.exit(progress$close())
+
+      updateProgress <- function(value = NULL, detail = NULL) {
+        progress$set(value = value, detail = detail)
+      }
+
       data_scenario_table <- data_scenario(
         mod_data$admin_div,
         mod_data$admin_div_fil,
@@ -178,7 +189,8 @@ mod_table <- function(
         mod_data$diameter_classes,
         mod_advancedFilters$adv_fil_clima_expressions(),
         mod_advancedFilters$adv_fil_sig_expressions(),
-        mod_map$custom_polygon()
+        mod_map$custom_polygon(),
+        updateProgress = updateProgress
       )
 
       # check data integrity (zero rows)
@@ -205,10 +217,21 @@ mod_table <- function(
   )
 
   table_base_data <- shiny::reactive({
+
+    # create a progress object to indicate the user this will take time
+    progress <- shiny::Progress$new(min = 0.33, max = 0.62)
+    progress$set(value = 0.33, message = 'Procesando la tabla...')
+    on.exit(progress$close())
+
+    updateProgress <- function(value = NULL, detail = NULL) {
+      progress$set(value = value, detail = detail)
+    }
+
     table_base_data_raw() %>%
       table_data_modificator(
         scenario_reac(),
-        mod_data$admin_div, mod_data$agg_level, mod_data$diameter_classes
+        mod_data$admin_div, mod_data$agg_level, mod_data$diameter_classes,
+        updateProgress = updateProgress
       )
   })
 
@@ -360,7 +383,22 @@ mod_table <- function(
         shiny::need(table_base_data(), 'No hay datos')
       )
 
+      # create a progress object to indicate the user this will take time
+      progress <- shiny::Progress$new(min = 0.63, max = 1)
+      progress$set(value = 0.63, message = 'Formateando la tabla...')
+      on.exit(progress$close())
+
+      updateProgress <- function(value = NULL, detail = NULL) {
+        progress$set(value = value, detail = detail)
+      }
+
       if (is.null(input$col_vis_selector)) {
+        # updateProgress setup
+        updateProgress(
+          value = 0.73,
+          detail = ''
+        )
+
         data_table_temp <- table_base_data() %>%
           dplyr::filter(!!! col_filter_expressions())
 
@@ -371,6 +409,11 @@ mod_table <- function(
           )
         )
       } else {
+        # updateProgress setup
+        updateProgress(
+          value = 0.73,
+          detail = ''
+        )
         data_table_temp <- table_base_data() %>%
           dplyr::filter(!!! col_filter_expressions()) %>%
           dplyr::select(dplyr::one_of(input$col_vis_selector))
@@ -387,6 +430,12 @@ mod_table <- function(
       # formattable accepts the format in a list with column names as list
       # names. So we need to create this list outside the formattable function
       # because we don't know the column names or indexes a priori
+
+      # updateProgress setup
+      updateProgress(
+        value = 0.83,
+        detail = ''
+      )
       num_cols_names <- data_table_temp %>%
         dplyr::select_if(is.numeric) %>%
         names()
@@ -400,11 +449,23 @@ mod_table <- function(
       names(formattable_options) <- num_cols_names
 
       # formattable
-      return(
-        data_table_temp %>%
-          dplyr::mutate_if(is.numeric, round, 2) %>%
-          formattable::formattable(formattable_options)
-      )
+      # updateProgress setup
+      updateProgress(value = 0.92, detail = '')
+      data_table_temp %>%
+        dplyr::mutate_if(is.numeric, round, 2) %>%
+        formattable::formattable(formattable_options) %>%
+        formattable::as.datatable(
+          style = 'default', rownames = FALSE,
+          fillContainer = TRUE, autoHideNavigation = TRUE,
+          extensions = c('Scroller'),
+          options = list(
+            autoWidth = TRUE,
+            deferRender = TRUE, scrollY = '70vh', scroller = TRUE,
+            dom = 'ti'
+          )
+        ) -> data_table_mutated
+      updateProgress(value = 0.99, detail = '')
+      return(data_table_mutated)
     }
   )
 
@@ -413,17 +474,7 @@ mod_table <- function(
     server = TRUE,
     expr = {
 
-      table_base_data_modifs() %>%
-      formattable::as.datatable(
-        style = 'default', rownames = FALSE,
-        fillContainer = TRUE, autoHideNavigation = TRUE,
-        extensions = c('Scroller'),
-        options = list(
-          autoWidth = TRUE,
-          deferRender = TRUE, scrollY = '70vh', scroller = TRUE,
-          dom = 'ti'
-        )
-      )
+      table_base_data_modifs()
 
       # data_table_temp %>%
       #   DT::datatable(

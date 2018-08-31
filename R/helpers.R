@@ -61,10 +61,18 @@ data_scenario <- function(
   diameter_classes,
   clima_filters,
   sig_extra_filters,
-  custom_polygon = NULL
+  custom_polygon = NULL,
+  updateProgress = NULL
 ) {
 
   ## SIG data
+  # updateProgress setup (only for table generation)
+  if (is.function(updateProgress)) {
+    updateProgress(
+      value = 0.1,
+      detail = 'SIG data'
+    )
+  }
   # admin_div filter
   if (is.null(admin_div_fil) ||
       any(admin_div_fil == '')) {
@@ -141,6 +149,13 @@ data_scenario <- function(
 
 
   ## CLIMA data
+  # updateProgress setup (only for table generation)
+  if (is.function(updateProgress)) {
+    updateProgress(
+      value = 0.2,
+      detail = 'Clima data'
+    )
+  }
   clima <- tidyIFN::data_clima(sig, ifn, ifndb, !!! clima_filters)
   clima_plots <- try(clima %>% dplyr::pull(idparcela))
 
@@ -152,6 +167,13 @@ data_scenario <- function(
   }
 
   ## CORE data
+  # updateProgress setup (only for table generation)
+  if (is.function(updateProgress)) {
+    updateProgress(
+      value = 0.3,
+      detail = 'Core data'
+    )
+  }
   core <- tidyIFN::data_core(
     sig, ifn, agg_level, ifndb, clima_plots, diameter_classes
   )
@@ -1090,15 +1112,30 @@ table_data_modificator <- function(
   scenario,
   admin_div,
   agg_level,
-  diameter_classes
+  diameter_classes,
+  updateProgress = NULL
 ) {
 
   # scenario 1, plots no breakdown
   if (scenario == 'scenario1') {
+    # updateProgress setup
+    if (is.function(updateProgress)) {
+      updateProgress(
+        value = 0.53,
+        detail = 'Procesando datos'
+      )
+    }
     return(data_scenario[['core']] %>% dplyr::collect())
   }
 
   if (scenario == 'scenario2') {
+    # updateProgress setup
+    if (is.function(updateProgress)) {
+      updateProgress(
+        value = 0.53,
+        detail = 'Procesando datos'
+      )
+    }
     return(data_scenario[['core']] %>% dplyr::collect())
   }
 
@@ -1106,6 +1143,13 @@ table_data_modificator <- function(
     # inputs needed
     admin_div_val <- admin_div
 
+    # updateProgress setup
+    if (is.function(updateProgress)) {
+      updateProgress(
+        value = 0.53,
+        detail = 'Procesando datos'
+      )
+    }
     return(
       data_scenario[['core']] %>%
         dplyr::collect() %>%
@@ -1120,6 +1164,13 @@ table_data_modificator <- function(
     admin_div_val <- admin_div
     agg_level_val <- glue::glue('id{agg_level}')
 
+    # updateProgress setup
+    if (is.function(updateProgress)) {
+      updateProgress(
+        value = 0.53,
+        detail = 'Procesando datos'
+      )
+    }
     return(
       data_scenario[['core']] %>%
         dplyr::collect() %>%

@@ -6,7 +6,7 @@
 \usage{
 data_scenario(admin_div, admin_div_fil, espai_tipus, espai_tipus_fil, ifn,
   ifndb, agg_level, diameter_classes, clima_filters, sig_extra_filters,
-  custom_polygon = NULL)
+  custom_polygon = NULL, updateProgress = NULL)
 }
 \arguments{
 \item{admin_div}{Input}

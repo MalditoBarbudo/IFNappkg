@@ -5,7 +5,7 @@
 \title{modifcate the table based on data inputs}
 \usage{
 table_data_modificator(data_scenario, scenario, admin_div, agg_level,
-  diameter_classes)
+  diameter_classes, updateProgress = NULL)
 }
 \arguments{
 \item{data_scenario}{tbl_sql object}
