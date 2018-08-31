@@ -1,47 +1,47 @@
 ## Polygon objects creation ####
 
-polygons_municipis <- rgdal::readOGR('data-raw/shapefiles', 'bm1000mv33sh1fpm1r170',
+polygons_municipis <- rgdal::readOGR('data-raw/shapefiles', 'bm5mv20sh0tpm1_20180101_0',
                               GDAL1_integer64_policy = FALSE) %>%
-  rmapshaper::ms_simplify() %>%
+  rmapshaper::ms_simplify(0.01) %>%
   sp::spTransform(sp::CRS("+proj=longlat +datum=WGS84"))
 
-polygons_comarques <- rgdal::readOGR('data-raw/shapefiles', 'bm1000mv33sh1fpc1r170',
+polygons_comarques <- rgdal::readOGR('data-raw/shapefiles', 'bm5mv20sh0tpc1_20180101_0',
                               GDAL1_integer64_policy = FALSE) %>%
-  rmapshaper::ms_simplify() %>%
+  rmapshaper::ms_simplify(0.01) %>%
   sp::spTransform(sp::CRS("+proj=longlat +datum=WGS84"))
 
-polygons_vegueries <- rgdal::readOGR('data-raw/shapefiles', 'bm500mv20sh0tpv1_20180101_0',
+polygons_vegueries <- rgdal::readOGR('data-raw/shapefiles', 'bm5mv20sh0tpv1_20180101_0',
                               GDAL1_integer64_policy = FALSE) %>%
-  rmapshaper::ms_simplify() %>%
+  rmapshaper::ms_simplify(0.01) %>%
   sp::spTransform(sp::CRS("+proj=longlat +datum=WGS84"))
 
-polygons_provincies <- rgdal::readOGR('data-raw/shapefiles', 'bm1000mv33sh1fpp1r170',
+polygons_provincies <- rgdal::readOGR('data-raw/shapefiles', 'bm5mv20sh0tpp1_20180101_0',
                                GDAL1_integer64_policy = FALSE) %>%
-  rmapshaper::ms_simplify() %>%
+  rmapshaper::ms_simplify(0.01) %>%
   sp::spTransform(sp::CRS("+proj=longlat +datum=WGS84"))
 
 polygons_enpe <- rgdal::readOGR('data-raw/shapefiles', 'enpe_2017',
                          GDAL1_integer64_policy = FALSE) %>%
-  rmapshaper::ms_simplify() %>%
+  rmapshaper::ms_simplify(0.01) %>%
   sp::spTransform(sp::CRS("+proj=longlat +datum=WGS84"))
 
 polygons_pein <- rgdal::readOGR('data-raw/shapefiles', 'pein_2017',
                          GDAL1_integer64_policy = FALSE) %>%
-  rmapshaper::ms_simplify() %>%
+  rmapshaper::ms_simplify(0.01) %>%
   sp::spTransform(sp::CRS("+proj=longlat +datum=WGS84"))
 
 polygons_xn2000 <- rgdal::readOGR('data-raw/shapefiles', 'xn2000_2017',
                          GDAL1_integer64_policy = FALSE) %>%
-  rmapshaper::ms_simplify() %>%
+  rmapshaper::ms_simplify(0.01) %>%
   sp::spTransform(sp::CRS("+proj=longlat +datum=WGS84"))
 
 ## Polygon divisions names
 names_comarcas <- c(
-  sort(as.character(polygons_comarques@data$NOM_COMAR))
+  sort(as.character(polygons_comarques@data$NOMCOMAR))
 )
 
 names_municipios <- c(
-  sort(as.character(polygons_municipis@data$NOM_MUNI))
+  sort(as.character(polygons_municipis@data$NOMMUNI))
 )
 
 names_veguerias <- c(
@@ -49,7 +49,7 @@ names_veguerias <- c(
 )
 
 names_provincias <- c(
-  sort(as.character(polygons_provincies@data$NOM_PROV))
+  sort(as.character(polygons_provincies@data$NOMPROV))
 )
 
 ## Polygons dictionary ####
@@ -60,11 +60,11 @@ polygons_dictionary <- list(
   provincia = list(
     polygon = 'polygons_provincies',
     group = 'provincia',
-    label = ~NOM_PROV,
+    label = ~NOMPROV,
     label_new = ~provincia,
     layerId = 'nom_provincies',
     # color_var = ~pal(NOM_PROV),
-    label_chr = 'NOM_PROV'
+    label_chr = 'NOMPROV'
   ),
 
   vegueria = list(
@@ -80,21 +80,21 @@ polygons_dictionary <- list(
   comarca = list(
     polygon = 'polygons_comarques',
     group = 'comarca',
-    label = ~NOM_COMAR,
+    label = ~NOMCOMAR,
     label_new = ~comarca,
     layerId = 'nom_comarques',
     # color_var = ~pal(NOM_COMAR),
-    label_chr = 'NOM_COMAR'
+    label_chr = 'NOMCOMAR'
   ),
 
   municipi = list(
     polygon = 'polygons_municipis',
     group = 'municipi',
-    label = ~NOM_MUNI,
+    label = ~NOMMUNI,
     label_new = ~municipi,
     layerId = 'nom_municipis',
     # color_var = ~pal(NOM_MUNI),
-    label_chr = 'NOM_MUNI'
+    label_chr = 'NOMMUNI'
   ),
 
   ## espai tipus

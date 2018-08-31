@@ -33,10 +33,10 @@ mod_map <- function(
 ) {
 
   # noms division (we need for the polygon dictionary call later on)
-  nom_provincies <- as.character(polygons_provincies@data$NOM_PROV)
+  nom_provincies <- as.character(polygons_provincies@data$NOMPROV)
   nom_vegueries <- as.character(polygons_vegueries@data$NOMVEGUE)
-  nom_comarques <- as.character(polygons_comarques@data$NOM_COMAR)
-  nom_municipis <- as.character(polygons_municipis@data$NOM_MUNI)
+  nom_comarques <- as.character(polygons_comarques@data$NOMCOMAR)
+  nom_municipis <- as.character(polygons_municipis@data$NOMMUNI)
   # noms proteccions
   nom_enpe <- as.character(polygons_enpe@data$nom)
   nom_pein <- as.character(polygons_pein@data$nom)
