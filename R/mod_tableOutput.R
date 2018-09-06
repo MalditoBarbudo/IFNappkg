@@ -333,7 +333,7 @@ mod_table <- function(
             )
           } else {
             min_var <- floor(min(data_temp[[var]], na.rm = TRUE))
-            max_var <- floor(max(data_temp[[var]], na.rm = TRUE))
+            max_var <- ceiling(max(data_temp[[var]], na.rm = TRUE))
 
             shiny::sliderInput(
               ns(var), label = var,
@@ -351,6 +351,7 @@ mod_table <- function(
     # tag list to return for the UI
     shiny::tagList(
       shiny::inputPanel(
+        shiny::h4('Filters'),
         col_filter_inputs()
       )
     )
@@ -376,7 +377,7 @@ mod_table <- function(
 
             if (!is.numeric(data_temp[[var]])) {
               rlang::quo(
-                !!rlang::sym(var) %in% !!input[[var]]
+                !!rlang::sym(var) %in% c(!!input[[var]])
               )
             } else {
               rlang::quo(
@@ -405,6 +406,8 @@ mod_table <- function(
       shiny::validate(
         shiny::need(table_base_data(), 'No hay datos')
       )
+
+      browser()
 
       # create a progress object to indicate the user this will take time
       progress <- shiny::Progress$new(min = 0.63, max = 1)
