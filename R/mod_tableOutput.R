@@ -407,8 +407,6 @@ mod_table <- function(
         shiny::need(table_base_data(), 'No hay datos')
       )
 
-      browser()
-
       # create a progress object to indicate the user this will take time
       progress <- shiny::Progress$new(min = 0.63, max = 1)
       progress$set(value = 0.63, message = 'Formateando la tabla...')
