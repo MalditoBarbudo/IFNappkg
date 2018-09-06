@@ -123,10 +123,10 @@ ifn_app <- function() {
 
     ## debug #####
     # output$debug1 <- shiny::renderPrint({
-    #   map_reactives$map_draw_deleted_features
+    #   map_reactives$map_draw_edited_features
     # })
     # output$debug2 <- shiny::renderPrint({
-    #   map_reactives$map_draw_stop
+    #   map_reactives$map_draw_all_features
     # })
     # output$debug3 <- shiny::renderPrint({
     #   map_reactives$map_draw_new_feature

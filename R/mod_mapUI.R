@@ -175,25 +175,31 @@ mod_map <- function(
     # is not cleared, so is always filtering the sites, even after removing. For
     # that we need to control when the removed feature equals the new, that's it,
     # when we removed the last one
-
-    res <- input$map_draw_new_feature
-    removed_id <- input$map_draw_deleted_features$features[[1]]$properties$`_leaflet_id`
-    res_id <- input$map_draw_new_feature$properties$`_leaflet_id`
-
-    # some iferation
-    if (is.null(res)) {
+    res <- input$map_draw_all_features
+    if (is.null(res) || length(res[['features']]) == 0) {
       return(NULL)
     } else {
-      if (is.null(removed_id)) {
-        return(res)
-      } else {
-        if (removed_id == res_id) {
-          return(NULL)
-        } else {
-          return(res)
-        }
-      }
+      return(res[['features']][[1]])
     }
+
+    # res <- input$map_draw_new_feature
+    # removed_id <- input$map_draw_deleted_features$features[[1]]$properties$`_leaflet_id`
+    # res_id <- input$map_draw_new_feature$properties$`_leaflet_id`
+    #
+    # # some iferation
+    # if (is.null(res)) {
+    #   return(NULL)
+    # } else {
+    #   if (is.null(removed_id)) {
+    #     return(res)
+    #   } else {
+    #     if (removed_id == res_id) {
+    #       return(NULL)
+    #     } else {
+    #       return(res)
+    #     }
+    #   }
+    # }
   })
 
   # update inputs with variables present in data. We have four input scenarios
@@ -236,8 +242,9 @@ mod_map <- function(
     base_data_reactives$ifn <- mod_data$ifn
     base_data_reactives$agg_level <- mod_data$agg_level
     base_data_reactives$apply_filters <- mod_data$apply_filters
-    base_data_reactives$map_draw_new_feature <- input$map_draw_new_feature
-    base_data_reactives$map_draw_deleted_features <- input$map_draw_deleted_features
+    # base_data_reactives$map_draw_new_feature <- input$map_draw_new_feature
+    # base_data_reactives$map_draw_deleted_features <- input$map_draw_deleted_features
+    base_data_reactives$map_draw_all_features <- input$map_draw_all_features
 
     return(base_data_reactives)
   }) %>%
@@ -256,8 +263,9 @@ mod_map <- function(
     base_data_modifs_reactives$agg_level <- mod_data$agg_level
     base_data_modifs_reactives$viz_shape <- mod_data$viz_shape
     base_data_modifs_reactives$apply_filters <- mod_data$apply_filters
-    base_data_modifs_reactives$map_draw_new_feature <- input$map_draw_new_feature
-    base_data_modifs_reactives$map_draw_deleted_features <- input$map_draw_deleted_features
+    base_data_modifs_reactives$map_draw_all_features <- input$map_draw_all_features
+    # base_data_modifs_reactives$map_draw_new_feature <- input$map_draw_new_feature
+    # base_data_modifs_reactives$map_draw_deleted_features <- input$map_draw_deleted_features
 
     return(base_data_modifs_reactives)
   }) %>%
