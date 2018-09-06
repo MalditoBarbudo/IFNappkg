@@ -432,29 +432,31 @@ mod_table <- function(
       # because we don't know the column names or indexes a priori
 
       # updateProgress setup
-      updateProgress(
-        value = 0.83,
-        detail = ''
-      )
-      num_cols_names <- data_table_temp %>%
-        dplyr::select_if(is.numeric) %>%
-        names()
-
-      formattable_options <- lapply(
-        num_cols_names, function(x) {
-          formattable::color_tile('#E4F1FE', '#4B77BE')
-        }
-      )
-
-      names(formattable_options) <- num_cols_names
+      # updateProgress(
+      #   value = 0.83,
+      #   detail = ''
+      # )
+      # num_cols_names <- data_table_temp %>%
+      #   dplyr::select_if(is.numeric) %>%
+      #   names()
+      #
+      # formattable_options <- lapply(
+      #   num_cols_names, function(x) {
+      #     formattable::normalize_bar('pink', 0.3, na.rm = TRUE)
+      #   }
+      # )
+      #
+      # names(formattable_options) <- num_cols_names
 
       # formattable
       # updateProgress setup
-      updateProgress(value = 0.92, detail = '')
-      data_table_temp %>%
-        dplyr::mutate_if(is.numeric, round, 2) %>%
-        formattable::formattable(formattable_options) %>%
-        formattable::as.datatable(
+      updateProgress(value = 0.89, detail = '')
+
+      numeric_cols <- names(data_table_temp)[data_table_temp %>%
+                                               purrr::map_lgl(is.numeric)]
+
+      data_table_mutated <- data_table_temp %>%
+        DT::datatable(
           style = 'default', rownames = FALSE,
           fillContainer = TRUE, autoHideNavigation = TRUE,
           extensions = c('Scroller'),
@@ -463,7 +465,25 @@ mod_table <- function(
             deferRender = TRUE, scrollY = '70vh', scroller = TRUE,
             dom = 'ti'
           )
-        ) -> data_table_mutated
+        ) %>%
+        DT::formatRound(
+          columns = numeric_cols,
+          digits = 2
+        )
+
+      for (var in numeric_cols) {
+        data_table_mutated <- data_table_mutated %>%
+          DT::formatStyle(
+            columns = var,
+            background = DT::styleColorBar(
+              range(data_table_temp[[var]], na.rm = TRUE) + c(-1,1), 'pink', 90
+            ),
+            backgroundSize = '98% 88%',
+            backgroundRepeat = 'no-repeat',
+            backgroundPosition = 'center'
+          )
+      }
+
       updateProgress(value = 0.99, detail = '')
       return(data_table_mutated)
     }
@@ -479,15 +499,15 @@ mod_table <- function(
       # data_table_temp %>%
       #   DT::datatable(
       #     # filter = list(position = 'top', clear = FALSE, plain = TRUE),
-          # selection = list(target = 'column'),
-          # style = 'default', rownames = FALSE,
-          # fillContainer = TRUE, autoHideNavigation = TRUE,
-          # extensions = c('Scroller'),
-          # options = list(
-          #   autoWidth = TRUE,
-          #   deferRender = TRUE, scrollY = '70vh', scroller = TRUE,
-          #   dom = 'ti'
-          # )
+      #     # selection = list(target = 'column'),
+      #     style = 'default', rownames = FALSE,
+      #     fillContainer = FALSE, autoHideNavigation = TRUE,
+      #     extensions = c('Scroller'),
+      #     options = list(
+      #       autoWidth = TRUE,
+      #       deferRender = TRUE, scrollY = '70vh', scroller = TRUE,
+      #       dom = 'ti'
+      #     )
       #   ) %>%
       #   DT::formatRound(
       #     columns = {

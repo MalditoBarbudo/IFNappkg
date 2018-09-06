@@ -60,7 +60,7 @@ mod_map <- function(
           shapeOptions = leaflet.extras::drawShapeOptions()
         ),
         editOptions = leaflet.extras::editToolbarOptions(
-          edit = FALSE, remove = TRUE
+          edit = TRUE, remove = TRUE
         ),
         singleFeature = TRUE
       ) %>%
