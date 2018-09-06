@@ -317,26 +317,42 @@ mod_table <- function(
       lapply(
         input$col_filter_selector, function(var) {
           if (!is.numeric(data_temp[[var]])) {
-            return()
+            # return()
+            shinyWidgets::pickerInput(
+              ns(var), label = var,
+              choices = unique(data_temp[[var]]),
+              multiple = TRUE,
+              options = list(
+                `actions-box` = TRUE,
+                `deselect-all-text` = 'None selected...',
+                `select-all-text` = 'All selected',
+                `selected-text-format` = 'count',
+                `count-selected-text` = "{0} values selected (of {1})"
+              ),
+              width = '100%'
+            )
+          } else {
+            min_var <- floor(min(data_temp[[var]], na.rm = TRUE))
+            max_var <- floor(max(data_temp[[var]], na.rm = TRUE))
+
+            shiny::sliderInput(
+              ns(var), label = var,
+              min = min_var,
+              max = max_var,
+              round = 1,
+              value = c(min_var, max_var),
+              width = '100%'
+            )
           }
-
-          min_var <- floor(min(data_temp[[var]], na.rm = TRUE))
-          max_var <- floor(max(data_temp[[var]], na.rm = TRUE))
-
-          shiny::sliderInput(
-            ns(var), label = var,
-            min = min_var,
-            max = max_var,
-            round = 1,
-            value = c(min_var, max_var)
-          )
         }
       )
     })
 
     # tag list to return for the UI
     shiny::tagList(
-      col_filter_inputs()
+      shiny::inputPanel(
+        col_filter_inputs()
+      )
     )
   })
 
@@ -357,9 +373,16 @@ mod_table <- function(
         lapply(
           input$col_filter_selector,
           function(var) {
-            rlang::quo(
-              between(!!rlang::sym(var), !!input[[var]][1], !!input[[var]][2])
-            )
+
+            if (!is.numeric(data_temp[[var]])) {
+              rlang::quo(
+                !!rlang::sym(var) %in% !!input[[var]]
+              )
+            } else {
+              rlang::quo(
+                between(!!rlang::sym(var), !!input[[var]][1], !!input[[var]][2])
+              )
+            }
           }
         )
       }
