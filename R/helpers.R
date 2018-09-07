@@ -103,12 +103,6 @@ data_scenario <- function(
     }
   }
 
-  # get the expressions for filters and remove the nulls
-  # sig_filters <- rlang::exprs(
-  #   !!filter_expr_admin, !!filter_expr_espai, !!!sig_extra_filters
-  # ) %>%
-  #   purrr::compact()
-
   sig <- tidyIFN::data_sig(
     ifn, ifndb,
     !!! filter_expr_admin, !!! filter_expr_espai, !!! sig_extra_filters
@@ -200,6 +194,8 @@ data_scenario <- function(
 #' @param grup_func Input
 #' @param statistic Input
 #' @param updateProgress progress function to monitorize the map drawing
+#'
+#' @importFrom dplyr left_join
 #'
 #' @export
 map_modificator <- function(
@@ -543,7 +539,8 @@ map_modificator <- function(
 
     if (grup_func_val == '') {
 
-      data_map <- data_scenario[['core']] %>%
+      data_map <- data_scenario %>%
+        purrr::reduce(left_join) %>%
         dplyr::collect() %>%
         tidyIFN::summarise_polygons(polygon_group = admin_div_val)
 
@@ -555,7 +552,8 @@ map_modificator <- function(
           !!grup_func_val
       )
 
-      data_map <- data_scenario[['core']] %>%
+      data_map <- data_scenario %>%
+        purrr::reduce(left_join) %>%
         dplyr::collect() %>%
         tidyIFN::summarise_polygons(
           filter_arg_val,
@@ -675,7 +673,8 @@ map_modificator <- function(
       !!rlang::sym(glue::glue('id{agg_level}')) == !!grup_func_val
     )
 
-    data_map <- data_scenario[['core']] %>%
+    data_map <- data_scenario %>%
+      purrr::reduce(left_join) %>%
       dplyr::collect() %>%
       tidyIFN::summarise_polygons(
         filter_arg_val,
@@ -1125,7 +1124,7 @@ table_data_modificator <- function(
         detail = 'Procesando datos'
       )
     }
-    return(data_scenario[['core']] %>% dplyr::collect())
+    return(data_scenario %>% purrr::reduce(left_join) %>% dplyr::collect())
   }
 
   if (scenario == 'scenario2') {
@@ -1136,7 +1135,7 @@ table_data_modificator <- function(
         detail = 'Procesando datos'
       )
     }
-    return(data_scenario[['core']] %>% dplyr::collect())
+    return(data_scenario %>% purrr::reduce(left_join) %>% dplyr::collect())
   }
 
   if (scenario == 'scenario3') {
@@ -1151,7 +1150,8 @@ table_data_modificator <- function(
       )
     }
     return(
-      data_scenario[['core']] %>%
+      data_scenario %>%
+        purrr::reduce(left_join) %>%
         dplyr::collect() %>%
         tidyIFN::summarise_polygons(
           polygon_group = admin_div_val, cd = diameter_classes
@@ -1172,7 +1172,8 @@ table_data_modificator <- function(
       )
     }
     return(
-      data_scenario[['core']] %>%
+      data_scenario %>%
+        purrr::reduce(left_join) %>%
         dplyr::collect() %>%
         tidyIFN::summarise_polygons(
           polygon_group = admin_div_val, func_group = agg_level_val,
