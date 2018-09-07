@@ -542,7 +542,19 @@ map_modificator <- function(
       data_map <- data_scenario %>%
         purrr::reduce(left_join) %>%
         dplyr::collect() %>%
-        tidyIFN::summarise_polygons(polygon_group = admin_div_val)
+        tidyIFN::summarise_polygons(
+          polygon_group = admin_div_val,
+          .funs = dplyr::funs(
+            mean = mean(., na.rm = TRUE),
+            sd = stats::sd(., na.rm = TRUE),
+            # min = min(., na.rm = TRUE),
+            # max = max(., na.rm = TRUE),
+            median = stats::median(., na.rm = TRUE),
+            # mad = stats::mad(., na.rm = TRUE),
+            # q95 = stats::quantile(., probs = 0.95, na.rm = TRUE),
+            n = dplyr::n()
+          )
+        )
 
 
     } else {
@@ -558,7 +570,17 @@ map_modificator <- function(
         tidyIFN::summarise_polygons(
           filter_arg_val,
           polygon_group = admin_div_val,
-          func_group = glue::glue('{tipo_grup_func_val}_dom_percdens')
+          func_group = glue::glue('{tipo_grup_func_val}_dom_percdens'),
+          .funs = dplyr::funs(
+            mean = mean(., na.rm = TRUE),
+            sd = stats::sd(., na.rm = TRUE),
+            # min = min(., na.rm = TRUE),
+            # max = max(., na.rm = TRUE),
+            median = stats::median(., na.rm = TRUE),
+            # mad = stats::mad(., na.rm = TRUE),
+            # q95 = stats::quantile(., probs = 0.95, na.rm = TRUE),
+            n = dplyr::n()
+          )
         )
     }
 
@@ -679,7 +701,17 @@ map_modificator <- function(
       tidyIFN::summarise_polygons(
         filter_arg_val,
         polygon_group = admin_div_val,
-        func_group = glue::glue('id{agg_level}')
+        func_group = glue::glue('id{agg_level}'),
+        .funs = dplyr::funs(
+          mean = mean(., na.rm = TRUE),
+          sd = stats::sd(., na.rm = TRUE),
+          # min = min(., na.rm = TRUE),
+          # max = max(., na.rm = TRUE),
+          median = stats::median(., na.rm = TRUE),
+          # mad = stats::mad(., na.rm = TRUE),
+          # q95 = stats::quantile(., probs = 0.95, na.rm = TRUE),
+          n = dplyr::n()
+        )
       )
 
     polygons_label_var <- polygons_dictionary[[admin_div_val]][['label_chr']]
@@ -1154,7 +1186,17 @@ table_data_modificator <- function(
         purrr::reduce(left_join) %>%
         dplyr::collect() %>%
         tidyIFN::summarise_polygons(
-          polygon_group = admin_div_val, cd = diameter_classes
+          polygon_group = admin_div_val, cd = diameter_classes,
+          .funs = dplyr::funs(
+            mean = mean(., na.rm = TRUE),
+            sd = stats::sd(., na.rm = TRUE),
+            # min = min(., na.rm = TRUE),
+            # max = max(., na.rm = TRUE),
+            median = stats::median(., na.rm = TRUE),
+            # mad = stats::mad(., na.rm = TRUE),
+            # q95 = stats::quantile(., probs = 0.95, na.rm = TRUE),
+            n = dplyr::n()
+          )
         )
     )
   }
@@ -1177,7 +1219,17 @@ table_data_modificator <- function(
         dplyr::collect() %>%
         tidyIFN::summarise_polygons(
           polygon_group = admin_div_val, func_group = agg_level_val,
-          cd = diameter_classes
+          cd = diameter_classes,
+          .funs = dplyr::funs(
+            mean = mean(., na.rm = TRUE),
+            sd = stats::sd(., na.rm = TRUE),
+            # min = min(., na.rm = TRUE),
+            # max = max(., na.rm = TRUE),
+            median = stats::median(., na.rm = TRUE),
+            # mad = stats::mad(., na.rm = TRUE),
+            # q95 = stats::quantile(., probs = 0.95, na.rm = TRUE),
+            n = dplyr::n()
+          )
         )
     )
   }
