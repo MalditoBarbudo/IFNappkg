@@ -327,7 +327,6 @@ mod_map <- function(
         progress$set(value = value, detail = detail)
       }
 
-
       map_base_data() %>%
         map_modificator(
           input_scenario(),

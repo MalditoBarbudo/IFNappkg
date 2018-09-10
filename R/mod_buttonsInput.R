@@ -3,9 +3,10 @@
 #' @description A shiny module to create and populate the buttons inputs
 #'
 #' @param id shiny id
+#' @param ifndb pool object to access the ifn db
 #'
 #' @export
-mod_buttonsInput <- function(id) {
+mod_buttonsInput <- function(id, ifndb) {
 
   # ns
   ns <- shiny::NS(id)

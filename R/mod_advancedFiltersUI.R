@@ -3,35 +3,39 @@
 #' @description A shiny module to process the advanced filters
 #'
 #' @param id shiny id
+#' @param ifndb pool obkect to access the ifn db
 #'
 #' @export
-mod_advancedFiltersUI <- function(id) {
+mod_advancedFiltersUI <- function(id, ifndb) {
 
   # ns
   ns <- shiny::NS(id)
 
+  # choices
+  adv_fil_clima_vars_choices <- dplyr::tbl(ifndb, 'adv_fil_clima_vars_thesaurus') %>%
+    dplyr::collect() %>% {
+      magrittr::set_names(
+        magrittr::extract2(., 'var_id'), magrittr::extract2(., 'esp')
+      )
+    }
+
+  adv_fil_sig_vars_choices <- dplyr::tbl(ifndb, 'adv_fil_sig_vars_thesaurus') %>%
+    dplyr::collect() %>% {
+      magrittr::set_names(
+        magrittr::extract2(., 'var_id'), magrittr::extract2(., 'esp')
+      )
+    }
+
   # ui
   shiny::tagList(
 
-    # shiny::fluidRow(
-    #   shiny::column(
-    #     4, shiny::h3('Filtros Avanzados')
-    #   ),
-    #   shiny::column(
-    #     1, offset = 7,
-    #     shinyWidgets::circleButton(
-    #       ns('close_adv_fils'), icon = shiny::icon('times'),
-    #       status = 'danger', size = 'sm'
-    #     )
-    #   )
-    # ),
     shiny::fluidRow(
       shiny::column(
         6,
         # picker input to select the variables to filter
         shinyWidgets::pickerInput(
           ns('adv_fil_clima_vars'), 'Variables climáticas',
-          choices = names(dic_adv_fil_clima_filters[['esp']]),
+          choices = adv_fil_clima_vars_choices,
           multiple = TRUE,
           options = list(
             `actions-box` = TRUE,
@@ -47,7 +51,7 @@ mod_advancedFiltersUI <- function(id) {
         # picker input to select the variables to filter
         shinyWidgets::pickerInput(
           ns('adv_fil_sig_vars'), 'Variables SIG',
-          choices = names(dic_adv_fil_sig_filters[['esp']]),
+          choices = adv_fil_sig_vars_choices,
           multiple = TRUE,
           options = list(
             `actions-box` = TRUE,
@@ -67,8 +71,10 @@ mod_advancedFiltersUI <- function(id) {
 #' @param input internal
 #' @param output internal
 #' @param session internal
+#'
 #' @param mod_buttons mod_buttons reactives, to get when button to show advanced
 #'   filters is pressed
+#' @param ifndb pool object to access the ifn db
 #'
 #' @export
 #'
@@ -77,7 +83,7 @@ mod_advancedFiltersUI <- function(id) {
 #' @rdname mod_advancedFiltersUI
 mod_advancedFilters <- function(
   input, output, session,
-  mod_buttons
+  mod_buttons, ifndb
 ) {
 
   # toggle the panel when close button is pressed
@@ -106,47 +112,50 @@ mod_advancedFilters <- function(
     # get the session ns to be able to tag the inputs with correct id
     ns <- session$ns
 
+    clima_slider_inputs_choices <- dplyr::tbl(ifndb, 'adv_fil_clima_vars_thesaurus') %>%
+      dplyr::collect()
+
     # we create the input list with lapply, easy peachy
     clima_inputs_list <- shiny::reactive({
       lapply(
         input$adv_fil_clima_vars, function(var) {
-          # shinyWidgets::noUiSliderInput(
-          #   ns(var), label = dic_adv_fil_clima_filters[['esp']][[var]][['label']],
-          #   min = dic_adv_fil_clima_filters[['esp']][[var]][['min']],
-          #   max = dic_adv_fil_clima_filters[['esp']][[var]][['max']],
-          #   value = dic_adv_fil_clima_filters[['esp']][[var]][['value']],
-          #   orientation = 'horizontal', direction = 'ltr',
-          #   behaviour = c('drag', 'tap'),
-          #   format = shinyWidgets::wNumbFormat(decimals = 1)
-          # )
+
+          clima_slider_inputs_choices_var <- clima_slider_inputs_choices %>%
+            dplyr::filter(var_id == var)
+
+
           shiny::sliderInput(
-            ns(var), label = dic_adv_fil_clima_filters[['esp']][[var]][['label']],
-            min = dic_adv_fil_clima_filters[['esp']][[var]][['min']],
-            max = dic_adv_fil_clima_filters[['esp']][[var]][['max']],
-            value = dic_adv_fil_clima_filters[['esp']][[var]][['value']],
+            ns(var), label = clima_slider_inputs_choices_var[['esp']],
+            min = clima_slider_inputs_choices_var[['min']],
+            max = clima_slider_inputs_choices_var[['max']],
+            value = c(
+              clima_slider_inputs_choices_var[['value_min']],
+              clima_slider_inputs_choices_var[['value_max']]
+            ),
             round = 1
           )
         }
       )
     })
 
+    sig_slider_inputs_choices <- dplyr::tbl(ifndb, 'adv_fil_sig_vars_thesaurus') %>%
+      dplyr::collect()
+
     sig_inputs_list <- shiny::reactive({
       lapply(
         input$adv_fil_sig_vars, function(var) {
-          # shinyWidgets::noUiSliderInput(
-          #   ns(var), label = dic_adv_fil_sig_filters[['esp']][[var]][['label']],
-          #   min = dic_adv_fil_sig_filters[['esp']][[var]][['min']],
-          #   max = dic_adv_fil_sig_filters[['esp']][[var]][['max']],
-          #   value = dic_adv_fil_sig_filters[['esp']][[var]][['value']],
-          #   orientation = 'horizontal', direction = 'ltr',
-          #   behaviour = c('drag', 'tap'),
-          #   format = shinyWidgets::wNumbFormat(decimals = 1)
-          # )
+          sig_slider_inputs_choices_var <- sig_slider_inputs_choices %>%
+            dplyr::filter(var_id == var)
+
+
           shiny::sliderInput(
-            ns(var), label = dic_adv_fil_sig_filters[['esp']][[var]][['label']],
-            min = dic_adv_fil_sig_filters[['esp']][[var]][['min']],
-            max = dic_adv_fil_sig_filters[['esp']][[var]][['max']],
-            value = dic_adv_fil_sig_filters[['esp']][[var]][['value']],
+            ns(var), label = sig_slider_inputs_choices_var[['esp']],
+            min = sig_slider_inputs_choices_var[['min']],
+            max = sig_slider_inputs_choices_var[['max']],
+            value = c(
+              sig_slider_inputs_choices_var[['value_min']],
+              sig_slider_inputs_choices_var[['value_max']]
+            ),
             round = 1
           )
         }

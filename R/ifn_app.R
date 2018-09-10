@@ -58,7 +58,7 @@ ifn_app <- function() {
 
           ## mod_data ####
           # mod_data module, it includes the dataSel, dataFil and dataAgg inputs
-          mod_dataInput('mod_dataInput'),
+          mod_dataInput('mod_dataInput', ifndb),
 
           ## mod_map ####
           # mod_map, it includes the map
@@ -100,7 +100,8 @@ ifn_app <- function() {
 
     # data
     data_reactives <- shiny::callModule(
-      mod_data, 'mod_dataInput'
+      mod_data, 'mod_dataInput',
+      ifndb
     )
 
     # map

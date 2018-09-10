@@ -3,12 +3,59 @@
 #' @description A shiny module to create and populate the data inputs
 #'
 #' @param id shiny id
+#' @param ifndb pool object to access the ifn db
 #'
 #' @export
-mod_dataInput <- function(id) {
+mod_dataInput <- function(id, ifndb) {
 
   # ns
   ns <- shiny::NS(id)
+
+  # choices
+  ifn_choices <- tbl(ifndb, 'ifn_thesaurus') %>%
+    dplyr::collect() %>% {
+      magrittr::set_names(
+        magrittr::extract2(., 'ifn_id'), magrittr::extract2(., 'esp')
+      )
+    }
+
+  viz_shape_choices <- tbl(ifndb, 'viz_shape_thesaurus') %>%
+    dplyr::collect() %>% {
+      magrittr::set_names(
+        magrittr::extract2(., 'viz_shape_id'), magrittr::extract2(., 'esp')
+      )
+    }
+
+  admin_div_choices <- tbl(ifndb, 'admin_div_thesaurus') %>%
+    dplyr::collect() %>% {
+      magrittr::set_names(
+        magrittr::extract2(., 'admin_div_id'), magrittr::extract2(., 'esp')
+      )
+    }
+
+  espai_tipus_choices <- tbl(ifndb, 'espai_tipus_thesaurus') %>%
+    dplyr::collect() %>% {
+      magrittr::set_names(
+        magrittr::extract2(., 'espai_tipus_id'), magrittr::extract2(., 'esp')
+      )
+    }
+
+  agg_level_choices <- tbl(ifndb, 'agg_level_thesaurus') %>%
+    dplyr::collect() %>% {
+      magrittr::set_names(
+        magrittr::extract2(., 'agg_level_id'), magrittr::extract2(., 'esp')
+      )
+    }
+
+  admin_div_fil_choices <- tbl(ifndb, 'admin_div_fil_thesaurus') %>%
+    filter(admin_div_fil_id == 'comarca') %>%
+    dplyr::collect() %>% {
+      magrittr::set_names(
+        magrittr::extract2(., 'admin_div_fil_value'), magrittr::extract2(., 'esp')
+      )
+    }
+
+
 
   # UI
   shiny::tagList(
@@ -36,7 +83,7 @@ mod_dataInput <- function(id) {
             shinyWidgets::pickerInput(
               ns('ifn'),
               label = label_ifn[['esp']],
-              choices = dic_ifn_choices[["esp"]],
+              choices = ifn_choices,
               selected = 'ifn3'
             )
           ),
@@ -44,7 +91,7 @@ mod_dataInput <- function(id) {
             6, offset = 2,
             shinyWidgets::radioGroupButtons(
               ns('viz_shape'), label_viz_shape[['esp']],
-              choices = dic_viz_shape_choices[["esp"]], selected = 'polygon',
+              choices = viz_shape_choices, selected = 'polygon',
               status = 'info', size = 'sm', justified = TRUE,
               checkIcon = list(
                 yes = shiny::icon("check"),
@@ -59,20 +106,20 @@ mod_dataInput <- function(id) {
             6,
             shinyWidgets::pickerInput(
               ns('admin_div'), label_admin_div[['esp']],
-              dic_admin_div_choices[["esp"]], selected = 'comarca'
+              admin_div_choices, selected = 'comarca'
             )
           ),
           shiny::column(
             6,
             shinyWidgets::pickerInput(
               ns('espai_tipus'), label_espai_tipus[['esp']],
-              dic_espai_tipus_choices[["esp"]], selected = 'proteccio'
+              espai_tipus_choices, selected = 'proteccio'
             )
           )
         ),
 
         # buttons module
-        mod_buttonsInput(ns('mod_buttonsInput'))
+        mod_buttonsInput(ns('mod_buttonsInput'), ifndb)
       ),
 
       # 2. data aggregation level (div and id is for shinyjs later application)
@@ -90,7 +137,7 @@ mod_dataInput <- function(id) {
               9,
               shinyWidgets::pickerInput(
                 ns('agg_level'), label_agg_level[['esp']],
-                choices = dic_agg_level_choices[['esp']],
+                choices = agg_level_choices,
                 selected = 'parcela', width = '100%'
               ),
               shinyWidgets::awesomeCheckbox(
@@ -119,7 +166,7 @@ mod_dataInput <- function(id) {
               6,
               shinyWidgets::pickerInput(
                 ns('admin_div_fil'), label_admin_div_fil[['esp']][['comarca']],
-                choices = dic_admin_div_fil_choices[["esp"]][["comarca"]],
+                choices = admin_div_fil_choices,
                 selected = '', multiple = TRUE, width = '100%',
                 options = list(
                   `actions-box` = TRUE,
@@ -149,7 +196,7 @@ mod_dataInput <- function(id) {
           ),
 
           # hidden div for advanced filters
-          mod_advancedFiltersUI(ns('mod_advancedFiltersUI')),
+          mod_advancedFiltersUI(ns('mod_advancedFiltersUI'), ifndb),
           # shinyjs::hidden(
           #   shiny::div(
           #     id = ns('advancedFiltersControls'),
@@ -176,15 +223,8 @@ mod_dataInput <- function(id) {
     ## vizControls ####
     shiny::div(
       id = ns('vizInputs'),
-      mod_vizInput(ns('mod_vizInput'))
+      mod_vizInput(ns('mod_vizInput'), ifndb)
     )
-
-    # shinyjs::hidden(
-    #   shiny::div(
-    #     id = ns('vizInputs'),
-    #     mod_vizInput(ns('mod_vizInput'))
-    #   )
-    # )
   ) # end of tagList
 }
 
@@ -193,33 +233,37 @@ mod_dataInput <- function(id) {
 #' @param output internal
 #' @param session internal
 #'
+#' @param ifndb
+#'
 #' @export
 #'
 #' @rdname mod_dataInput
 mod_data <- function(
-  input, output, session
+  input, output, session, ifndb
 ) {
 
   # observers to update the dataFil inputs
   shiny::observe({
     # create the input choices based on the administrative division input
-    admin_div_sel <- input$admin_div
+   admin_div_sel <- input$admin_div
     if (is.null(admin_div_sel) | admin_div_sel == '') {
 
       shinyjs::reset('admin_div_fil')
       shinyjs::disable('admin_div_fil')
 
     } else {
-      # shiny::updateSelectInput(
-      #   session, 'admin_div_fil',
-      #   label = label_admin_div_fil[["esp"]][[admin_div_sel]],
-      #   choices = dic_admin_div_fil_choices[["esp"]][[admin_div_sel]]
-      # )
+      admin_div_fil_choices <- dplyr::tbl(ifndb, 'admin_div_fil_thesaurus') %>%
+        dplyr::filter(admin_div_fil_id == admin_div_sel) %>%
+        dplyr::collect() %>% {
+          magrittr::set_names(
+            magrittr::extract2(., 'admin_div_fil_value'), magrittr::extract2(., 'esp')
+          )
+        }
 
       shinyWidgets::updatePickerInput(
         session, 'admin_div_fil',
         label = label_admin_div_fil[["esp"]][[admin_div_sel]],
-        choices = dic_admin_div_fil_choices[["esp"]][[admin_div_sel]]
+        choices = admin_div_fil_choices
       )
 
       shinyjs::enable('admin_div_fil')
@@ -229,15 +273,19 @@ mod_data <- function(
   shiny::observe({
     # get the protection level and create the choices based on the dic
     espai_tipus_sel <- input$espai_tipus
-    # shiny::updateSelectInput(
-    #   session, 'espai_tipus_fil',
-    #   label = label_espai_tipus_fil[["esp"]][[espai_tipus_sel]],
-    #   choices = dic_espai_tipus_fil_choices[["esp"]][[espai_tipus_sel]]
-    # )
+
+    espai_tipus_fil_choices <- dplyr::tbl(ifndb, 'espai_tipus_fil_thesaurus') %>%
+      dplyr::filter(espai_tipus_fil_id == espai_tipus_sel) %>%
+      dplyr::collect() %>% {
+        magrittr::set_names(
+          magrittr::extract2(., 'espai_tipus_fil_value'), magrittr::extract2(., 'esp')
+        )
+      }
+
     shinyWidgets::updatePickerInput(
       session, 'espai_tipus_fil',
       label = label_espai_tipus_fil[["esp"]][[espai_tipus_sel]],
-      choices = dic_espai_tipus_fil_choices[["esp"]][[espai_tipus_sel]]
+      choices = espai_tipus_fil_choices
     )
   })
 
@@ -267,13 +315,13 @@ mod_data <- function(
   # viz controls
   viz_reactives <- shiny::callModule(
     mod_viz, 'mod_vizInput',
-    data_reactives
+    data_reactives, ifndb
   )
 
   # advancedFilters
   advancedFIlters_reactives <- shiny::callModule(
     mod_advancedFilters, 'mod_advancedFiltersUI',
-    buttons_reactives
+    buttons_reactives, ifndb
   )
 
 

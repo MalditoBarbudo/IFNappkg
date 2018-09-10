@@ -5,18 +5,22 @@
 \alias{mod_data}
 \title{mod_dataInput and mod_data}
 \usage{
-mod_dataInput(id)
+mod_dataInput(id, ifndb)
 
-mod_data(input, output, session)
+mod_data(input, output, session, ifndb)
 }
 \arguments{
 \item{id}{shiny id}
+
+\item{ifndb}{pool object to access the ifn db}
 
 \item{input}{internal}
 
 \item{output}{internal}
 
 \item{session}{internal}
+
+\item{ifndb}{}
 }
 \description{
 A shiny module to create and populate the data inputs

@@ -3,12 +3,52 @@
 #' @description A shiny module to generate and populate the visualization inputs
 #'
 #' @param id shiny id
+#' @param ifndb pool object to access ifn db
 #'
 #' @export
-mod_vizInput <- function(id) {
+mod_vizInput <- function(id, ifndb) {
 
   # ns
   ns <- shiny::NS(id)
+
+  # choices
+  color_choices <- dplyr::tbl(ifndb, 'color_thesaurus') %>%
+    dplyr::filter(scenario_id == 'scenario3') %>%
+    dplyr::collect() %>% {
+      magrittr::set_names(
+        magrittr::extract2(., 'color_id'), magrittr::extract2(., 'esp')
+      )
+    }
+
+  mida_choices <- dplyr::tbl(ifndb, 'mida_thesaurus') %>%
+    dplyr::filter(scenario_id == 'scenario3') %>%
+    dplyr::collect() %>% {
+      magrittr::set_names(
+        magrittr::extract2(., 'mida_id'), magrittr::extract2(., 'esp')
+      )
+    }
+
+  statistic_choices <- dplyr::tbl(ifndb, 'statistic_thesaurus') %>%
+    dplyr::collect() %>% {
+      magrittr::set_names(
+        magrittr::extract2(., 'statistic_id'), magrittr::extract2(., 'esp')
+      )
+    }
+
+  tipo_grup_func_choices <- dplyr::tbl(ifndb, 'tipo_grup_func_thesaurus') %>%
+    dplyr::collect() %>% {
+      magrittr::set_names(
+        magrittr::extract2(., 'tipo_grup_func_id'), magrittr::extract2(., 'esp')
+      )
+    }
+
+  grup_func_choices <- dplyr::tbl(ifndb, 'grup_func_thesaurus') %>%
+    dplyr::filter(scenario_id == 'scenario3', grup_func_id == 'cadesccon') %>%
+    dplyr::collect() %>% {
+      magrittr::set_names(
+        magrittr::extract2(., 'grup_func_val'), magrittr::extract2(., 'esp')
+      )
+    }
 
   # UI
   shiny::absolutePanel(
@@ -22,7 +62,7 @@ mod_vizInput <- function(id) {
         shiny::h3('Visualización'),
         shinyWidgets::pickerInput(
           ns('color'), 'Selecciona la variable para colorear',
-          dic_color_choices[['esp']][['scenario3']],
+          color_choices,
           width = '100%'
         ),
         shinyWidgets::awesomeCheckbox(
@@ -31,23 +71,23 @@ mod_vizInput <- function(id) {
         shinyjs::hidden(
           shinyWidgets::pickerInput(
             ns('mida'), label_mida[['esp']],
-            dic_mida_choices[['esp']][['scenario1']],
+            mida_choices,
             width = '100%'
           )
         ),
         shinyWidgets::pickerInput(
           ns('statistic'), label = label_statistic[['esp']],
-          choices = dic_statistic_choices[['esp']],
+          choices = statistic_choices,
           width = '100%'
         ),
         shinyWidgets::pickerInput(
           ns('tipo_grup_func'), label_tipo_grup_func[['esp']],
-          choices = dic_tipo_grup_func_choices[['esp']],
+          choices = tipo_grup_func_choices,
           selected = 'cadesccon', width = '100%'
         ),
         shinyWidgets::pickerInput(
           ns('grup_func'), label_grup_func[['esp']][['scenario3']][['especie']],
-          choices = dic_grup_func_choices[['esp']][['scenario3']][['especie']],
+          choices = grup_func_choices,
           width = '100%'
         )
       )
@@ -61,13 +101,14 @@ mod_vizInput <- function(id) {
 #' @param session internal
 #'
 #' @param mod_data reactive with the reactive data and the data inputs
+#' @param ifndb pool object to access ifn db
 #'
 #' @export
 #'
 #' @rdname mod_vizUI
 mod_viz <- function(
   input, output, session,
-  mod_data
+  mod_data, ifndb
 ) {
 
   input_scenario <- shiny::reactive({
@@ -78,10 +119,19 @@ mod_viz <- function(
   shiny::observeEvent(
     eventExpr = input_scenario(),
     handlerExpr = {
+
+      color_choices <- dplyr::tbl(ifndb, 'color_thesaurus') %>%
+        dplyr::filter(scenario_id == !!input_scenario()) %>%
+        dplyr::collect() %>% {
+          magrittr::set_names(
+            magrittr::extract2(., 'color_id'), magrittr::extract2(., 'esp')
+          )
+        }
+
       # update the needed inputs
       shinyWidgets::updatePickerInput(
         session, 'color', label = 'Color',
-        choices = dic_color_choices[["esp"]][[input_scenario()]]
+        choices = color_choices
       )
     }
   )
@@ -97,9 +147,17 @@ mod_viz <- function(
       # scenarios 1 and 2 (parecelas con y sin desglose)
       if (input_scenario() %in% c('scenario1', 'scenario2')) {
 
+        mida_choices <- dplyr::tbl(ifndb, 'mida_thesaurus') %>%
+          dplyr::filter(scenario_id == !!input_scenario()) %>%
+          dplyr::collect() %>% {
+            magrittr::set_names(
+              magrittr::extract2(., 'mida_id'), magrittr::extract2(., 'esp')
+            )
+          }
+
         shinyWidgets::updatePickerInput(
           session, 'mida', label = label_mida[['esp']],
-          choices = dic_mida_choices[["esp"]][[input_scenario()]]
+          choices = mida_choices
         )
 
         # show and enable
@@ -138,34 +196,36 @@ mod_viz <- function(
     handlerExpr = {
       # este está presente en los cuatro scenarios, pero su valor depende de
       # de tipo_grup_funcional en 1 y 3 y de los datos en 2 y 4
-      if (input_scenario() == 'scenario1') {
+      if (input_scenario() %in% c('scenario1', 'scenario3')) {
+
+        grup_func_choices <- dplyr::tbl(ifndb, 'grup_func_thesaurus') %>%
+          dplyr::filter(scenario_id == !!input_scenario(), grup_func_id == input$tipo_grup_func) %>%
+          dplyr::collect() %>% {
+            magrittr::set_names(
+              magrittr::extract2(., 'grup_func_val'), magrittr::extract2(., 'esp')
+            )
+          }
 
         shinyWidgets::updatePickerInput(
           session, 'grup_func',
           label = label_grup_func[['esp']][['scenario1']][[input$tipo_grup_func]],
-          choices = dic_grup_func_choices[['esp']][['scenario1']][[input$tipo_grup_func]]
+          choices = grup_func_choices
         )
 
       } else {
-        if (input_scenario() %in% c('scenario2', 'scenario4')) {
-
-          shinyWidgets::updatePickerInput(
-            session, 'grup_func',
-            label = label_grup_func[['esp']][[input_scenario()]][[mod_data$agg_level]],
-            choices = dic_grup_func_choices[['esp']][[input_scenario()]][[mod_data$agg_level]]
-          )
-
-        } else {
-          if (input_scenario() == 'scenario3') {
-
-            shinyWidgets::updatePickerInput(
-              session, 'grup_func',
-              label = label_grup_func[['esp']][['scenario3']][[input$tipo_grup_func]],
-              choices = dic_grup_func_choices[['esp']][['scenario3']][[input$tipo_grup_func]]
+        grup_func_choices <- dplyr::tbl(ifndb, 'grup_func_thesaurus') %>%
+          dplyr::filter(scenario_id == !!input_scenario(), grup_func_id == mod_data$agg_level) %>%
+          dplyr::collect() %>% {
+            magrittr::set_names(
+              magrittr::extract2(., 'grup_func_val'), magrittr::extract2(., 'esp')
             )
-
           }
-        }
+
+        shinyWidgets::updatePickerInput(
+          session, 'grup_func',
+          label = label_grup_func[['esp']][[input_scenario()]][[mod_data$agg_level]],
+          choices = grup_func_choices
+        )
       }
     }
   )

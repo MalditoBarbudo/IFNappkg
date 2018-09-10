@@ -133,15 +133,23 @@ mod_table <- function(
 
     cd <- ifelse(mod_data$diameter_classes, 'cd', 'nocd')
 
+    col_vis_choices <- dplyr::tbl(ifndb, 'col_vis_thesaurus') %>%
+      dplyr::filter(scenario_id == !!scenario_reac(), cd_id == cd) %>%
+      dplyr::collect() %>% {
+        magrittr::set_names(
+          magrittr::extract2(., 'col_vis_val'), magrittr::extract2(., 'esp')
+        )
+      }
+
     shinyWidgets::updatePickerInput(
       session, 'col_vis_selector', 'Show/Hide columns',
-      choices = dic_col_vis_input[['esp']][[cd]][[scenario_reac()]],
-      selected = dic_col_vis_input[['esp']][[cd]][[scenario_reac()]][1:10]
+      choices = col_vis_choices,
+      selected = col_vis_choices[1:10]
     )
 
     shinyWidgets::updatePickerInput(
       session, 'col_filter_selector', 'Select columns to filter by',
-      choices = dic_col_vis_input[['esp']][[cd]][[scenario_reac()]]
+      choices = col_vis_choices
     )
   })
 
@@ -235,52 +243,6 @@ mod_table <- function(
       )
   })
 
-  # output$sig_and_clima_opts <- shiny::renderUI({
-  #   # get the session ns to be able to tag the inputs with correct id
-  #   ns <- session$ns
-  #
-  #   # we create all, and hidden
-  #   shiny::tagList(
-  #     shinyjs::hidden(
-  #       shiny::div(
-  #         id = ns('sigclima_checkboxes'),
-  #         shinyWidgets::awesomeCheckbox(
-  #           ns('SIG_CLIMA'), 'Añadir datos SIG y CLIMA a la descarga',
-  #           value = FALSE, status = 'info'
-  #         )
-  #       )
-  #     ),
-  #     shinyjs::hidden(
-  #       shiny::div(
-  #         id = ns('sigclima_buttons'),
-  #         shinyWidgets::downloadBttn(
-  #           ns('SIG_CLIMA_download'), 'Descargar datos SIG y Clima',
-  #           color = 'primary', size = 'sm', block = FALSE,
-  #           style = 'minimal'
-  #         )
-  #       )
-  #     )
-  #   )
-  #
-  #   # # depending on scenario, build the buttons or the checkboxes
-  #   # if (scenario_reac() %in% c('scenario1', 'scenario2')) {
-  #   #   shiny::tagList(
-  #   #     shinyWidgets::awesomeCheckbox(
-  #   #       ns('SIG_CLIMA'), 'Añadir datos SIG y CLIMA a la descarga',
-  #   #       value = FALSE, status = 'info'
-  #   #     )
-  #   #   )
-  #   # } else {
-  #   #   shiny::tagList(
-  #   #     shinyWidgets::downloadBttn(
-  #   #       ns('SIG_CLIMA_download'), 'Descargar datos SIG y Clima',
-  #   #       color = 'primary', size = 'sm', block = FALSE,
-  #   #       style = 'minimal'
-  #   #     )
-  #   #   )
-  #   # }
-  # })
-
   # depending on the scenario, we need to show/enable and hide/disable the
   # SIGCLIMA download helpers inputs
   shiny::observe({
@@ -317,9 +279,18 @@ mod_table <- function(
       lapply(
         input$col_filter_selector, function(var) {
           if (!is.numeric(data_temp[[var]])) {
-            # return()
+
+            var_label <- dplyr::tbl(ifndb, 'col_vis_thesaurus') %>%
+              dplyr::filter(
+                scenario_id == !!scenario_reac(),
+                cd_id == cd,
+                col_vis_val == var
+              ) %>%
+              dplyr::collect() %>%
+              dplyr::pull(esp)
+
             shinyWidgets::pickerInput(
-              ns(var), label = var,
+              ns(var), label = var_label,
               choices = unique(data_temp[[var]]),
               multiple = TRUE,
               options = list(
@@ -334,9 +305,17 @@ mod_table <- function(
           } else {
             min_var <- floor(min(data_temp[[var]], na.rm = TRUE))
             max_var <- ceiling(max(data_temp[[var]], na.rm = TRUE))
+            var_label <- dplyr::tbl(ifndb, 'col_vis_thesaurus') %>%
+              dplyr::filter(
+                scenario_id == !!scenario_reac(),
+                cd_id == cd,
+                col_vis_val == var
+              ) %>%
+              dplyr::collect() %>%
+              dplyr::pull(esp)
 
             shiny::sliderInput(
-              ns(var), label = var,
+              ns(var), label = var_label,
               min = min_var,
               max = max_var,
               round = 1,

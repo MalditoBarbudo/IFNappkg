@@ -4,10 +4,12 @@
 \alias{mod_vizInput}
 \title{mod_vizInput and mod_viz}
 \usage{
-mod_vizInput(id)
+mod_vizInput(id, ifndb)
 }
 \arguments{
 \item{id}{shiny id}
+
+\item{ifndb}{pool object to access ifn db}
 }
 \description{
 A shiny module to generate and populate the visualization inputs

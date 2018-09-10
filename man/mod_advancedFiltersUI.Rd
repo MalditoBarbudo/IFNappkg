@@ -5,12 +5,14 @@
 \alias{mod_advancedFilters}
 \title{mod_advancedFiltersUI and mod_advancedFilters}
 \usage{
-mod_advancedFiltersUI(id)
+mod_advancedFiltersUI(id, ifndb)
 
-mod_advancedFilters(input, output, session, mod_buttons)
+mod_advancedFilters(input, output, session, mod_buttons, ifndb)
 }
 \arguments{
 \item{id}{shiny id}
+
+\item{ifndb}{pool obkect to access the ifn db}
 
 \item{input}{internal}
 
@@ -20,6 +22,8 @@ mod_advancedFilters(input, output, session, mod_buttons)
 
 \item{mod_buttons}{mod_buttons reactives, to get when button to show advanced
 filters is pressed}
+
+\item{ifndb}{pool object to access the ifn db}
 }
 \description{
 A shiny module to process the advanced filters

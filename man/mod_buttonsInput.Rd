@@ -5,12 +5,14 @@
 \alias{mod_buttons}
 \title{mod_buttonsInput and mod_buttons}
 \usage{
-mod_buttonsInput(id)
+mod_buttonsInput(id, ifndb)
 
 mod_buttons(input, output, session)
 }
 \arguments{
 \item{id}{shiny id}
+
+\item{ifndb}{pool object to access the ifn db}
 
 \item{input}{internal}
 

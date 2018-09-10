@@ -4,7 +4,7 @@
 \alias{mod_viz}
 \title{mod_viz server function}
 \usage{
-mod_viz(input, output, session, mod_data)
+mod_viz(input, output, session, mod_data, ifndb)
 }
 \arguments{
 \item{input}{internal}
@@ -14,6 +14,8 @@ mod_viz(input, output, session, mod_data)
 \item{session}{internal}
 
 \item{mod_data}{reactive with the reactive data and the data inputs}
+
+\item{ifndb}{pool object to access ifn db}
 }
 \description{
 mod_viz server function
