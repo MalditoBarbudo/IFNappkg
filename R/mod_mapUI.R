@@ -247,8 +247,8 @@ mod_map <- function(
     base_data_reactives$map_draw_all_features <- input$map_draw_all_features
 
     return(base_data_reactives)
-  }) %>%
-    shiny::debounce(millis = 500)
+  }) #%>%
+    # shiny::debounce(millis = 500)
 
   base_data_modifs_reactives <- shiny::reactive({
     base_data_modifs_reactives <- list()
@@ -268,8 +268,8 @@ mod_map <- function(
     # base_data_modifs_reactives$map_draw_deleted_features <- input$map_draw_deleted_features
 
     return(base_data_modifs_reactives)
-  }) %>%
-    shiny::debounce(millis = 500)
+  }) #%>%
+    # shiny::debounce(millis = 500)
 
   map_base_data <- shiny::eventReactive(
     ignoreInit = FALSE,
