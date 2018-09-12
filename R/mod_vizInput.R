@@ -59,34 +59,36 @@ mod_vizInput <- function(id, ifndb) {
     shiny::tagList(
 
       shiny::wellPanel(
-        shiny::h3('Visualización'),
+        shiny::h3(label_getter(ifndb, 'esp', 'vizControls_h3_label')),
         shinyWidgets::pickerInput(
-          ns('color'), 'Selecciona la variable para colorear',
+          ns('color'), label_getter(ifndb, 'esp', 'color_label'),
           color_choices,
           width = '100%'
         ),
         shinyWidgets::awesomeCheckbox(
-          ns('inverse_pal'), '¿Invertir paleta?', value = FALSE, status = 'info'
+          ns('inverse_pal'), label_getter(ifndb, 'esp', 'inverse_pal_label'),
+          value = FALSE, status = 'info'
         ),
         shinyjs::hidden(
           shinyWidgets::pickerInput(
-            ns('mida'), label_mida[['esp']],
+            ns('mida'), label_getter(ifndb, 'esp', 'mida_label'),
             mida_choices,
             width = '100%'
           )
         ),
         shinyWidgets::pickerInput(
-          ns('statistic'), label = label_statistic[['esp']],
+          ns('statistic'), label = label_getter(ifndb, 'esp', 'statistic_label'),
           choices = statistic_choices,
           width = '100%'
         ),
         shinyWidgets::pickerInput(
-          ns('tipo_grup_func'), label_tipo_grup_func[['esp']],
+          ns('tipo_grup_func'), label_getter(ifndb, 'esp', 'tipo_grup_func_label'),
           choices = tipo_grup_func_choices,
           selected = 'cadesccon', width = '100%'
         ),
         shinyWidgets::pickerInput(
-          ns('grup_func'), label_grup_func[['esp']][['scenario3']][['especie']],
+          ns('grup_func'),
+          label_getter(ifndb, 'esp', 'grup_func_label', 'scenario3', 'especie'),
           choices = grup_func_choices,
           width = '100%'
         )
@@ -130,7 +132,7 @@ mod_viz <- function(
 
       # update the needed inputs
       shinyWidgets::updatePickerInput(
-        session, 'color', label = 'Color',
+        session, 'color', label = label_getter(ifndb, 'esp', 'color_label'),
         choices = color_choices
       )
     }
@@ -156,7 +158,7 @@ mod_viz <- function(
           }
 
         shinyWidgets::updatePickerInput(
-          session, 'mida', label = label_mida[['esp']],
+          session, 'mida', label = label_getter(ifndb, 'esp', 'mida_label'),
           choices = mida_choices
         )
 
@@ -208,7 +210,7 @@ mod_viz <- function(
 
         shinyWidgets::updatePickerInput(
           session, 'grup_func',
-          label = label_grup_func[['esp']][['scenario1']][[input$tipo_grup_func]],
+          label = label_getter(ifndb, 'esp', 'grup_func_label', input_scenario(), input$tipo_grup_func),
           choices = grup_func_choices
         )
 
@@ -223,7 +225,7 @@ mod_viz <- function(
 
         shinyWidgets::updatePickerInput(
           session, 'grup_func',
-          label = label_grup_func[['esp']][[input_scenario()]][[mod_data$agg_level]],
+          label = label_getter(ifndb, 'esp', 'grup_func_label', input_scenario(), mod_data$agg_level),
           choices = grup_func_choices
         )
       }

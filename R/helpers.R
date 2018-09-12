@@ -70,7 +70,7 @@ data_scenario <- function(
   if (is.function(updateProgress)) {
     updateProgress(
       value = 0.1,
-      detail = 'SIG data'
+      detail = label_getter(ifndb, 'esp', 'progress_data_scenario_label', 'detail', 'sig')
     )
   }
   # admin_div filter
@@ -147,7 +147,7 @@ data_scenario <- function(
   if (is.function(updateProgress)) {
     updateProgress(
       value = 0.2,
-      detail = 'Clima data'
+      detail = label_getter(ifndb, 'esp', 'progress_data_scenario_label', 'detail', 'clima')
     )
   }
   clima <- tidyIFN::data_clima(sig, ifn, ifndb, !!! clima_filters)
@@ -165,7 +165,7 @@ data_scenario <- function(
   if (is.function(updateProgress)) {
     updateProgress(
       value = 0.3,
-      detail = 'Core data'
+      detail = label_getter(ifndb, 'esp', 'progress_data_scenario_label', 'detail', 'core')
     )
   }
   core <- tidyIFN::data_core(
@@ -193,6 +193,7 @@ data_scenario <- function(
 #' @param tipo_grup_func Input
 #' @param grup_func Input
 #' @param statistic Input
+#' @param ifndb pool object to access the ifn db
 #' @param updateProgress progress function to monitorize the map drawing
 #'
 #' @importFrom dplyr left_join
@@ -210,6 +211,7 @@ map_modificator <- function(
   statistic,
   admin_div,
   agg_level,
+  ifndb,
   updateProgress = NULL
 ) {
 
@@ -230,7 +232,7 @@ map_modificator <- function(
     if (is.function(updateProgress)) {
       updateProgress(
         value = 0.33,
-        detail = 'Procesando datos'
+        detail = label_getter(ifndb, 'esp', 'progress_map_modificator_label', 'detail', 'first')
       )
     }
 
@@ -321,7 +323,7 @@ map_modificator <- function(
     if (is.function(updateProgress)) {
       updateProgress(
         value = 0.72,
-        detail = 'Creando el mapa'
+        detail = label_getter(ifndb, 'esp', 'progress_map_modificator_label', 'detail', 'second')
       )
     }
 
@@ -375,7 +377,7 @@ map_modificator <- function(
     if (is.function(updateProgress)) {
       updateProgress(
         value = 0.33,
-        detail = 'Procesando datos'
+        detail = label_getter(ifndb, 'esp', 'progress_map_modificator_label', 'detail', 'first')
       )
     }
 
@@ -476,7 +478,7 @@ map_modificator <- function(
     if (is.function(updateProgress)) {
       updateProgress(
         value = 0.72,
-        detail = 'Creando el mapa'
+        detail = label_getter(ifndb, 'esp', 'progress_map_modificator_label', 'detail', 'second')
       )
     }
 
@@ -525,7 +527,7 @@ map_modificator <- function(
     if (is.function(updateProgress)) {
       updateProgress(
         value = 0.33,
-        detail = 'Procesando datos'
+        detail = label_getter(ifndb, 'esp', 'progress_map_modificator_label', 'detail', 'first')
       )
     }
 
@@ -622,7 +624,7 @@ map_modificator <- function(
     if (is.function(updateProgress)) {
       updateProgress(
         value = 0.72,
-        detail = 'Creando el mapa'
+        detail = label_getter(ifndb, 'esp', 'progress_map_modificator_label', 'detail', 'second')
       )
     }
 
@@ -673,7 +675,7 @@ map_modificator <- function(
     if (is.function(updateProgress)) {
       updateProgress(
         value = 0.33,
-        detail = 'Procesando datos'
+        detail = label_getter(ifndb, 'esp', 'progress_map_modificator_label', 'detail', 'first')
       )
     }
 
@@ -746,7 +748,7 @@ map_modificator <- function(
     if (is.function(updateProgress)) {
       updateProgress(
         value = 0.72,
-        detail = 'Creando el mapa'
+        detail = label_getter(ifndb, 'esp', 'progress_map_modificator_label', 'detail', 'second')
       )
     }
 
@@ -1135,6 +1137,7 @@ infopanel_climaplot_gen <- function(data, color, click) {
 #' @param scenario character indicating the scenario
 #' @param admin_div Input
 #' @param agg_level Input
+#' @param ifndb pool object to access the ifn db
 #' @param diameter_classes Input
 #'
 #' @export
@@ -1144,6 +1147,7 @@ table_data_modificator <- function(
   admin_div,
   agg_level,
   diameter_classes,
+  ifndb,
   updateProgress = NULL
 ) {
 
@@ -1153,7 +1157,7 @@ table_data_modificator <- function(
     if (is.function(updateProgress)) {
       updateProgress(
         value = 0.53,
-        detail = 'Procesando datos'
+        detail = label_getter(ifndb, 'esp', 'progress_table_data_modificator', 'detail', 'first')
       )
     }
     return(data_scenario %>% purrr::reduce(left_join) %>% dplyr::collect())
@@ -1164,7 +1168,7 @@ table_data_modificator <- function(
     if (is.function(updateProgress)) {
       updateProgress(
         value = 0.53,
-        detail = 'Procesando datos'
+        detail = label_getter(ifndb, 'esp', 'progress_table_data_modificator', 'detail', 'first')
       )
     }
     return(data_scenario %>% purrr::reduce(left_join) %>% dplyr::collect())
@@ -1178,7 +1182,7 @@ table_data_modificator <- function(
     if (is.function(updateProgress)) {
       updateProgress(
         value = 0.53,
-        detail = 'Procesando datos'
+        detail = label_getter(ifndb, 'esp', 'progress_table_data_modificator', 'detail', 'first')
       )
     }
     return(
@@ -1210,7 +1214,7 @@ table_data_modificator <- function(
     if (is.function(updateProgress)) {
       updateProgress(
         value = 0.53,
-        detail = 'Procesando datos'
+        detail = label_getter(ifndb, 'esp', 'progress_table_data_modificator', 'detail', 'first')
       )
     }
     return(
@@ -1233,4 +1237,39 @@ table_data_modificator <- function(
         )
     )
   }
+}
+
+#' label getter
+#'
+#' @param ifndb pool
+#' @param lang character
+#' @param label_id character
+#' @param label_sub1 character
+#' @param label_sub2 character
+#'
+label_getter <- function(
+  ifndb, lang = 'esp', label_id, label_sub1 = NULL, label_sub2 = NULL
+) {
+
+  label_id_fil <- rlang::quo(label_id == !!label_id)
+
+  if (is.null(label_sub1)) {
+    label_sub1_fil <- rlang::quos()
+  } else {
+    label_sub1_fil <- rlang::quo(label_sub1 == !!label_sub1)
+  }
+
+  if (is.null(label_sub2)) {
+    label_sub2_fil <- rlang::quos()
+  } else {
+    label_sub2_fil <- rlang::quo(label_sub2 == !!label_sub2)
+  }
+
+  dplyr::tbl(ifndb, 'label_thesaurus') %>%
+    dplyr::filter(
+      !!! label_id_fil,
+      !!! label_sub1_fil, !!! label_sub2_fil
+    ) %>%
+    dplyr::collect() %>%
+    magrittr::extract2(lang)
 }

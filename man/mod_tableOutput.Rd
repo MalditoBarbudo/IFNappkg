@@ -5,12 +5,14 @@
 \alias{mod_table}
 \title{mod_tableOutput and mod_table}
 \usage{
-mod_tableOutput(id)
+mod_tableOutput(id, ifndb)
 
 mod_table(input, output, session, mod_data, mod_advancedFilters, mod_map, ifndb)
 }
 \arguments{
 \item{id}{shiny id}
+
+\item{ifndb}{pool object to access the ifn db}
 
 \item{input}{internal}
 

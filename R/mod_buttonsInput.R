@@ -16,14 +16,16 @@ mod_buttonsInput <- function(id, ifndb) {
     shiny::column(
       12,
       # title
-      shiny::tags$strong('Muestra/oculta controles adicionales'),
+      shiny::tags$strong(label_getter(ifndb, 'esp', 'buttonsInput_strong_label')),
       # buttons
       shinyWidgets::actionGroupButtons(
         inputIds = c(
           ns('show_agg'), ns('show_filter_def'), ns('show_viz')
         ),
         labels = c(
-          'Agregación', 'Filtros', 'Visualización'
+          label_getter(ifndb, 'esp', 'show_agg_label'),
+          label_getter(ifndb, 'esp', 'show_filter_def_label'),
+          label_getter(ifndb, 'esp', 'show_viz_label')
         ),
         status = 'success', size = 'sm',
         direction = 'horizontal', fullwidth = TRUE

@@ -5,7 +5,7 @@
 \title{modifcate the map based on vis inputs}
 \usage{
 map_modificator(data_scenario, scenario, ifn, inverse_pal, color, mida,
-  tipo_grup_func, grup_func, statistic, admin_div, agg_level,
+  tipo_grup_func, grup_func, statistic, admin_div, agg_level, ifndb,
   updateProgress = NULL)
 }
 \arguments{
@@ -26,6 +26,8 @@ map_modificator(data_scenario, scenario, ifn, inverse_pal, color, mida,
 \item{grup_func}{Input}
 
 \item{statistic}{Input}
+
+\item{ifndb}{pool object to access the ifn db}
 
 \item{updateProgress}{progress function to monitorize the map drawing}
 }

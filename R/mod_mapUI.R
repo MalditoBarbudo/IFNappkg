@@ -300,8 +300,9 @@ mod_map <- function(
       ) {
 
         shinyWidgets::sendSweetAlert(
-          session, title = 'Sin datos',
-          text = 'Con los filtros actuales activados no hay parcelas que cumplan los requisitos',
+          session,
+          title = label_getter(ifndb, 'esp', 'sweetalert_map_base_data_label', 'title'),
+          text = label_getter(ifndb, 'esp', 'sweetalert_map_base_data_label', 'text'),
           type = 'warning'
         )
 
@@ -320,7 +321,12 @@ mod_map <- function(
 
       # create a progress object to indicate the user this will take time
       progress <- shiny::Progress$new()
-      progress$set(value = 0, message = 'Procesando el mapa...')
+      progress$set(
+        value = 0,
+        message = label_getter(
+          ifndb, 'esp', 'progress_map_base_data_modifs_label', 'message'
+        )
+      )
       on.exit(progress$close())
 
       updateProgress <- function(value = NULL, detail = NULL) {
@@ -339,6 +345,7 @@ mod_map <- function(
           mod_data$statistic,
           mod_data$admin_div,
           mod_data$agg_level,
+          ifndb,
           updateProgress = updateProgress
         )
     }

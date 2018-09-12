@@ -5,7 +5,7 @@
 \title{modifcate the table based on data inputs}
 \usage{
 table_data_modificator(data_scenario, scenario, admin_div, agg_level,
-  diameter_classes, updateProgress = NULL)
+  diameter_classes, ifndb, updateProgress = NULL)
 }
 \arguments{
 \item{data_scenario}{tbl_sql object}
@@ -17,6 +17,8 @@ table_data_modificator(data_scenario, scenario, admin_div, agg_level,
 \item{agg_level}{Input}
 
 \item{diameter_classes}{Input}
+
+\item{ifndb}{pool object to access the ifn db}
 }
 \description{
 this returns the data object to modify the table

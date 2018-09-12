@@ -20,13 +20,13 @@ ifn_app <- function() {
 
     shiny::navbarPage(
       # opts
-      title = "Eines d'anàlisi IFN",
+      title = label_getter(ifndb, 'esp', 'nav_label'),
       id = 'nav',
       collapsible = TRUE,
 
       # contents
       shiny::tabPanel(
-        "Mapa interactiu",
+        label_getter(ifndb, 'esp', 'tabPanel_map_label'),
 
         shiny::div(
           class = "outer",
@@ -71,24 +71,24 @@ ifn_app <- function() {
           ## cite div ####
           shiny::tags$div(
             id = 'cite',
-            "Dades compilats pel CREAF & CTFC basats en l'IFN"
+            label_getter(ifndb, 'esp', 'cite_label')
           )
         )
       ),
 
       # data tab
       shiny::tabPanel(
-        "Explora les dades",
+        label_getter(ifndb, 'esp', 'tabPanel_table_label'),
 
         shiny::div(
           class = 'inner',
-          mod_tableOutput('mod_tableOutput')
+          mod_tableOutput('mod_tableOutput', ifndb)
         )
       ),
 
       # Alometrias tab
       shiny::tabPanel(
-        "Alometrías"
+        label_getter(ifndb, 'esp', 'tabPanel_alometrias_label')
       )
     )
   )

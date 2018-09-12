@@ -12,46 +12,54 @@ mod_dataInput <- function(id, ifndb) {
   ns <- shiny::NS(id)
 
   # choices
-  ifn_choices <- tbl(ifndb, 'ifn_thesaurus') %>%
+  ifn_choices <- dplyr::tbl(ifndb, 'ifn_thesaurus') %>%
     dplyr::collect() %>% {
       magrittr::set_names(
         magrittr::extract2(., 'ifn_id'), magrittr::extract2(., 'esp')
       )
     }
 
-  viz_shape_choices <- tbl(ifndb, 'viz_shape_thesaurus') %>%
+  viz_shape_choices <- dplyr::tbl(ifndb, 'viz_shape_thesaurus') %>%
     dplyr::collect() %>% {
       magrittr::set_names(
         magrittr::extract2(., 'viz_shape_id'), magrittr::extract2(., 'esp')
       )
     }
 
-  admin_div_choices <- tbl(ifndb, 'admin_div_thesaurus') %>%
+  admin_div_choices <- dplyr::tbl(ifndb, 'admin_div_thesaurus') %>%
     dplyr::collect() %>% {
       magrittr::set_names(
         magrittr::extract2(., 'admin_div_id'), magrittr::extract2(., 'esp')
       )
     }
 
-  espai_tipus_choices <- tbl(ifndb, 'espai_tipus_thesaurus') %>%
+  espai_tipus_choices <- dplyr::tbl(ifndb, 'espai_tipus_thesaurus') %>%
     dplyr::collect() %>% {
       magrittr::set_names(
         magrittr::extract2(., 'espai_tipus_id'), magrittr::extract2(., 'esp')
       )
     }
 
-  agg_level_choices <- tbl(ifndb, 'agg_level_thesaurus') %>%
+  agg_level_choices <- dplyr::tbl(ifndb, 'agg_level_thesaurus') %>%
     dplyr::collect() %>% {
       magrittr::set_names(
         magrittr::extract2(., 'agg_level_id'), magrittr::extract2(., 'esp')
       )
     }
 
-  admin_div_fil_choices <- tbl(ifndb, 'admin_div_fil_thesaurus') %>%
-    filter(admin_div_fil_id == 'comarca') %>%
+  admin_div_fil_choices <- dplyr::tbl(ifndb, 'admin_div_fil_thesaurus') %>%
+    dplyr::filter(admin_div_fil_id == 'comarca') %>%
     dplyr::collect() %>% {
       magrittr::set_names(
         magrittr::extract2(., 'admin_div_fil_value'), magrittr::extract2(., 'esp')
+      )
+    }
+
+  espai_tipus_fil_choices <- dplyr::tbl(ifndb, 'espai_tipus_fil_thesaurus') %>%
+    dplyr::filter(espai_tipus_fil_id == 'proteccio') %>%
+    dplyr::collect() %>% {
+      magrittr::set_names(
+        magrittr::extract2(., 'espai_tipus_fil_value'), magrittr::extract2(., 'esp')
       )
     }
 
@@ -75,14 +83,14 @@ mod_dataInput <- function(id, ifndb) {
       shiny::div(
         id = 'dataSel',
 
-        shiny::h3('Datos'),
+        shiny::h3(label_getter(ifndb, 'esp', 'dataSel_h3_label')),
 
         shiny::fluidRow(
           shiny::column(
             4,
             shinyWidgets::pickerInput(
               ns('ifn'),
-              label = label_ifn[['esp']],
+              label = label_getter(ifndb, 'esp', 'ifn_label'),
               choices = ifn_choices,
               selected = 'ifn3'
             )
@@ -90,7 +98,8 @@ mod_dataInput <- function(id, ifndb) {
           shiny::column(
             6, offset = 2,
             shinyWidgets::radioGroupButtons(
-              ns('viz_shape'), label_viz_shape[['esp']],
+              ns('viz_shape'),
+              label_getter(ifndb, 'esp', 'viz_shape_label'),
               choices = viz_shape_choices, selected = 'polygon',
               status = 'info', size = 'sm', justified = TRUE,
               checkIcon = list(
@@ -105,14 +114,14 @@ mod_dataInput <- function(id, ifndb) {
           shiny::column(
             6,
             shinyWidgets::pickerInput(
-              ns('admin_div'), label_admin_div[['esp']],
+              ns('admin_div'), label_getter(ifndb, 'esp', 'admin_div_label'),
               admin_div_choices, selected = 'comarca'
             )
           ),
           shiny::column(
             6,
             shinyWidgets::pickerInput(
-              ns('espai_tipus'), label_espai_tipus[['esp']],
+              ns('espai_tipus'), label_getter(ifndb, 'esp', 'espai_tipus_label'),
               espai_tipus_choices, selected = 'proteccio'
             )
           )
@@ -130,19 +139,20 @@ mod_dataInput <- function(id, ifndb) {
           # horizontal rule to separate
           shiny::hr(),
 
-          shiny::h4('Agregación'),
+          shiny::h4(label_getter(ifndb, 'esp', 'dataAgg_h4_label')),
 
           shiny::fluidRow(
             shiny::column(
               9,
               shinyWidgets::pickerInput(
-                ns('agg_level'), label_agg_level[['esp']],
+                ns('agg_level'), label_getter(ifndb, 'esp', 'agg_level_label'),
                 choices = agg_level_choices,
                 selected = 'parcela', width = '100%'
               ),
               shinyWidgets::awesomeCheckbox(
                 ns('diameter_classes'),
-                label = label_diam_class[['esp']][['on']], status = 'info'
+                label = label_getter(ifndb, 'esp', 'diameter_classes_label'),
+                status = 'info'
               )
             )
           )
@@ -159,13 +169,14 @@ mod_dataInput <- function(id, ifndb) {
           # horizontal rule to separate
           shiny::hr(),
 
-          shiny::h4('Filtros'),
+          shiny::h4(label_getter(ifndb, 'esp', 'dataFil_h4_label')),
 
           shiny::fluidRow(
             shiny::column(
               6,
               shinyWidgets::pickerInput(
-                ns('admin_div_fil'), label_admin_div_fil[['esp']][['comarca']],
+                ns('admin_div_fil'),
+                label_getter(ifndb, 'esp', 'admin_div_fil_label', 'comarca'),
                 choices = admin_div_fil_choices,
                 selected = '', multiple = TRUE, width = '100%',
                 options = list(
@@ -181,8 +192,8 @@ mod_dataInput <- function(id, ifndb) {
               6,
               shinyWidgets::pickerInput(
                 ns('espai_tipus_fil'),
-                label_espai_tipus_fil[["esp"]][['proteccio']],
-                choices = dic_espai_tipus_fil_choices[["esp"]][['proteccio']],
+                label_getter(ifndb, 'esp', 'espai_tipus_fil_label', 'proteccio'),
+                choices = espai_tipus_fil_choices,
                 selected = '', multiple = TRUE, width = '100%',
                 options = list(
                   `actions-box` = TRUE,
@@ -208,7 +219,8 @@ mod_dataInput <- function(id, ifndb) {
             shiny::column(
               6, offset = 3,
               shinyWidgets::actionBttn(
-                ns('apply_filters'), label_apply_filters[['esp']],
+                ns('apply_filters'),
+                label_getter(ifndb, 'esp', 'apply_filters_label'),
                 icon = shiny::icon('check'),
                 style = "material-flat",
                 block = TRUE,
@@ -262,7 +274,7 @@ mod_data <- function(
 
       shinyWidgets::updatePickerInput(
         session, 'admin_div_fil',
-        label = label_admin_div_fil[["esp"]][[admin_div_sel]],
+        label = label_getter(ifndb, 'esp', 'admin_div_fil_label', admin_div_sel),
         choices = admin_div_fil_choices
       )
 
@@ -284,7 +296,7 @@ mod_data <- function(
 
     shinyWidgets::updatePickerInput(
       session, 'espai_tipus_fil',
-      label = label_espai_tipus_fil[["esp"]][[espai_tipus_sel]],
+      label = label_getter(ifndb, 'esp', 'espai_tipus_fil_label', espai_tipus_sel),
       choices = espai_tipus_fil_choices
     )
   })

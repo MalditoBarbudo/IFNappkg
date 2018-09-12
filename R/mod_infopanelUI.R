@@ -153,27 +153,45 @@ mod_infopanel <- function(
       shiny::tagList(
         # header
         shiny::h4(
-          glue::glue(label_shape_click_info[['esp']][['plot']][['header']])
+          glue::glue(
+            label_getter(ifndb, 'esp', 'shape_click_info_label', 'plot', 'header')
+          )
         ),
         # muni
-        glue::glue(label_shape_click_info[['esp']][['plot']][['muni']]),
+        glue::glue(
+          label_getter(ifndb, 'esp', 'shape_click_info_label', 'plot', 'muni')
+        ),
         # comarca
-        glue::glue(label_shape_click_info[['esp']][['plot']][['comarca']]),
+        glue::glue(
+          label_getter(ifndb, 'esp', 'shape_click_info_label', 'plot', 'comarca')
+        ),
         # province
-        glue::glue(label_shape_click_info[['esp']][['plot']][['province']]),
+        glue::glue(
+          label_getter(ifndb, 'esp', 'shape_click_info_label', 'plot', 'province')
+        ),
 
         shiny::br(),
 
         # altitude
-        glue::glue(label_shape_click_info[['esp']][['plot']][['altitude']]),
+        glue::glue(
+          label_getter(ifndb, 'esp', 'shape_click_info_label', 'plot', 'altitude')
+        ),
         # slope
-        glue::glue(label_shape_click_info[['esp']][['plot']][['slope']]),
+        glue::glue(
+          label_getter(ifndb, 'esp', 'shape_click_info_label', 'plot', 'slope')
+        ),
         # an_rad
-        glue::glue(label_shape_click_info[['esp']][['plot']][['an_rad']]),
+        glue::glue(
+          label_getter(ifndb, 'esp', 'shape_click_info_label', 'plot', 'an_rad')
+        ),
         # an_ave_temp
-        glue::glue(label_shape_click_info[['esp']][['plot']][['an_ave_temp']]),
+        glue::glue(
+          label_getter(ifndb, 'esp', 'shape_click_info_label', 'plot', 'an_ave_temp')
+        ),
         # an_prec
-        glue::glue(label_shape_click_info[['esp']][['plot']][['an_prec']])
+        glue::glue(
+          label_getter(ifndb, 'esp', 'shape_click_info_label', 'plot', 'an_prec')
+        )
       )
 
 
@@ -187,10 +205,14 @@ mod_infopanel <- function(
       shiny::tagList(
         # header
         shiny::h4(
-          glue::glue(label_shape_click_info[['esp']][['polygon']][['header']])
+          glue::glue(
+            label_getter(ifndb, 'esp', 'shape_click_info_label', 'polygon', 'header')
+          )
         ),
          # explanation
-        glue::glue(label_shape_click_info[['esp']][['polygon']][['explanation']])
+        glue::glue(
+          label_getter(ifndb, 'esp', 'shape_click_info_label', 'polygon', 'explanation')
+        )
       )
 
 
@@ -205,7 +227,7 @@ mod_infopanel <- function(
       ns <- session$ns
       shinyWidgets::sendSweetAlert(
         session = session,
-        title = 'Vamos a ver...',
+        title = label_getter(ifndb, 'esp', 'sweetalert_shape_click_info_label', 'title'),
         text = shiny::tags$div(
           shiny::plotOutput(
             ns('shape_click_plot')
@@ -214,7 +236,8 @@ mod_infopanel <- function(
               type = 4, color = '#D2527F'
             )
         ),
-        html = TRUE, btn_labels = 'Dismiss'
+        html = TRUE,
+        btn_labels = label_getter(ifndb, 'esp', 'sweetalert_shape_click_info_label', 'btn_labels')
       )
     }
   )

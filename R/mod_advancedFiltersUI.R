@@ -34,7 +34,8 @@ mod_advancedFiltersUI <- function(id, ifndb) {
         6,
         # picker input to select the variables to filter
         shinyWidgets::pickerInput(
-          ns('adv_fil_clima_vars'), 'Variables climáticas',
+          ns('adv_fil_clima_vars'),
+          label_getter(ifndb, 'esp', 'adv_fil_clima_vars_label'),
           choices = adv_fil_clima_vars_choices,
           multiple = TRUE,
           options = list(
@@ -50,7 +51,8 @@ mod_advancedFiltersUI <- function(id, ifndb) {
         6,
         # picker input to select the variables to filter
         shinyWidgets::pickerInput(
-          ns('adv_fil_sig_vars'), 'Variables SIG',
+          ns('adv_fil_sig_vars'),
+          label_getter(ifndb, 'esp', 'adv_fil_sig_vars_label'),
           choices = adv_fil_sig_vars_choices,
           multiple = TRUE,
           options = list(
@@ -125,7 +127,8 @@ mod_advancedFilters <- function(
 
 
           shiny::sliderInput(
-            ns(var), label = clima_slider_inputs_choices_var[['esp']],
+            ns(var),
+            label = clima_slider_inputs_choices_var[['esp']],
             min = clima_slider_inputs_choices_var[['min']],
             max = clima_slider_inputs_choices_var[['max']],
             value = c(

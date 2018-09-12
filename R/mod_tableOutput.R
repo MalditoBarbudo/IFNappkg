@@ -3,9 +3,10 @@
 #' @description A shiny module to generate the base IFN plots table
 #'
 #' @param id shiny id
+#' @param ifndb pool object to access the ifn db
 #'
 #' @export
-mod_tableOutput <- function(id) {
+mod_tableOutput <- function(id, ifndb) {
 
   # ns
   ns <- shiny::NS(id)
@@ -18,12 +19,14 @@ mod_tableOutput <- function(id) {
         2,
         shiny::fluidRow(
           shinyWidgets::downloadBttn(
-            ns('dwl_csv_button'), 'Save csv',
+            ns('dwl_csv_button'),
+            label_getter(ifndb, 'esp', 'dwl_csv_button_label'),
             color = 'primary', size = 'sm', block = FALSE,
             style = 'minimal'
           ),
           shinyWidgets::downloadBttn(
-            ns('dwl_xlsx_button'), 'Save xlsx',
+            ns('dwl_xlsx_button'),
+            label_getter(ifndb, 'esp', 'dwl_xlsx_button_label'),
             color = 'primary', size = 'sm', block = FALSE,
             style = 'minimal'
           )
@@ -35,7 +38,8 @@ mod_tableOutput <- function(id) {
             shiny::div(
               id = ns('sigclima_checkboxes'),
               shinyWidgets::awesomeCheckbox(
-                ns('SIG_CLIMA'), 'Añadir datos SIG y CLIMA a la descarga',
+                ns('SIG_CLIMA'),
+                label_getter(ifndb, 'esp', 'sigclima_checkboxes_label'),
                 value = FALSE, status = 'info'
               )
             )
@@ -58,7 +62,8 @@ mod_tableOutput <- function(id) {
 
         shiny::fluidRow(
           shinyWidgets::pickerInput(
-            ns('col_vis_selector'), 'Show/Hide columns',
+            ns('col_vis_selector'),
+            label_getter(ifndb, 'esp', 'col_vis_selector_label'),
             choices = '', multiple = TRUE,
             options = list(
               `actions-box` = TRUE,
@@ -71,7 +76,8 @@ mod_tableOutput <- function(id) {
         ),
         shiny::fluidRow(
           shinyWidgets::pickerInput(
-            ns('col_filter_selector'), 'Select columns to filter by',
+            ns('col_filter_selector'),
+            label_getter(ifndb, 'esp', 'col_filter_selector_label'),
             choices = '', multiple = TRUE,
             options = list(
               `actions-box` = TRUE,
@@ -85,7 +91,8 @@ mod_tableOutput <- function(id) {
           shiny::br(),
           shiny::br(),
           shinyWidgets::actionBttn(
-            ns('apply_table_filters'), 'Aplicar columnas y filtros',
+            ns('apply_table_filters'),
+            label_getter(ifndb, 'esp', 'apply_table_filters_label'),
             icon = shiny::icon('eye'),
             style = "material-flat",
             block = FALSE,
@@ -142,13 +149,15 @@ mod_table <- function(
       }
 
     shinyWidgets::updatePickerInput(
-      session, 'col_vis_selector', 'Show/Hide columns',
+      session, 'col_vis_selector',
+      label_getter(ifndb, 'esp', 'col_vis_selector_label'),
       choices = col_vis_choices,
       selected = col_vis_choices[1:10]
     )
 
     shinyWidgets::updatePickerInput(
-      session, 'col_filter_selector', 'Select columns to filter by',
+      session, 'col_filter_selector',
+      label_getter(ifndb, 'esp', 'col_filter_selector_label'),
       choices = col_vis_choices
     )
   })
@@ -179,7 +188,10 @@ mod_table <- function(
 
       # create a progress object to indicate the user this will take time
       progress <- shiny::Progress$new(min = 0, max = 0.32)
-      progress$set(value = 0, message = 'Retrieving data...')
+      progress$set(
+        value = 0,
+        message = label_getter(ifndb, 'esp', 'progress_table_base_data_raw_label', 'message')
+      )
       on.exit(progress$close())
 
       updateProgress <- function(value = NULL, detail = NULL) {
@@ -211,8 +223,9 @@ mod_table <- function(
       ) {
 
         shinyWidgets::sendSweetAlert(
-          session, title = 'Sin datos',
-          text = 'Con los filtros actuales activados no hay parcelas que cumplan los requisitos',
+          session,
+          title = label_getter(ifndb, 'esp', 'sweetalert_table_base_data_raw_label', 'title'),
+          text = label_getter(ifndb, 'esp', 'sweetalert_table_base_data_raw_label', 'text'),
           type = 'warning'
         )
 
@@ -228,7 +241,10 @@ mod_table <- function(
 
     # create a progress object to indicate the user this will take time
     progress <- shiny::Progress$new(min = 0.33, max = 0.62)
-    progress$set(value = 0.33, message = 'Procesando la tabla...')
+    progress$set(
+      value = 0.33,
+      message = label_getter(ifndb, 'esp', 'progress_table_base_data_label', 'message')
+    )
     on.exit(progress$close())
 
     updateProgress <- function(value = NULL, detail = NULL) {
@@ -239,7 +255,7 @@ mod_table <- function(
       table_data_modificator(
         scenario_reac(),
         mod_data$admin_div, mod_data$agg_level, mod_data$diameter_classes,
-        updateProgress = updateProgress
+        ifndb, updateProgress = updateProgress
       )
   })
 
@@ -330,7 +346,7 @@ mod_table <- function(
     # tag list to return for the UI
     shiny::tagList(
       shiny::inputPanel(
-        shiny::h4('Filters'),
+        shiny::h4(label_getter(ifndb, 'esp', 'col_filter_h4_label')),
         col_filter_inputs()
       )
     )
@@ -383,12 +399,12 @@ mod_table <- function(
     eventExpr = base_data_modifs_reactives(),
     valueExpr = {
       shiny::validate(
-        shiny::need(table_base_data(), 'No hay datos')
+        shiny::need(table_base_data(), label_getter(ifndb, 'esp', 'table_base_data_modifs_validate_label', 'first'))
       )
 
       # create a progress object to indicate the user this will take time
       progress <- shiny::Progress$new(min = 0.63, max = 1)
-      progress$set(value = 0.63, message = 'Formateando la tabla...')
+      progress$set(value = 0.63, message = label_getter(ifndb, 'esp', 'progress_table_base_data_modifs_label', 'message'))
       on.exit(progress$close())
 
       updateProgress <- function(value = NULL, detail = NULL) {
@@ -408,7 +424,7 @@ mod_table <- function(
         shiny::validate(
           shiny::need(
             nrow(data_table_temp) > 0,
-            'Con los filtros actuales no se pueden mostrar datos'
+            label_getter(ifndb, 'esp', 'table_base_data_modifs_validate_label', 'second')
           )
         )
       } else {
@@ -425,7 +441,7 @@ mod_table <- function(
         shiny::validate(
           shiny::need(
             nrow(data_table_temp) > 0,
-            'Con los filtros actuales no se pueden mostrar datos'
+            label_getter(ifndb, 'esp', 'table_base_data_modifs_validate_label', 'second')
           )
         )
       }
