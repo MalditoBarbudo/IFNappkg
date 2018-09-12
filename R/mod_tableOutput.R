@@ -106,7 +106,17 @@ mod_tableOutput <- function(id, ifndb) {
         # formattable::formattableOutput(ns('ifn_table')) #%>%
           shinycssloaders::withSpinner(
             type = 4, color = '#D2527F'
-          )
+          ),
+
+        # show query button
+        shinyWidgets::actionBttn(
+          ns('see_query'),
+          label_getter(ifndb, 'esp', 'see_query_label'),
+          icon = shiny::icon('brain'),
+          style = "material-flat",
+          block = FALSE,
+          size = 'sm'
+        )
       )
     )
   )
@@ -399,12 +409,18 @@ mod_table <- function(
     eventExpr = base_data_modifs_reactives(),
     valueExpr = {
       shiny::validate(
-        shiny::need(table_base_data(), label_getter(ifndb, 'esp', 'table_base_data_modifs_validate_label', 'first'))
+        shiny::need(
+          table_base_data(),
+          label_getter(ifndb, 'esp', 'table_base_data_modifs_validate_label', 'first')
+        )
       )
 
       # create a progress object to indicate the user this will take time
       progress <- shiny::Progress$new(min = 0.63, max = 1)
-      progress$set(value = 0.63, message = label_getter(ifndb, 'esp', 'progress_table_base_data_modifs_label', 'message'))
+      progress$set(
+        value = 0.63,
+        message = label_getter(ifndb, 'esp', 'progress_table_base_data_modifs_label', 'message')
+      )
       on.exit(progress$close())
 
       updateProgress <- function(value = NULL, detail = NULL) {
@@ -603,6 +619,23 @@ mod_table <- function(
       ) %>%
         dplyr::collect() %>%
         readr::write_csv(file)
+    }
+  )
+
+  # sweetalert to show the query
+  shiny::observeEvent(
+    eventExpr = input$see_query,
+    handlerExpr = {
+      # ns <- session$ns
+      shinyWidgets::sendSweetAlert(
+        session = session,
+        title = label_getter(ifndb, 'esp', 'sweetalert_see_query_label', 'title'),
+        text = shiny::tags$div(
+          query_builder(mod_data, col_filter_expressions)
+        ),
+        html = TRUE,
+        btn_labels = label_getter(ifndb, 'esp', 'sweetalert_see_query_label', 'btn_labels')
+      )
     }
   )
 

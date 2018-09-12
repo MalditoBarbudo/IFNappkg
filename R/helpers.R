@@ -1273,3 +1273,79 @@ label_getter <- function(
     dplyr::collect() %>%
     magrittr::extract2(lang)
 }
+
+#' query_builder
+#'
+#' @param mod_data reactives from data module
+#' @param col_filter_expressions filter expressions for table module
+query_builder <- function(
+  mod_data, col_filter_expressions
+) {
+
+  ifn <- mod_data$ifn
+  admin_div <- mod_data$admin_div
+  espai_tipus <- mod_data$espai_tipus
+  admin_div_fil <- mod_data$admin_div_fil
+  espai_tipus_fil <- mod_data$espai_tipus_fil
+  agg_level <- mod_data$agg_level
+  diameter_classes <- mod_data$diameter_classes
+  viz_shape <- mod_data$viz_shape
+  adv_fil_clima_expressions <- mod_data$advancedFilters_reactives$adv_fil_clima_expressions()
+  adv_fil_sig_expressions <- mod_data$advancedFilters_reactives$adv_fil_sig_expressions()
+
+
+  admin_div_fil_vec <- glue::glue("{admin_div} in {glue::collapse(admin_div_fil, sep = ', ', last = ' and ')}")
+
+  espai_tipus_fil_vec <- glue::glue("{espai_tipus} in {glue::collapse(espai_tipus_fil, sep = ', ', last = ' and ')}")
+
+  adv_fil_clima_expressions_vec <- vapply(
+    adv_fil_clima_expressions,
+    function(x) {
+      as.character(rlang::get_expr(x))[c(2,1,3,4)] %>%
+        glue::collapse(sep = ' ', last = ' and ')
+    },
+    character(1)
+  )
+
+  adv_fil_sig_expressions_vec <- vapply(
+    adv_fil_sig_expressions,
+    function(x) {
+      as.character(rlang::get_expr(x))[c(2,1,3,4)] %>%
+        glue::collapse(sep = ' ', last = ' and ')
+    },
+    character(1)
+  )
+
+  col_filter_expressions_vec <- vapply(
+    col_filter_expressions(),
+    function(x) {
+      tmp_expr <- as.character(rlang::get_expr(x))
+      if (length(tmp_expr) < 4) {
+        tmp_expr <- tmp_expr[c(2,1,3)] %>%
+          glue::collapse(sep = ' ')
+      } else {
+        tmp_expr <- tmp_expr[c(2,1,3,4)] %>%
+          glue::collapse(sep = ' ', last = ' and ')
+      }
+    },
+    character(1)
+  )
+
+  filters_txt <- c(
+    admin_div_fil_vec, espai_tipus_fil_vec, adv_fil_clima_expressions_vec,
+    adv_fil_sig_expressions_vec, col_filter_expressions_vec
+  ) %>% purrr::discard(is.na)
+
+  shiny::tagList(
+    shiny::h3('Query'),
+    shiny::h5(glue::glue('Datos usados: {ifn}')),
+    shiny::h5(glue::glue('Nivel de agregación: {agg_level}')),
+    shiny::h5(glue::glue('Clases diamétricas: {diameter_classes}')),
+    shiny::h5(glue::glue('Parcelas o polígonos?: {viz_shape}')),
+    shiny::h5(glue::glue("Filtros usados: ")),
+    lapply(filters_txt, function(x) {
+      shiny::p(x)
+    })
+  )
+
+}

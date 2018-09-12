@@ -331,7 +331,7 @@ mod_data <- function(
   )
 
   # advancedFilters
-  advancedFIlters_reactives <- shiny::callModule(
+  advancedFilters_reactives <- shiny::callModule(
     mod_advancedFilters, 'mod_advancedFiltersUI',
     buttons_reactives, ifndb
   )
@@ -379,7 +379,7 @@ mod_data <- function(
     data_reactives$statistic <- viz_reactives$statistic
 
     # advanced_filtes
-    data_reactives$advancedFIlters_reactives <- advancedFIlters_reactives
+    data_reactives$advancedFilters_reactives <- advancedFilters_reactives
   })
 
   return(data_reactives)

@@ -107,19 +107,19 @@ ifn_app <- function() {
     # map
     map_reactives <- shiny::callModule(
       mod_map, 'mod_mapUI',
-      data_reactives, data_reactives$advancedFIlters_reactives, ifndb
+      data_reactives, data_reactives$advancedFilters_reactives, ifndb
     )
 
     # info panel
     shiny::callModule(
       mod_infopanel, 'mod_infopanelUI',
-      data_reactives, map_reactives, data_reactives$advancedFIlters_reactives, ifndb
+      data_reactives, map_reactives, data_reactives$advancedFilters_reactives, ifndb
     )
 
     # table
     shiny::callModule(
       mod_table, 'mod_tableOutput',
-      data_reactives, data_reactives$advancedFIlters_reactives, map_reactives, ifndb
+      data_reactives, data_reactives$advancedFilters_reactives, map_reactives, ifndb
     )
 
     ## debug #####
