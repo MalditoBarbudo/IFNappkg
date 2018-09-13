@@ -1349,3 +1349,22 @@ query_builder <- function(
   )
 
 }
+
+#' nav bar with inputs
+#'
+#' from daattali in
+#' https://github.com/daattali/advanced-shiny/tree/master/navbar-add-text
+#'
+#' @param ... navbarpage arguments
+#' @param inputs inputs objects
+#'
+navbarPageWithInputs <- function(..., inputs) {
+  navbar <- shiny::navbarPage(...)
+
+  browser()
+  form <- shiny::tags$form(class = 'navbar-form', inputs)
+  navbar[[3]][[1]]$children[[1]]$children[[2]] <- htmltools::tagAppendChild(
+    navbar[[3]][[1]]$children[[1]]$children[[2]], form
+  )
+  navbar
+}
