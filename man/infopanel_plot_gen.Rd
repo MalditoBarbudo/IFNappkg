@@ -5,7 +5,7 @@
 \title{genreate the plot for the info panel}
 \usage{
 infopanel_plot_gen(data, click, color, viz_shape, agg_level, diameter_classes,
-  tipo_grup_func)
+  tipo_grup_func, ifndb)
 }
 \arguments{
 \item{data}{reactive data}
@@ -21,6 +21,8 @@ infopanel_plot_gen(data, click, color, viz_shape, agg_level, diameter_classes,
 \item{diameter_classes}{input}
 
 \item{tipo_grup_func}{input}
+
+\item{ifndb}{pool object to access the ifn db}
 }
 \description{
 genreate the plot for the info panel

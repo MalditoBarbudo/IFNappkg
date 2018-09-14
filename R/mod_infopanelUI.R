@@ -129,7 +129,7 @@ mod_infopanel <- function(
         infopanel_plot_gen(
           core, mod_map$map_shape_click, mod_data$color,
           mod_data$viz_shape, mod_data$agg_level, mod_data$diameter_classes,
-          mod_data$tipo_grup_func
+          mod_data$tipo_grup_func, ifndb
         )
       }
     }

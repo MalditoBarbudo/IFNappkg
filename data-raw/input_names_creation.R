@@ -195,218 +195,218 @@
 #   eng = 'Visualization'
 # )
 #
-# label_infopanel_plot <- list(
-#   cat = list(
-#     cd = list(
-#       scenario1 = list(
-#         plot = list(
-#           title = '',
-#           subtitle = ''
-#         ),
-#         polygon = list(
-#           title = '',
-#           subtitle = ''
-#         )
-#       ),
-#       scenario2 = list(
-#         plot = list(
-#           title = '',
-#           subtitle = ''
-#         ),
-#         polygon = list(
-#           title = '',
-#           subtitle = ''
-#         )
-#       ),
-#       scenario3 = list(
-#         polygon = list(
-#           title = '',
-#           subtitle = ''
-#         )
-#       ),
-#       scenario4 = list(
-#         polygon = list(
-#           title = '',
-#           subtitle = ''
-#         )
-#       )
-#     ),
-#     nocd = list(
-#       scenario1 = list(
-#         plot = list(
-#           title = '',
-#           subtitle = ''
-#         ),
-#         polygon = list(
-#           title = '',
-#           subtitle = ''
-#         )
-#       ),
-#       scenario2 = list(
-#         plot = list(
-#           title = '',
-#           subtitle = ''
-#         ),
-#         polygon = list(
-#           title = '',
-#           subtitle = ''
-#         )
-#       ),
-#       scenario3 = list(
-#         polygon = list(
-#           title = '',
-#           subtitle = ''
-#         )
-#       ),
-#       scenario4 = list(
-#         polygon = list(
-#           title = '',
-#           subtitle = ''
-#         )
-#       )
-#     )
-#   ),
-#   esp = list(
-#     cd = list(
-#       scenario1 = list(
-#         plot = list(
-#           title = 'Parcela #{click$id}',
-#           subtitle = 'por clase diamétrica'
-#         ),
-#         polygon = list(
-#           title = 'Parcelas en {click$id}',
-#           subtitle = 'por clase diamétrica'
-#         )
-#       ),
-#       scenario2 = list(
-#         plot = list(
-#           title = 'Parcela #{click$id}',
-#           subtitle = 'por {label_infopanel_variables[["esp"]][[glue::glue("id{agg_level}")]]} y clase diamétrica'
-#         ),
-#         polygon = list(
-#           title = 'Parcelas en {click$id}',
-#           subtitle = 'por {label_infopanel_variables[["esp"]][[glue::glue("id{agg_level}")]]} y clase diamétrica'
-#         )
-#       ),
-#       scenario3 = list(
-#         polygon = list(
-#           title = 'Parcelas en {click$id}',
-#           subtitle = 'por clase diamétrica'
-#         )
-#       ),
-#       scenario4 = list(
-#         polygon = list(
-#           title = 'Parcelas en {click$id}',
-#           subtitle = 'por {label_infopanel_variables[["esp"]][[glue::glue("id{agg_level}")]]} y clase diamétrica'
-#         )
-#       )
-#     ),
-#     nocd = list(
-#       scenario1 = list(
-#         plot = list(
-#           title = 'Parcela #{click$id}',
-#           subtitle = 'por {tolower(label_infopanel_variables[["esp"]][[glue::glue("{tipo_grup_func}_dom_percdens")]])}'
-#         ),
-#         polygon = list(
-#           title = 'Parcelas en {click$id}',
-#           subtitle = 'por {tolower(label_infopanel_variables[["esp"]][[glue::glue("{tipo_grup_func}_dom_percdens")]])}'
-#         )
-#       ),
-#       scenario2 = list(
-#         plot = list(
-#           title = 'Parcela #{click$id}',
-#           subtitle = 'por {label_infopanel_variables[["esp"]][[glue::glue("id{agg_level}")]]}'
-#         ),
-#         polygon = list(
-#           title = 'Parcelas en {click$id}',
-#           subtitle = 'por {label_infopanel_variables[["esp"]][[glue::glue("id{agg_level}")]]}'
-#         )
-#       ),
-#       scenario3 = list(
-#         polygon = list(
-#           title = 'Parcelas en {click$id}',
-#           subtitle = 'por {tolower(label_infopanel_variables[["esp"]][[glue::glue("{tipo_grup_func}_dom_percdens")]])}'
-#         )
-#       ),
-#       scenario4 = list(
-#         polygon = list(
-#           title = 'Parcelas en {click$id}',
-#           subtitle = 'por {label_infopanel_variables[["esp"]][[glue::glue("id{agg_level}")]]}'
-#         )
-#       )
-#     )
-#   ),
-#   eng = list(
-#     cd = list(
-#       scenario1 = list(
-#         plot = list(
-#           title = '',
-#           subtitle = ''
-#         ),
-#         polygon = list(
-#           title = '',
-#           subtitle = ''
-#         )
-#       ),
-#       scenario2 = list(
-#         plot = list(
-#           title = '',
-#           subtitle = ''
-#         ),
-#         polygon = list(
-#           title = '',
-#           subtitle = ''
-#         )
-#       ),
-#       scenario3 = list(
-#         polygon = list(
-#           title = '',
-#           subtitle = ''
-#         )
-#       ),
-#       scenario4 = list(
-#         polygon = list(
-#           title = '',
-#           subtitle = ''
-#         )
-#       )
-#     ),
-#     nocd = list(
-#       scenario1 = list(
-#         plot = list(
-#           title = '',
-#           subtitle = ''
-#         ),
-#         polygon = list(
-#           title = '',
-#           subtitle = ''
-#         )
-#       ),
-#       scenario2 = list(
-#         plot = list(
-#           title = '',
-#           subtitle = ''
-#         ),
-#         polygon = list(
-#           title = '',
-#           subtitle = ''
-#         )
-#       ),
-#       scenario3 = list(
-#         polygon = list(
-#           title = '',
-#           subtitle = ''
-#         )
-#       ),
-#       scenario4 = list(
-#         polygon = list(
-#           title = '',
-#           subtitle = ''
-#         )
-#       )
-#     )
-#   )
-# )
+label_infopanel_plot <- list(
+  cat = list(
+    cd = list(
+      scenario1 = list(
+        plot = list(
+          title = '',
+          subtitle = ''
+        ),
+        polygon = list(
+          title = '',
+          subtitle = ''
+        )
+      ),
+      scenario2 = list(
+        plot = list(
+          title = '',
+          subtitle = ''
+        ),
+        polygon = list(
+          title = '',
+          subtitle = ''
+        )
+      ),
+      scenario3 = list(
+        polygon = list(
+          title = '',
+          subtitle = ''
+        )
+      ),
+      scenario4 = list(
+        polygon = list(
+          title = '',
+          subtitle = ''
+        )
+      )
+    ),
+    nocd = list(
+      scenario1 = list(
+        plot = list(
+          title = '',
+          subtitle = ''
+        ),
+        polygon = list(
+          title = '',
+          subtitle = ''
+        )
+      ),
+      scenario2 = list(
+        plot = list(
+          title = '',
+          subtitle = ''
+        ),
+        polygon = list(
+          title = '',
+          subtitle = ''
+        )
+      ),
+      scenario3 = list(
+        polygon = list(
+          title = '',
+          subtitle = ''
+        )
+      ),
+      scenario4 = list(
+        polygon = list(
+          title = '',
+          subtitle = ''
+        )
+      )
+    )
+  ),
+  esp = list(
+    cd = list(
+      scenario1 = list(
+        plot = list(
+          title = 'Parcela #{click$id}',
+          subtitle = 'por clase diamétrica'
+        ),
+        polygon = list(
+          title = 'Parcelas en {click$id}',
+          subtitle = 'por clase diamétrica'
+        )
+      ),
+      scenario2 = list(
+        plot = list(
+          title = 'Parcela #{click$id}',
+          subtitle = 'por {label_infopanel_variables[["esp"]][[glue::glue("id{agg_level}")]]} y clase diamétrica'
+        ),
+        polygon = list(
+          title = 'Parcelas en {click$id}',
+          subtitle = 'por {label_infopanel_variables[["esp"]][[glue::glue("id{agg_level}")]]} y clase diamétrica'
+        )
+      ),
+      scenario3 = list(
+        polygon = list(
+          title = 'Parcelas en {click$id}',
+          subtitle = 'por clase diamétrica'
+        )
+      ),
+      scenario4 = list(
+        polygon = list(
+          title = 'Parcelas en {click$id}',
+          subtitle = 'por {label_infopanel_variables[["esp"]][[glue::glue("id{agg_level}")]]} y clase diamétrica'
+        )
+      )
+    ),
+    nocd = list(
+      scenario1 = list(
+        plot = list(
+          title = 'Parcela #{click$id}',
+          subtitle = 'por {tolower(label_infopanel_variables[["esp"]][[glue::glue("{tipo_grup_func}_dom_percdens")]])}'
+        ),
+        polygon = list(
+          title = 'Parcelas en {click$id}',
+          subtitle = 'por {tolower(label_infopanel_variables[["esp"]][[glue::glue("{tipo_grup_func}_dom_percdens")]])}'
+        )
+      ),
+      scenario2 = list(
+        plot = list(
+          title = 'Parcela #{click$id}',
+          subtitle = 'por {label_infopanel_variables[["esp"]][[glue::glue("id{agg_level}")]]}'
+        ),
+        polygon = list(
+          title = 'Parcelas en {click$id}',
+          subtitle = 'por {label_infopanel_variables[["esp"]][[glue::glue("id{agg_level}")]]}'
+        )
+      ),
+      scenario3 = list(
+        polygon = list(
+          title = 'Parcelas en {click$id}',
+          subtitle = 'por {tolower(label_infopanel_variables[["esp"]][[glue::glue("{tipo_grup_func}_dom_percdens")]])}'
+        )
+      ),
+      scenario4 = list(
+        polygon = list(
+          title = 'Parcelas en {click$id}',
+          subtitle = 'por {label_infopanel_variables[["esp"]][[glue::glue("id{agg_level}")]]}'
+        )
+      )
+    )
+  ),
+  eng = list(
+    cd = list(
+      scenario1 = list(
+        plot = list(
+          title = '',
+          subtitle = ''
+        ),
+        polygon = list(
+          title = '',
+          subtitle = ''
+        )
+      ),
+      scenario2 = list(
+        plot = list(
+          title = '',
+          subtitle = ''
+        ),
+        polygon = list(
+          title = '',
+          subtitle = ''
+        )
+      ),
+      scenario3 = list(
+        polygon = list(
+          title = '',
+          subtitle = ''
+        )
+      ),
+      scenario4 = list(
+        polygon = list(
+          title = '',
+          subtitle = ''
+        )
+      )
+    ),
+    nocd = list(
+      scenario1 = list(
+        plot = list(
+          title = '',
+          subtitle = ''
+        ),
+        polygon = list(
+          title = '',
+          subtitle = ''
+        )
+      ),
+      scenario2 = list(
+        plot = list(
+          title = '',
+          subtitle = ''
+        ),
+        polygon = list(
+          title = '',
+          subtitle = ''
+        )
+      ),
+      scenario3 = list(
+        polygon = list(
+          title = '',
+          subtitle = ''
+        )
+      ),
+      scenario4 = list(
+        polygon = list(
+          title = '',
+          subtitle = ''
+        )
+      )
+    )
+  )
+)
 #
 #
 #

@@ -804,10 +804,11 @@ map_modificator <- function(
 #' @param agg_level input
 #' @param diameter_classes input
 #' @param tipo_grup_func input
+#' @param ifndb pool object to access the ifn db
 #'
 #' @export
 infopanel_plot_gen <- function(
-  data, click, color, viz_shape, agg_level, diameter_classes, tipo_grup_func
+  data, click, color, viz_shape, agg_level, diameter_classes, tipo_grup_func, ifndb
 ) {
 
 
@@ -825,12 +826,22 @@ infopanel_plot_gen <- function(
         y_var_plot <- rlang::quo(!!rlang::sym(color))
         fill_var_plot <- x_var_plot
         y_var_index <- as.character(rlang::get_expr(y_var_plot))
-        y_lab_plot <- label_infopanel_variables[['esp']][[y_var_index]]
+
+        y_lab_plot <- dplyr::tbl(ifndb, 'infopanel_variables_thesaurus') %>%
+          dplyr::filter(infopanel_variable_id == !!y_var_index) %>%
+          dplyr::collect() %>%
+          magrittr::extract2('esp')
         title_plot <- glue::glue(
-          label_infopanel_plot[['esp']][['cd']][[scenario]][['plot']][['title']]
+          dplyr::tbl(ifndb, 'infopanel_plot_thesaurus') %>%
+            dplyr::filter(cd_id == 'cd', scenario_id == scenario, shape_id == 'plot', label_id == 'title') %>%
+            dplyr::collect() %>%
+            magrittr::extract2('esp')
         )
         subtitle_plot <- glue::glue(
-          label_infopanel_plot[['esp']][['cd']][[scenario]][['plot']][['subtitle']]
+          dplyr::tbl(ifndb, 'infopanel_plot_thesaurus') %>%
+            dplyr::filter(cd_id == 'cd', scenario_id == scenario, shape_id == 'plot', label_id == 'subtitle') %>%
+            dplyr::collect() %>%
+            magrittr::extract2('esp')
         )
 
         infopanel_plot <- data %>%
@@ -852,12 +863,21 @@ infopanel_plot_gen <- function(
         y_var_plot <- rlang::quo(!!rlang::sym(color))
         fill_var_plot <- rlang::quo(!!rlang::sym('idcd'))
         y_var_index <- as.character(rlang::get_expr(y_var_plot))
-        y_lab_plot <- label_infopanel_variables[['esp']][[y_var_index]]
+        y_lab_plot <- dplyr::tbl(ifndb, 'infopanel_variables_thesaurus') %>%
+          dplyr::filter(infopanel_variable_id == !!y_var_index) %>%
+          dplyr::collect() %>%
+          magrittr::extract2('esp')
         title_plot <- glue::glue(
-          label_infopanel_plot[['esp']][['cd']][[scenario]][['plot']][['title']]
+          dplyr::tbl(ifndb, 'infopanel_plot_thesaurus') %>%
+            dplyr::filter(cd_id == 'cd', scenario_id == scenario, shape_id == 'plot', label_id == 'title') %>%
+            dplyr::collect() %>%
+            magrittr::extract2('esp')
         )
         subtitle_plot <- glue::glue(
-          label_infopanel_plot[['esp']][['cd']][[scenario]][['plot']][['subtitle']]
+          dplyr::tbl(ifndb, 'infopanel_plot_thesaurus') %>%
+            dplyr::filter(cd_id == 'cd', scenario_id == scenario, shape_id == 'plot', label_id == 'subtitle') %>%
+            dplyr::collect() %>%
+            magrittr::extract2('esp')
         )
 
         infopanel_plot <- data %>%
@@ -883,12 +903,21 @@ infopanel_plot_gen <- function(
         y_var_plot <- rlang::quo(!!rlang::sym(color))
         fill_var_plot <- x_var_plot
         y_var_index <- as.character(rlang::get_expr(y_var_plot))
-        y_lab_plot <- label_infopanel_variables[['esp']][[y_var_index]]
+        y_lab_plot <- dplyr::tbl(ifndb, 'infopanel_variables_thesaurus') %>%
+          dplyr::filter(infopanel_variable_id == !!y_var_index) %>%
+          dplyr::collect() %>%
+          magrittr::extract2('esp')
         title_plot <- glue::glue(
-          label_infopanel_plot[['esp']][['cd']][[scenario]][['polygon']][['title']]
+          dplyr::tbl(ifndb, 'infopanel_plot_thesaurus') %>%
+            dplyr::filter(cd_id == 'cd', scenario_id == scenario, shape_id == 'polygon', label_id == 'title') %>%
+            dplyr::collect() %>%
+            magrittr::extract2('esp')
         )
         subtitle_plot <- glue::glue(
-          label_infopanel_plot[['esp']][['cd']][[scenario]][['polygon']][['subtitle']]
+          dplyr::tbl(ifndb, 'infopanel_plot_thesaurus') %>%
+            dplyr::filter(cd_id == 'cd', scenario_id == scenario, shape_id == 'polygon', label_id == 'subtitle') %>%
+            dplyr::collect() %>%
+            magrittr::extract2('esp')
         )
 
         infopanel_plot <- data %>%
@@ -910,12 +939,21 @@ infopanel_plot_gen <- function(
         y_var_plot <- rlang::quo(!!rlang::sym(color))
         fill_var_plot <- rlang::quo(!!rlang::sym('idcd'))
         y_var_index <- as.character(rlang::get_expr(y_var_plot))
-        y_lab_plot <- label_infopanel_variables[['esp']][[y_var_index]]
+        y_lab_plot <- dplyr::tbl(ifndb, 'infopanel_variables_thesaurus') %>%
+          dplyr::filter(infopanel_variable_id == !!y_var_index) %>%
+          dplyr::collect() %>%
+          magrittr::extract2('esp')
         title_plot <- glue::glue(
-          label_infopanel_plot[['esp']][['cd']][[scenario]][['polygon']][['title']]
+          dplyr::tbl(ifndb, 'infopanel_plot_thesaurus') %>%
+            dplyr::filter(cd_id == 'cd', scenario_id == scenario, shape_id == 'polygon', label_id == 'title') %>%
+            dplyr::collect() %>%
+            magrittr::extract2('esp')
         )
         subtitle_plot <- glue::glue(
-          label_infopanel_plot[['esp']][['cd']][[scenario]][['polygon']][['subtitle']]
+          dplyr::tbl(ifndb, 'infopanel_plot_thesaurus') %>%
+            dplyr::filter(cd_id == 'cd', scenario_id == scenario, shape_id == 'polygon', label_id == 'subtitle') %>%
+            dplyr::collect() %>%
+            magrittr::extract2('esp')
         )
 
         infopanel_plot <- data %>%
@@ -944,12 +982,21 @@ infopanel_plot_gen <- function(
         fill_var_plot <- x_var_plot
         y_var_plot <- rlang::quo(!!rlang::sym(color))
         y_var_index <- as.character(rlang::get_expr(y_var_plot))
-        y_lab_plot <- label_infopanel_variables[['esp']][[y_var_index]]
+        y_lab_plot <- dplyr::tbl(ifndb, 'infopanel_variables_thesaurus') %>%
+          dplyr::filter(infopanel_variable_id == !!y_var_index) %>%
+          dplyr::collect() %>%
+          magrittr::extract2('esp')
         title_plot <- glue::glue(
-          label_infopanel_plot[['esp']][['nocd']][[scenario]][['plot']][['title']]
+          dplyr::tbl(ifndb, 'infopanel_plot_thesaurus') %>%
+            dplyr::filter(cd_id == 'nocd', scenario_id == scenario, shape_id == 'plot', label_id == 'title') %>%
+            dplyr::collect() %>%
+            magrittr::extract2('esp')
         )
         subtitle_plot <- glue::glue(
-          label_infopanel_plot[['esp']][['nocd']][[scenario]][['plot']][['subtitle']]
+          dplyr::tbl(ifndb, 'infopanel_plot_thesaurus') %>%
+            dplyr::filter(cd_id == 'nocd', scenario_id == scenario, shape_id == 'plot', label_id == 'subtitle') %>%
+            dplyr::collect() %>%
+            magrittr::extract2('esp')
         )
 
         infopanel_plot <- data %>%
@@ -971,12 +1018,21 @@ infopanel_plot_gen <- function(
         fill_var_plot <- x_var_plot
         y_var_plot <- rlang::quo(!!rlang::sym(color))
         y_var_index <- as.character(rlang::get_expr(y_var_plot))
-        y_lab_plot <- label_infopanel_variables[['esp']][[y_var_index]]
+        y_lab_plot <- dplyr::tbl(ifndb, 'infopanel_variables_thesaurus') %>%
+          dplyr::filter(infopanel_variable_id == !!y_var_index) %>%
+          dplyr::collect() %>%
+          magrittr::extract2('esp')
         title_plot <- glue::glue(
-          label_infopanel_plot[['esp']][['nocd']][[scenario]][['plot']][['title']]
+          dplyr::tbl(ifndb, 'infopanel_plot_thesaurus') %>%
+            dplyr::filter(cd_id == 'nocd', scenario_id == scenario, shape_id == 'plot', label_id == 'title') %>%
+            dplyr::collect() %>%
+            magrittr::extract2('esp')
         )
         subtitle_plot <- glue::glue(
-          label_infopanel_plot[['esp']][['nocd']][[scenario]][['plot']][['subtitle']]
+          dplyr::tbl(ifndb, 'infopanel_plot_thesaurus') %>%
+            dplyr::filter(cd_id == 'nocd', scenario_id == scenario, shape_id == 'plot', label_id == 'subtitle') %>%
+            dplyr::collect() %>%
+            magrittr::extract2('esp')
         )
 
         infopanel_plot <- data %>%
@@ -1000,12 +1056,21 @@ infopanel_plot_gen <- function(
         fill_var_plot <- x_var_plot
         y_var_plot <- rlang::quo(!!rlang::sym(color))
         y_var_index <- as.character(rlang::get_expr(y_var_plot))
-        y_lab_plot <- label_infopanel_variables[['esp']][[y_var_index]]
+        y_lab_plot <- dplyr::tbl(ifndb, 'infopanel_variables_thesaurus') %>%
+          dplyr::filter(infopanel_variable_id == !!y_var_index) %>%
+          dplyr::collect() %>%
+          magrittr::extract2('esp')
         title_plot <- glue::glue(
-          label_infopanel_plot[['esp']][['nocd']][[scenario]][['polygon']][['title']]
+          dplyr::tbl(ifndb, 'infopanel_plot_thesaurus') %>%
+            dplyr::filter(cd_id == 'nocd', scenario_id == scenario, shape_id == 'polygon', label_id == 'title') %>%
+            dplyr::collect() %>%
+            magrittr::extract2('esp')
         )
         subtitle_plot <- glue::glue(
-          label_infopanel_plot[['esp']][['nocd']][[scenario]][['polygon']][['subtitle']]
+          dplyr::tbl(ifndb, 'infopanel_plot_thesaurus') %>%
+            dplyr::filter(cd_id == 'nocd', scenario_id == scenario, shape_id == 'polygon', label_id == 'subtitle') %>%
+            dplyr::collect() %>%
+            magrittr::extract2('esp')
         )
 
         infopanel_plot <- data %>%
@@ -1027,12 +1092,21 @@ infopanel_plot_gen <- function(
         fill_var_plot <- x_var_plot
         y_var_plot <- rlang::quo(!!rlang::sym(color))
         y_var_index <- as.character(rlang::get_expr(y_var_plot))
-        y_lab_plot <- label_infopanel_variables[['esp']][[y_var_index]]
+        y_lab_plot <- dplyr::tbl(ifndb, 'infopanel_variables_thesaurus') %>%
+          dplyr::filter(infopanel_variable_id == !!y_var_index) %>%
+          dplyr::collect() %>%
+          magrittr::extract2('esp')
         title_plot <- glue::glue(
-          label_infopanel_plot[['esp']][['nocd']][[scenario]][['polygon']][['title']]
+          dplyr::tbl(ifndb, 'infopanel_plot_thesaurus') %>%
+            dplyr::filter(cd_id == 'nocd', scenario_id == scenario, shape_id == 'polygon', label_id == 'title') %>%
+            dplyr::collect() %>%
+            magrittr::extract2('esp')
         )
         subtitle_plot <- glue::glue(
-          label_infopanel_plot[['esp']][['nocd']][[scenario]][['polygon']][['subtitle']]
+          dplyr::tbl(ifndb, 'infopanel_plot_thesaurus') %>%
+            dplyr::filter(cd_id == 'nocd', scenario_id == scenario, shape_id == 'polygon', label_id == 'subtitle') %>%
+            dplyr::collect() %>%
+            magrittr::extract2('esp')
         )
 
         infopanel_plot <- data %>%
