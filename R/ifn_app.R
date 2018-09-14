@@ -18,7 +18,7 @@ ifn_app <- function() {
     shinyjs::useShinyjs(),
     shinyWidgets::chooseSliderSkin(skin = "Flat", color = '#0DB3D4'),
 
-    navbarPageWithInputs(
+    shiny::navbarPage(
       # opts
       title = label_getter(ifndb, 'esp', 'nav_label'),
       id = 'nav',
@@ -89,15 +89,6 @@ ifn_app <- function() {
       # Alometrias tab
       shiny::tabPanel(
         label_getter(ifndb, 'esp', 'tabPanel_alometrias_label')
-      ),
-
-      # input for language, in the navbar
-      inputs = shiny::tagList(
-        shinyWidgets::radioGroupButtons(
-          'lang_selector', '',
-          choices = c('ESP' = 'esp', 'CAT' = 'cat', 'ENG' = 'eng'),
-          size = 'sm', selected = 'esp'
-        )
       )
     )
   )
