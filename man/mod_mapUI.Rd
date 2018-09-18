@@ -27,6 +27,4 @@ advancedFilters module}
 }
 \description{
 A shiny module to generate the data tables
-
-mod_map server function
 }

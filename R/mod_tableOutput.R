@@ -33,29 +33,29 @@ mod_tableOutput <- function(id, ifndb) {
         ),
 
         shiny::hr(),
-        shiny::fluidRow(
-          shinyjs::hidden(
-            shiny::div(
-              id = ns('sigclima_checkboxes'),
-              shinyWidgets::awesomeCheckbox(
-                ns('SIG_CLIMA'),
-                label_getter(ifndb, 'esp', 'sigclima_checkboxes_label'),
-                value = FALSE, status = 'info'
-              )
-            )
-          ),
-          shinyjs::hidden(
-            shiny::div(
-              id = ns('sigclima_buttons'),
-              shinyWidgets::downloadBttn(
-                ns('SIG_CLIMA_download'), 'Descargar datos SIG y Clima',
-                color = 'primary', size = 'sm', block = FALSE,
-                style = 'minimal'
-              )
-            )
-          )
-        ),
-        shiny::hr(),
+        # shiny::fluidRow(
+        #   shinyjs::hidden(
+        #     shiny::div(
+        #       id = ns('sigclima_checkboxes'),
+        #       shinyWidgets::awesomeCheckbox(
+        #         ns('SIG_CLIMA'),
+        #         label_getter(ifndb, 'esp', 'sigclima_checkboxes_label'),
+        #         value = FALSE, status = 'info'
+        #       )
+        #     )
+        #   ),
+        #   shinyjs::hidden(
+        #     shiny::div(
+        #       id = ns('sigclima_buttons'),
+        #       shinyWidgets::downloadBttn(
+        #         ns('SIG_CLIMA_download'), 'Descargar datos SIG y Clima',
+        #         color = 'primary', size = 'sm', block = FALSE,
+        #         style = 'minimal'
+        #       )
+        #     )
+        #   )
+        # ),
+        # shiny::hr(),
 
         shiny::br(),
         shiny::br(),
@@ -271,23 +271,23 @@ mod_table <- function(
 
   # depending on the scenario, we need to show/enable and hide/disable the
   # SIGCLIMA download helpers inputs
-  shiny::observe({
-    if (scenario_reac() %in% c('scenario1', 'scenario2')) {
-      # show/enable
-      shinyjs::enable('SIG_CLIMA')
-      shinyjs::showElement('sigclima_checkboxes')
-      # hide/disable
-      shinyjs::disable('SIG_CLIMA_download')
-      shinyjs::hideElement('sigclima_buttons')
-    } else {
-      # hide/disable
-      shinyjs::disable('SIG_CLIMA')
-      shinyjs::hideElement('sigclima_checkboxes')
-      # show/enable
-      shinyjs::enable('SIG_CLIMA_download')
-      shinyjs::showElement('sigclima_buttons')
-    }
-  })
+  # shiny::observe({
+  #   if (scenario_reac() %in% c('scenario1', 'scenario2')) {
+  #     # show/enable
+  #     shinyjs::enable('SIG_CLIMA')
+  #     shinyjs::showElement('sigclima_checkboxes')
+  #     # hide/disable
+  #     shinyjs::disable('SIG_CLIMA_download')
+  #     shinyjs::hideElement('sigclima_buttons')
+  #   } else {
+  #     # hide/disable
+  #     shinyjs::disable('SIG_CLIMA')
+  #     shinyjs::hideElement('sigclima_checkboxes')
+  #     # show/enable
+  #     shinyjs::enable('SIG_CLIMA_download')
+  #     shinyjs::showElement('sigclima_buttons')
+  #   }
+  # })
 
   output$col_filter <- shiny::renderUI({
 
@@ -462,28 +462,6 @@ mod_table <- function(
         )
       }
 
-      # formattable accepts the format in a list with column names as list
-      # names. So we need to create this list outside the formattable function
-      # because we don't know the column names or indexes a priori
-
-      # updateProgress setup
-      # updateProgress(
-      #   value = 0.83,
-      #   detail = ''
-      # )
-      # num_cols_names <- data_table_temp %>%
-      #   dplyr::select_if(is.numeric) %>%
-      #   names()
-      #
-      # formattable_options <- lapply(
-      #   num_cols_names, function(x) {
-      #     formattable::normalize_bar('pink', 0.3, na.rm = TRUE)
-      #   }
-      # )
-      #
-      # names(formattable_options) <- num_cols_names
-
-      # formattable
       # updateProgress setup
       updateProgress(value = 0.89, detail = '')
 
@@ -511,7 +489,8 @@ mod_table <- function(
           DT::formatStyle(
             columns = var,
             background = DT::styleColorBar(
-              range(data_table_temp[[var]], na.rm = TRUE) + c(-1,1), 'pink', 90
+              range(data_table_temp[[var]], na.rm = TRUE) + c(-1,1),
+              '#3fc380', 90
             ),
             backgroundSize = '98% 88%',
             backgroundRepeat = 'no-repeat',
@@ -530,28 +509,6 @@ mod_table <- function(
     expr = {
 
       table_base_data_modifs()
-
-      # data_table_temp %>%
-      #   DT::datatable(
-      #     # filter = list(position = 'top', clear = FALSE, plain = TRUE),
-      #     # selection = list(target = 'column'),
-      #     style = 'default', rownames = FALSE,
-      #     fillContainer = FALSE, autoHideNavigation = TRUE,
-      #     extensions = c('Scroller'),
-      #     options = list(
-      #       autoWidth = TRUE,
-      #       deferRender = TRUE, scrollY = '70vh', scroller = TRUE,
-      #       dom = 'ti'
-      #     )
-      #   ) %>%
-      #   DT::formatRound(
-      #     columns = {
-      #       data_table_temp %>%
-      #         purrr::map(is.numeric) %>%
-      #         purrr::flatten_lgl()
-      #     },
-      #     digits = 2
-      #   )
     }
   )
 
@@ -561,24 +518,33 @@ mod_table <- function(
     },
     content = function(file) {
 
-      if (input$SIG_CLIMA) {
+      res <- table_base_data_modifs()
 
-        sig_clima <- dplyr::left_join(
-          table_base_data_raw()[['sig']], table_base_data_raw()[['clima']],
-          by = 'idparcela'
-        ) %>%
-          dplyr::collect()
+      res$x$data [,-1] %>%
+        readr::write_csv(file)
 
-        table_base_data_modifs() %>%
-          as.data.frame() %>%
-          dplyr::left_join(sig_clima, by = 'idparcela') %>%
-          readr::write_csv(file)
-      } else {
-
-        table_base_data_modifs() %>%
-          as.data.frame() %>%
-          readr::write_csv(file)
-      }
+      # if (input$SIG_CLIMA) {
+      #
+      #   sig_clima <- dplyr::left_join(
+      #     table_base_data_raw()[['sig']], table_base_data_raw()[['clima']],
+      #     by = 'idparcela'
+      #   ) %>%
+      #     dplyr::collect()
+      #
+      #   core <- table_base_data_modifs()
+      #
+      #   core$x$data[,-1] %>%
+      #     # as.data.frame() %>%
+      #     dplyr::left_join(sig_clima, by = 'idparcela') %>%
+      #     readr::write_csv(file)
+      # } else {
+      #
+      #   core <- table_base_data_modifs()
+      #
+      #   core$x$data[,-1] %>%
+      #     as.data.frame() %>%
+      #     readr::write_csv(file)
+      # }
     }
   )
 
@@ -588,39 +554,44 @@ mod_table <- function(
     },
     content = function(file) {
 
-      if (input$SIG_CLIMA) {
+      res <- table_base_data_modifs()
 
-        sig_clima <- dplyr::left_join(
-          table_base_data_raw()[['sig']], table_base_data_raw()[['clima']],
-          by = 'idparcela'
-        ) %>%
-          dplyr::collect()
+      res$x$data [,-1] %>%
+        writexl::write_xlsx(file)
 
-        table_base_data_modifs() %>%
-          dplyr::as_data_frame() %>%
-          dplyr::left_join(sig_clima, by = 'idparcela') %>%
-          writexl::write_xlsx(file)
-      } else {
-        table_base_data_modifs() %>%
-          dplyr::as_data_frame() %>%
-          writexl::write_xlsx(file)
-      }
+      # if (input$SIG_CLIMA) {
+      #
+      #   sig_clima <- dplyr::left_join(
+      #     table_base_data_raw()[['sig']], table_base_data_raw()[['clima']],
+      #     by = 'idparcela'
+      #   ) %>%
+      #     dplyr::collect()
+      #
+      #   table_base_data_modifs() %>%
+      #     dplyr::as_data_frame() %>%
+      #     dplyr::left_join(sig_clima, by = 'idparcela') %>%
+      #     writexl::write_xlsx(file)
+      # } else {
+      #   table_base_data_modifs() %>%
+      #     dplyr::as_data_frame() %>%
+      #     writexl::write_xlsx(file)
+      # }
     }
   )
 
-  output$SIG_CLIMA_download <- shiny::downloadHandler(
-    filename = function() {
-      'IFN_sig_and_clima.csv'
-    },
-    content = function(file) {
-      dplyr::left_join(
-        table_base_data_raw()[['sig']], table_base_data_raw()[['clima']],
-        by = 'idparcela'
-      ) %>%
-        dplyr::collect() %>%
-        readr::write_csv(file)
-    }
-  )
+  # output$SIG_CLIMA_download <- shiny::downloadHandler(
+  #   filename = function() {
+  #     'IFN_sig_and_clima.csv'
+  #   },
+  #   content = function(file) {
+  #     dplyr::left_join(
+  #       table_base_data_raw()[['sig']], table_base_data_raw()[['clima']],
+  #       by = 'idparcela'
+  #     ) %>%
+  #       dplyr::collect() %>%
+  #       readr::write_csv(file)
+  #   }
+  # )
 
   # sweetalert to show the query
   shiny::observeEvent(
