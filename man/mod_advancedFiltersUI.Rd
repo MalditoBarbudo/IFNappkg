@@ -27,4 +27,6 @@ filters is pressed}
 }
 \description{
 A shiny module to process the advanced filters
+
+mod_advancedFilters server function
 }

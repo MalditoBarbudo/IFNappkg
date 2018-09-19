@@ -4,8 +4,8 @@
 \alias{mod_infopanel}
 \title{mod_infopanel server function}
 \usage{
-mod_infopanel(input, output, session, mod_data, mod_map,
-  mod_advancedFilters, ifndb)
+mod_infopanel(input, output, session, mod_data, mod_map, mod_advancedFilters,
+  ifndb)
 }
 \arguments{
 \item{input}{internal}

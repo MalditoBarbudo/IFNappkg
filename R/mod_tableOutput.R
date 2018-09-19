@@ -33,63 +33,75 @@ mod_tableOutput <- function(id, ifndb) {
         ),
 
         shiny::hr(),
-        # shiny::fluidRow(
-        #   shinyjs::hidden(
-        #     shiny::div(
-        #       id = ns('sigclima_checkboxes'),
-        #       shinyWidgets::awesomeCheckbox(
-        #         ns('SIG_CLIMA'),
-        #         label_getter(ifndb, 'esp', 'sigclima_checkboxes_label'),
-        #         value = FALSE, status = 'info'
-        #       )
-        #     )
-        #   ),
-        #   shinyjs::hidden(
-        #     shiny::div(
-        #       id = ns('sigclima_buttons'),
-        #       shinyWidgets::downloadBttn(
-        #         ns('SIG_CLIMA_download'), 'Descargar datos SIG y Clima',
-        #         color = 'primary', size = 'sm', block = FALSE,
-        #         style = 'minimal'
-        #       )
-        #     )
-        #   )
-        # ),
-        # shiny::hr(),
+        # shiny::br(),
+        # shiny::br(),
 
-        shiny::br(),
-        shiny::br(),
-
+        shiny::h4('Columnas visibles'),
         shiny::fluidRow(
-          shinyWidgets::pickerInput(
-            ns('col_vis_selector'),
-            label_getter(ifndb, 'esp', 'col_vis_selector_label'),
-            choices = '', multiple = TRUE,
-            options = list(
-              `actions-box` = TRUE,
-              `deselect-all-text` = 'None selected...',
-              `select-all-text` = 'All selected',
-              `selected-text-format` = 'count',
-              `count-selected-text` = "{0} variables selected (of {1})"
+          shiny::inputPanel(
+            shinyWidgets::pickerInput(
+              ns('col_vis_selector'),
+              # label_getter(ifndb, 'esp', 'col_vis_selector_label'),
+              label = 'variables IFN',
+              choices = '', multiple = TRUE,
+              options = list(
+                `actions-box` = TRUE,
+                `deselect-all-text` = 'None selected...',
+                `select-all-text` = 'All selected',
+                `selected-text-format` = 'count',
+                `count-selected-text` = "{0} variables selected (of {1})"
+              )
+            ),
+            shinyWidgets::pickerInput(
+              ns('col_vis_selector_sig'),
+              # label_getter(ifndb, 'esp', 'col_vis_selector_label'),
+              label = 'variables SIG (no funciona todavia)',
+              choices = '', multiple = TRUE,
+              options = list(
+                `actions-box` = TRUE,
+                `deselect-all-text` = 'None selected...',
+                `select-all-text` = 'All selected',
+                `selected-text-format` = 'count',
+                `count-selected-text` = "{0} variables selected (of {1})"
+              )
+            ),
+            shinyWidgets::pickerInput(
+              ns('col_vis_selector_clima'),
+              # label_getter(ifndb, 'esp', 'col_vis_selector_label'),
+              label = 'variables Clima (no funciona todavia)',
+              choices = '', multiple = TRUE,
+              options = list(
+                `actions-box` = TRUE,
+                `deselect-all-text` = 'None selected...',
+                `select-all-text` = 'All selected',
+                `selected-text-format` = 'count',
+                `count-selected-text` = "{0} variables selected (of {1})"
+              )
             )
           )
         ),
+
+        shiny::h4(label_getter(ifndb, 'esp', 'col_filter_h4_label')),
         shiny::fluidRow(
-          shinyWidgets::pickerInput(
-            ns('col_filter_selector'),
-            label_getter(ifndb, 'esp', 'col_filter_selector_label'),
-            choices = '', multiple = TRUE,
-            options = list(
-              `actions-box` = TRUE,
-              `deselect-all-text` = 'None selected...',
-              `select-all-text` = 'All selected',
-              `selected-text-format` = 'count',
-              `count-selected-text` = "{0} variables selected (of {1})"
-            )
-          ),
-          shiny::uiOutput(ns('col_filter')),
-          shiny::br(),
-          shiny::br(),
+          shiny::inputPanel(
+            shinyWidgets::pickerInput(
+              ns('col_filter_selector'),
+              label_getter(ifndb, 'esp', 'col_filter_selector_label'),
+              choices = '', multiple = TRUE,
+              options = list(
+                `actions-box` = TRUE,
+                `deselect-all-text` = 'None selected...',
+                `select-all-text` = 'All selected',
+                `selected-text-format` = 'count',
+                `count-selected-text` = "{0} variables selected (of {1})"
+              )
+            ),
+            shiny::uiOutput(ns('col_filter'))
+            # shiny::br(),
+            # shiny::br(),
+          )
+        ),
+        shiny::fluidRow(
           shinyWidgets::actionBttn(
             ns('apply_table_filters'),
             label_getter(ifndb, 'esp', 'apply_table_filters_label'),
@@ -160,7 +172,8 @@ mod_table <- function(
 
     shinyWidgets::updatePickerInput(
       session, 'col_vis_selector',
-      label_getter(ifndb, 'esp', 'col_vis_selector_label'),
+      # label_getter(ifndb, 'esp', 'col_vis_selector_label'),
+      label = 'variables IFN',
       choices = col_vis_choices,
       selected = col_vis_choices[1:10]
     )
@@ -354,11 +367,14 @@ mod_table <- function(
     })
 
     # tag list to return for the UI
+    # shiny::tagList(
+    #   shiny::inputPanel(
+    #     shiny::h4(label_getter(ifndb, 'esp', 'col_filter_h4_label')),
+    #     col_filter_inputs()
+    #   )
+    # )
     shiny::tagList(
-      shiny::inputPanel(
-        shiny::h4(label_getter(ifndb, 'esp', 'col_filter_h4_label')),
-        col_filter_inputs()
-      )
+      col_filter_inputs()
     )
   })
 

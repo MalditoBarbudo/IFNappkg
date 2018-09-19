@@ -7,8 +7,7 @@
 \usage{
 mod_tableOutput(id, ifndb)
 
-mod_table(input, output, session, mod_data, mod_advancedFilters, mod_map,
-  ifndb)
+mod_table(input, output, session, mod_data, mod_advancedFilters, mod_map, ifndb)
 }
 \arguments{
 \item{id}{shiny id}
@@ -32,4 +31,6 @@ advancedFilters module}
 }
 \description{
 A shiny module to generate the base IFN plots table
+
+mod_table server function
 }
