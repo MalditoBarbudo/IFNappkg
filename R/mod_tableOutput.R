@@ -51,33 +51,33 @@ mod_tableOutput <- function(id, ifndb) {
                 `selected-text-format` = 'count',
                 `count-selected-text` = "{0} variables selected (of {1})"
               )
-            ),
-            shinyWidgets::pickerInput(
-              ns('col_vis_selector_sig'),
-              # label_getter(ifndb, 'esp', 'col_vis_selector_label'),
-              label = 'variables SIG (no funciona todavia)',
-              choices = '', multiple = TRUE,
-              options = list(
-                `actions-box` = TRUE,
-                `deselect-all-text` = 'None selected...',
-                `select-all-text` = 'All selected',
-                `selected-text-format` = 'count',
-                `count-selected-text` = "{0} variables selected (of {1})"
-              )
-            ),
-            shinyWidgets::pickerInput(
-              ns('col_vis_selector_clima'),
-              # label_getter(ifndb, 'esp', 'col_vis_selector_label'),
-              label = 'variables Clima (no funciona todavia)',
-              choices = '', multiple = TRUE,
-              options = list(
-                `actions-box` = TRUE,
-                `deselect-all-text` = 'None selected...',
-                `select-all-text` = 'All selected',
-                `selected-text-format` = 'count',
-                `count-selected-text` = "{0} variables selected (of {1})"
-              )
             )
+            # shinyWidgets::pickerInput(
+            #   ns('col_vis_sig_selector'),
+            #   # label_getter(ifndb, 'esp', 'col_vis_selector_label'),
+            #   label = 'variables SIG (testing)',
+            #   choices = '', multiple = TRUE,
+            #   options = list(
+            #     `actions-box` = TRUE,
+            #     `deselect-all-text` = 'None selected...',
+            #     `select-all-text` = 'All selected',
+            #     `selected-text-format` = 'count',
+            #     `count-selected-text` = "{0} variables selected (of {1})"
+            #   )
+            # ),
+            # shinyWidgets::pickerInput(
+            #   ns('col_vis_clima_selector'),
+            #   # label_getter(ifndb, 'esp', 'col_vis_selector_label'),
+            #   label = 'variables Clima (testing)',
+            #   choices = '', multiple = TRUE,
+            #   options = list(
+            #     `actions-box` = TRUE,
+            #     `deselect-all-text` = 'None selected...',
+            #     `select-all-text` = 'All selected',
+            #     `selected-text-format` = 'count',
+            #     `count-selected-text` = "{0} variables selected (of {1})"
+            #   )
+            # )
           )
         ),
 
@@ -158,6 +158,7 @@ mod_table <- function(
     get_scenario(mod_data$viz_shape, mod_data$agg_level)
   })
 
+  # update col_filter_selector variables.
   shiny::observe({
 
     cd <- ifelse(mod_data$diameter_classes, 'cd', 'nocd')
@@ -170,6 +171,22 @@ mod_table <- function(
         )
       }
 
+    # col_vis_sig_choices <- dplyr::tbl(ifndb, 'col_vis_sig_thesaurus') %>%
+    #   dplyr::filter(scenario_id == !!scenario_reac(), cd_id == cd) %>%
+    #   dplyr::collect() %>% {
+    #     magrittr::set_names(
+    #       magrittr::extract2(., 'col_vis_sig_val'), magrittr::extract2(., 'esp')
+    #     )
+    #   }
+    #
+    # col_vis_clima_choices <- dplyr::tbl(ifndb, 'col_vis_clima_thesaurus') %>%
+    #   dplyr::filter(scenario_id == !!scenario_reac(), cd_id == cd) %>%
+    #   dplyr::collect() %>% {
+    #     magrittr::set_names(
+    #       magrittr::extract2(., 'col_vis_clima_val'), magrittr::extract2(., 'esp')
+    #     )
+    #   }
+
     shinyWidgets::updatePickerInput(
       session, 'col_vis_selector',
       # label_getter(ifndb, 'esp', 'col_vis_selector_label'),
@@ -177,6 +194,22 @@ mod_table <- function(
       choices = col_vis_choices,
       selected = col_vis_choices[1:10]
     )
+
+    # shinyWidgets::updatePickerInput(
+    #   session, 'col_vis_sig_selector',
+    #   # label_getter(ifndb, 'esp', 'col_vis_selector_label'),
+    #   label = 'variables SIG',
+    #   choices = col_vis_sig_choices,
+    #   selected = NULL
+    # )
+
+    # shinyWidgets::updatePickerInput(
+    #   session, 'col_vis_clima_selector',
+    #   # label_getter(ifndb, 'esp', 'col_vis_selector_label'),
+    #   label = 'variables Clima',
+    #   choices = col_vis_clima_choices,
+    #   selected = NULL
+    # )
 
     shinyWidgets::updatePickerInput(
       session, 'col_filter_selector',
@@ -443,7 +476,13 @@ mod_table <- function(
         progress$set(value = value, detail = detail)
       }
 
-      if (is.null(input$col_vis_selector)) {
+      # if (is.null(input$col_vis_selector)) {
+      if (
+        all(
+          is.null(input$col_vis_selector), is.null(input$col_vis_sig_selector),
+          is.null(input$col_vis_clima_selector)
+        )
+      ) {
         # updateProgress setup
         updateProgress(
           value = 0.73,

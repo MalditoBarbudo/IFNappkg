@@ -1,10 +1,11 @@
 Package: IFNappkg
 Type: Package
 Title: Shiny modules and helpers for IFNapp
-Version: 0.0.0.9000
+Version: 0.0.0.9001
 Authors@R: person("Granda", "Víctor", email = "victorgrandagarcia@gmail.com",
                   role = c("aut", "cre"))
-Description: Package to maintain and improve the shiny modules and helper
+Description: "v0.0.0.9001 Armored Scarves"
+    Package to maintain and improve the shiny modules and helper
     functions for the IFNapp from the "Laboratori Forestal Catalá"
 License: MIT
 Encoding: UTF-8
