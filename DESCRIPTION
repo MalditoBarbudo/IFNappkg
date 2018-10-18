@@ -19,6 +19,7 @@ Imports:
   leaflet,
   leaflet.extras,
   sp,
+  readr,
   rgdal,
   dplyr,
   tidyr,
