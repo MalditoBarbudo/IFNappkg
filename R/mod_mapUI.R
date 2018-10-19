@@ -181,25 +181,6 @@ mod_map <- function(
     } else {
       return(res[['features']][[1]])
     }
-
-    # res <- input$map_draw_new_feature
-    # removed_id <- input$map_draw_deleted_features$features[[1]]$properties$`_leaflet_id`
-    # res_id <- input$map_draw_new_feature$properties$`_leaflet_id`
-    #
-    # # some iferation
-    # if (is.null(res)) {
-    #   return(NULL)
-    # } else {
-    #   if (is.null(removed_id)) {
-    #     return(res)
-    #   } else {
-    #     if (removed_id == res_id) {
-    #       return(NULL)
-    #     } else {
-    #       return(res)
-    #     }
-    #   }
-    # }
   })
 
   # update inputs with variables present in data. We have four input scenarios
@@ -208,30 +189,6 @@ mod_map <- function(
   input_scenario <- shiny::reactive({
     get_scenario(mod_data$viz_shape, mod_data$agg_level)
   })
-
-  # inputs to monitorize
-  # input_reactives <- shiny::reactive({
-  #   input_reactives <- list()
-  #   input_reactives$admin_div <- mod_data$admin_div
-  #   # input_reactives$admin_div_fil <- mod_data$admin_div_fil
-  #   input_reactives$espai_tipus <- mod_data$espai_tipus
-  #   # input_reactives$espai_tipus_fil <- mod_data$espai_tipus_fil
-  #   input_reactives$ifn <- mod_data$ifn
-  #   input_reactives$inverse_pal <- mod_data$inverse_pal
-  #   input_reactives$color <- mod_data$color
-  #   input_reactives$mida <- mod_data$mida
-  #   input_reactives$tipo_grup_func <- mod_data$tipo_grup_func
-  #   input_reactives$grup_func <- mod_data$grup_func
-  #   input_reactives$statistic <- mod_data$statistic
-  #   input_reactives$agg_level <- mod_data$agg_level
-  #   input_reactives$viz_shape <- mod_data$viz_shape
-  #   input_reactives$apply_filters <- mod_data$apply_filters
-  #   input_reactives$map_draw_new_feature <- input$map_draw_new_feature
-  #   input_reactives$map_draw_deleted_features <- input$map_draw_deleted_features
-  #
-  #   return(input_reactives)
-  # }) %>%
-  #   shiny::debounce(millis = 500)
 
   base_data_reactives <- shiny::reactive({
     base_data_reactives <- list()
@@ -268,8 +225,7 @@ mod_map <- function(
     # base_data_modifs_reactives$map_draw_deleted_features <- input$map_draw_deleted_features
 
     return(base_data_modifs_reactives)
-  }) #%>%
-    # shiny::debounce(millis = 500)
+  })
 
   map_base_data <- shiny::eventReactive(
     ignoreInit = FALSE,
@@ -358,65 +314,6 @@ mod_map <- function(
       map_base_data_modifs()
     }
   )
-
-
-  # input_map <- shiny::eventReactive(
-  #   ignoreInit = TRUE,
-  #   eventExpr = {
-  #     input_reactives()
-  #   },
-  #   valueExpr = {
-  #
-  #     data_scenario_map <- data_scenario(
-  #       mod_data$admin_div,
-  #       mod_data$admin_div_fil,
-  #       mod_data$espai_tipus,
-  #       mod_data$espai_tipus_fil,
-  #       mod_data$ifn,
-  #       ifndb,
-  #       mod_data$agg_level,
-  #       diameter_classes = FALSE,
-  #       mod_advancedFilters$adv_fil_clima_expressions(),
-  #       mod_advancedFilters$adv_fil_sig_expressions(),
-  #       custom_polygon()
-  #     )
-  #
-  #     # check data integrity (zero rows)
-  #     if (
-  #       {
-  #         data_scenario_map[['clima']] %>%
-  #           dplyr::collect() %>%
-  #           nrow()
-  #       } < 1
-  #     ) {
-  #
-  #       shinyWidgets::sendSweetAlert(
-  #         session, title = 'Sin datos',
-  #         text = 'Con los filtros actuales activados no hay parcelas que cumplan los requisitos',
-  #         type = 'warning'
-  #       )
-  #
-  #       return()
-  #
-  #     } else {
-  #       data_scenario_map %>%
-  #         map_modificator(
-  #           input_scenario(),
-  #           mod_data$ifn,
-  #           mod_data$inverse_pal,
-  #           mod_data$color,
-  #           mod_data$mida,
-  #           mod_data$tipo_grup_func,
-  #           mod_data$grup_func,
-  #           mod_data$statistic,
-  #           mod_data$admin_div,
-  #           mod_data$agg_level
-  #         )
-  #     }
-  #   }
-  # )
-
-
 
   # reactive with the map events
   map_reactives <- shiny::reactiveValues()
