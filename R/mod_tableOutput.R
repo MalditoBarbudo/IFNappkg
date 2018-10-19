@@ -33,8 +33,6 @@ mod_tableOutput <- function(id, ifndb) {
         ),
 
         shiny::hr(),
-        # shiny::br(),
-        # shiny::br(),
 
         shiny::h4('Columnas visibles'),
         shiny::fluidRow(
@@ -52,32 +50,6 @@ mod_tableOutput <- function(id, ifndb) {
                 `count-selected-text` = "{0} variables selected (of {1})"
               )
             )
-            # shinyWidgets::pickerInput(
-            #   ns('col_vis_sig_selector'),
-            #   # label_getter(ifndb, 'esp', 'col_vis_selector_label'),
-            #   label = 'variables SIG (testing)',
-            #   choices = '', multiple = TRUE,
-            #   options = list(
-            #     `actions-box` = TRUE,
-            #     `deselect-all-text` = 'None selected...',
-            #     `select-all-text` = 'All selected',
-            #     `selected-text-format` = 'count',
-            #     `count-selected-text` = "{0} variables selected (of {1})"
-            #   )
-            # ),
-            # shinyWidgets::pickerInput(
-            #   ns('col_vis_clima_selector'),
-            #   # label_getter(ifndb, 'esp', 'col_vis_selector_label'),
-            #   label = 'variables Clima (testing)',
-            #   choices = '', multiple = TRUE,
-            #   options = list(
-            #     `actions-box` = TRUE,
-            #     `deselect-all-text` = 'None selected...',
-            #     `select-all-text` = 'All selected',
-            #     `selected-text-format` = 'count',
-            #     `count-selected-text` = "{0} variables selected (of {1})"
-            #   )
-            # )
           )
         ),
 
@@ -97,8 +69,6 @@ mod_tableOutput <- function(id, ifndb) {
               )
             ),
             shiny::uiOutput(ns('col_filter'))
-            # shiny::br(),
-            # shiny::br(),
           )
         ),
         shiny::fluidRow(
@@ -171,22 +141,6 @@ mod_table <- function(
         )
       }
 
-    # col_vis_sig_choices <- dplyr::tbl(ifndb, 'col_vis_sig_thesaurus') %>%
-    #   dplyr::filter(scenario_id == !!scenario_reac(), cd_id == cd) %>%
-    #   dplyr::collect() %>% {
-    #     magrittr::set_names(
-    #       magrittr::extract2(., 'col_vis_sig_val'), magrittr::extract2(., 'esp')
-    #     )
-    #   }
-    #
-    # col_vis_clima_choices <- dplyr::tbl(ifndb, 'col_vis_clima_thesaurus') %>%
-    #   dplyr::filter(scenario_id == !!scenario_reac(), cd_id == cd) %>%
-    #   dplyr::collect() %>% {
-    #     magrittr::set_names(
-    #       magrittr::extract2(., 'col_vis_clima_val'), magrittr::extract2(., 'esp')
-    #     )
-    #   }
-
     shinyWidgets::updatePickerInput(
       session, 'col_vis_selector',
       # label_getter(ifndb, 'esp', 'col_vis_selector_label'),
@@ -194,22 +148,6 @@ mod_table <- function(
       choices = col_vis_choices,
       selected = col_vis_choices[1:10]
     )
-
-    # shinyWidgets::updatePickerInput(
-    #   session, 'col_vis_sig_selector',
-    #   # label_getter(ifndb, 'esp', 'col_vis_selector_label'),
-    #   label = 'variables SIG',
-    #   choices = col_vis_sig_choices,
-    #   selected = NULL
-    # )
-
-    # shinyWidgets::updatePickerInput(
-    #   session, 'col_vis_clima_selector',
-    #   # label_getter(ifndb, 'esp', 'col_vis_selector_label'),
-    #   label = 'variables Clima',
-    #   choices = col_vis_clima_choices,
-    #   selected = NULL
-    # )
 
     shinyWidgets::updatePickerInput(
       session, 'col_filter_selector',
@@ -315,26 +253,6 @@ mod_table <- function(
       )
   })
 
-  # depending on the scenario, we need to show/enable and hide/disable the
-  # SIGCLIMA download helpers inputs
-  # shiny::observe({
-  #   if (scenario_reac() %in% c('scenario1', 'scenario2')) {
-  #     # show/enable
-  #     shinyjs::enable('SIG_CLIMA')
-  #     shinyjs::showElement('sigclima_checkboxes')
-  #     # hide/disable
-  #     shinyjs::disable('SIG_CLIMA_download')
-  #     shinyjs::hideElement('sigclima_buttons')
-  #   } else {
-  #     # hide/disable
-  #     shinyjs::disable('SIG_CLIMA')
-  #     shinyjs::hideElement('sigclima_checkboxes')
-  #     # show/enable
-  #     shinyjs::enable('SIG_CLIMA_download')
-  #     shinyjs::showElement('sigclima_buttons')
-  #   }
-  # })
-
   output$col_filter <- shiny::renderUI({
 
     # get the session ns to be able to tag the inputs with correct id
@@ -399,13 +317,7 @@ mod_table <- function(
       )
     })
 
-    # tag list to return for the UI
-    # shiny::tagList(
-    #   shiny::inputPanel(
-    #     shiny::h4(label_getter(ifndb, 'esp', 'col_filter_h4_label')),
-    #     col_filter_inputs()
-    #   )
-    # )
+    # tag list to return the inputs
     shiny::tagList(
       col_filter_inputs()
     )
@@ -559,10 +471,8 @@ mod_table <- function(
   )
 
   output$ifn_table <- DT::renderDT(
-  # output$ifn_table <- formattable::renderFormattable(
     server = TRUE,
     expr = {
-
       table_base_data_modifs()
     }
   )
@@ -575,31 +485,8 @@ mod_table <- function(
 
       res <- table_base_data_modifs()
 
-      res$x$data [,-1] %>%
+      res$x$data[,-1] %>%
         readr::write_csv(file)
-
-      # if (input$SIG_CLIMA) {
-      #
-      #   sig_clima <- dplyr::left_join(
-      #     table_base_data_raw()[['sig']], table_base_data_raw()[['clima']],
-      #     by = 'idparcela'
-      #   ) %>%
-      #     dplyr::collect()
-      #
-      #   core <- table_base_data_modifs()
-      #
-      #   core$x$data[,-1] %>%
-      #     # as.data.frame() %>%
-      #     dplyr::left_join(sig_clima, by = 'idparcela') %>%
-      #     readr::write_csv(file)
-      # } else {
-      #
-      #   core <- table_base_data_modifs()
-      #
-      #   core$x$data[,-1] %>%
-      #     as.data.frame() %>%
-      #     readr::write_csv(file)
-      # }
     }
   )
 
@@ -611,42 +498,10 @@ mod_table <- function(
 
       res <- table_base_data_modifs()
 
-      res$x$data [,-1] %>%
+      res$x$data[,-1] %>%
         writexl::write_xlsx(file)
-
-      # if (input$SIG_CLIMA) {
-      #
-      #   sig_clima <- dplyr::left_join(
-      #     table_base_data_raw()[['sig']], table_base_data_raw()[['clima']],
-      #     by = 'idparcela'
-      #   ) %>%
-      #     dplyr::collect()
-      #
-      #   table_base_data_modifs() %>%
-      #     dplyr::as_data_frame() %>%
-      #     dplyr::left_join(sig_clima, by = 'idparcela') %>%
-      #     writexl::write_xlsx(file)
-      # } else {
-      #   table_base_data_modifs() %>%
-      #     dplyr::as_data_frame() %>%
-      #     writexl::write_xlsx(file)
-      # }
     }
   )
-
-  # output$SIG_CLIMA_download <- shiny::downloadHandler(
-  #   filename = function() {
-  #     'IFN_sig_and_clima.csv'
-  #   },
-  #   content = function(file) {
-  #     dplyr::left_join(
-  #       table_base_data_raw()[['sig']], table_base_data_raw()[['clima']],
-  #       by = 'idparcela'
-  #     ) %>%
-  #       dplyr::collect() %>%
-  #       readr::write_csv(file)
-  #   }
-  # )
 
   # sweetalert to show the query
   shiny::observeEvent(
