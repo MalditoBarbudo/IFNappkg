@@ -37,6 +37,7 @@ mod_map <- function(
   nom_vegueries <- as.character(polygons_vegueries@data$NOMVEGUE)
   nom_comarques <- as.character(polygons_comarques@data$NOMCOMAR)
   nom_municipis <- as.character(polygons_municipis@data$NOMMUNI)
+  nom_delegacions <- as.character(polygons_delegacions@data$comarcas_d)
   # noms proteccions
   nom_enpe <- as.character(polygons_enpe@data$nom)
   nom_pein <- as.character(polygons_pein@data$nom)

@@ -220,6 +220,7 @@ map_modificator <- function(
   nom_vegueries <- as.character(polygons_vegueries@data$NOMVEGUE)
   nom_comarques <- as.character(polygons_comarques@data$NOMCOMAR)
   nom_municipis <- as.character(polygons_municipis@data$NOMMUNI)
+  nom_delegacions <- as.character(polygons_delegacions@data$comarcas_d)
   # noms proteccions
   nom_enpe <- as.character(polygons_enpe@data$nom)
   nom_pein <- as.character(polygons_pein@data$nom)
@@ -346,6 +347,7 @@ map_modificator <- function(
         leaflet::clearGroup('comarca') %>%
         leaflet::clearGroup('municipi') %>%
         leaflet::clearGroup('provincia') %>%
+        leaflet::clearGroup('delegacio') %>%
         leaflet::addPolygons(
           data = rlang::eval_tidy(
             rlang::sym(polygons_dictionary[[admin_div_val]][['polygon']])
@@ -501,6 +503,7 @@ map_modificator <- function(
         leaflet::clearGroup('comarca') %>%
         leaflet::clearGroup('municipi') %>%
         leaflet::clearGroup('provincia') %>%
+        leaflet::clearGroup('delegacio') %>%
         leaflet::addPolygons(
           data = rlang::eval_tidy(rlang::sym(polygons_dictionary[[admin_div_val]][['polygon']])),
           group = polygons_dictionary[[admin_div_val]][['group']],
@@ -634,6 +637,7 @@ map_modificator <- function(
           leaflet::clearGroup('vegueria') %>%
           leaflet::clearGroup('comarca') %>%
           leaflet::clearGroup('municipi') %>%
+          leaflet::clearGroup('delegacio') %>%
           leaflet::clearGroup('provincia')
       })
     } else {
@@ -643,6 +647,7 @@ map_modificator <- function(
           leaflet::clearGroup('comarca') %>%
           leaflet::clearGroup('municipi') %>%
           leaflet::clearGroup('provincia') %>%
+          leaflet::clearGroup('delegacio') %>%
           leaflet::clearGroup('idparcela') %>%
           leaflet::addPolygons(
             data = polygon_data,
@@ -758,6 +763,7 @@ map_modificator <- function(
           leaflet::clearGroup('vegueria') %>%
           leaflet::clearGroup('comarca') %>%
           leaflet::clearGroup('municipi') %>%
+          leaflet::clearGroup('delegacio') %>%
           leaflet::clearGroup('provincia')
       })
     } else {
@@ -767,6 +773,7 @@ map_modificator <- function(
           leaflet::clearGroup('comarca') %>%
           leaflet::clearGroup('municipi') %>%
           leaflet::clearGroup('provincia') %>%
+          leaflet::clearGroup('delegacio') %>%
           leaflet::clearGroup('idparcela') %>%
           leaflet::addPolygons(
             data = polygon_data,

@@ -1,3 +1,4 @@
+library(tidyverse)
 
 # source scripts
 source('data-raw/input_dictionaries_creation.R')
@@ -14,10 +15,10 @@ devtools::use_data(
   # label_tipo_grup_func, label_viz_shape, , label_tabpanel_visualization,
   # label_infopanel_plot, label_infopanel_variables, label_shape_click_info,
   # dic_col_vis_input, dic_adv_fil_clima_filters, dic_adv_fil_sig_filters,
-  names_comarcas, names_municipios,
+  names_comarcas, names_municipios, names_delegacions,
   names_provincias, names_veguerias, polygons_comarques, polygons_dictionary,
   polygons_enpe, polygons_municipis, polygons_pein, polygons_provincies,
-  polygons_vegueries, polygons_xn2000,
+  polygons_vegueries, polygons_xn2000, polygons_delegacions,
 
   internal = TRUE, overwrite = TRUE
 )

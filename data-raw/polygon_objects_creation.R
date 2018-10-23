@@ -20,6 +20,11 @@ polygons_provincies <- rgdal::readOGR('data-raw/shapefiles', 'bm5mv20sh0tpp1_201
   rmapshaper::ms_simplify(0.01) %>%
   sp::spTransform(sp::CRS("+proj=longlat +datum=WGS84"))
 
+polygons_delegacions <- rgdal::readOGR('data-raw/shapefiles', 'delegacions2018',
+                                       GDAL1_integer64_policy = FALSE) %>%
+  rmapshaper::ms_simplify(0.01) %>%
+  sp::spTransform(sp::CRS("+proj=longlat +datum=WGS84"))
+
 polygons_enpe <- rgdal::readOGR('data-raw/shapefiles', 'enpe_2017',
                          GDAL1_integer64_policy = FALSE) %>%
   rmapshaper::ms_simplify(0.01) %>%
@@ -52,6 +57,10 @@ names_provincias <- c(
   sort(as.character(polygons_provincies@data$NOMPROV))
 )
 
+names_delegacions <- c(
+  sort(as.character(polygons_delegacions@data$comarcas_d))
+)
+
 ## Polygons dictionary ####
 polygons_dictionary <- list(
 
@@ -65,6 +74,15 @@ polygons_dictionary <- list(
     layerId = 'nom_provincies',
     # color_var = ~pal(NOM_PROV),
     label_chr = 'NOMPROV'
+  ),
+
+  delegacio = list(
+    polygon = 'polygons_delegacions',
+    group = 'delegacio',
+    label = ~comarcas_d,
+    label_new = ~delegacio,
+    layerId = 'nom_delegacions',
+    label_chr = 'comarcas_d'
   ),
 
   vegueria = list(
