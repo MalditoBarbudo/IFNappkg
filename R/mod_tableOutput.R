@@ -49,6 +49,14 @@ mod_tableOutput <- function(id, ifndb) {
                 `selected-text-format` = 'count',
                 `count-selected-text` = "{0} variables selected (of {1})"
               )
+            ),
+            shinyWidgets::actionBttn(
+              ns('apply_col_vis'),
+              'Aplicar',
+              icon = shiny::icon('eye'),
+              style = "material-flat",
+              block = FALSE,
+              size = 'sm'
             )
           )
         ),
@@ -68,19 +76,27 @@ mod_tableOutput <- function(id, ifndb) {
                 `count-selected-text` = "{0} variables selected (of {1})"
               )
             ),
-            shiny::uiOutput(ns('col_filter'))
-          )
-        ),
-        shiny::fluidRow(
-          shinyWidgets::actionBttn(
-            ns('apply_table_filters'),
-            label_getter(ifndb, 'esp', 'apply_table_filters_label'),
-            icon = shiny::icon('eye'),
-            style = "material-flat",
-            block = FALSE,
-            size = 'sm'
+            shiny::uiOutput(ns('col_filter')),
+            shinyWidgets::actionBttn(
+              ns('apply_table_filters'),
+              'Aplicar',
+              icon = shiny::icon('eye'),
+              style = "material-flat",
+              block = FALSE,
+              size = 'sm'
+            )
           )
         )
+        # shiny::fluidRow(
+        #   shinyWidgets::actionBttn(
+        #     ns('apply_table_filters'),
+        #     label_getter(ifndb, 'esp', 'apply_table_filters_label'),
+        #     icon = shiny::icon('eye'),
+        #     style = "material-flat",
+        #     block = FALSE,
+        #     size = 'sm'
+        #   )
+        # )
       ),
       shiny::column(
         10,
@@ -323,10 +339,18 @@ mod_table <- function(
     )
   })
 
+  # reactive for col_vis and col_fil buttons
+  apply_buttons_reactives <- shiny::reactive({
+    apply_reactives <- list()
+    apply_reactives$col_vis <- input$apply_col_vis
+    apply_reactives$col_fil <- input$apply_table_filters
+    apply_reactives$col_fil <- input$apply_col_vis
+  })
+
   # quo filter expression constructor
   col_filter_expressions <- shiny::eventReactive(
     ignoreInit = FALSE, ignoreNULL = FALSE,
-    eventExpr = input$apply_table_filters,
+    eventExpr = apply_buttons_reactives(),
     valueExpr = {
 
       # check if adv_fil_clima_variables is null or empty, to avoid problems in
@@ -362,6 +386,7 @@ mod_table <- function(
     base_data_modifs_reactives$table_base_data <- table_base_data()
     # base_data_modifs_reactives$col_vis_selector <- input$col_vis_selector
     base_data_modifs_reactives$apply_table_filters <- input$apply_table_filters
+    base_data_modifs_reactives$apply_col_vis <- input$apply_col_vis
   })
 
   # table final modifications based on table filters and col visibilty
