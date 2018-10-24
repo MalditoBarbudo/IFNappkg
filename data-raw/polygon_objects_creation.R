@@ -25,6 +25,11 @@ polygons_delegacions <- rgdal::readOGR('data-raw/shapefiles', 'delegacions2018',
   rmapshaper::ms_simplify(0.01) %>%
   sp::spTransform(sp::CRS("+proj=longlat +datum=WGS84"))
 
+polygons_catalunya <- rgdal::readOGR('data-raw/shapefiles', 'catalunya',
+                                       GDAL1_integer64_policy = FALSE) %>%
+  rmapshaper::ms_simplify(0.01) %>%
+  sp::spTransform(sp::CRS("+proj=longlat +datum=WGS84"))
+
 polygons_enpe <- rgdal::readOGR('data-raw/shapefiles', 'enpe_2017',
                          GDAL1_integer64_policy = FALSE) %>%
   rmapshaper::ms_simplify(0.01) %>%
@@ -61,10 +66,23 @@ names_delegacions <- c(
   sort(as.character(polygons_delegacions@data$comarcas_d))
 )
 
+names_comunidades <- c(
+  sort(as.character(polygons_catalunya@data$NOM_CA))
+)
+
 ## Polygons dictionary ####
 polygons_dictionary <- list(
 
   ## admin divs
+
+  comunidad = list(
+    polygon = 'polygons_catalunya',
+    group = 'comunidad',
+    label = ~NOM_CA,
+    label_new = ~comunidad,
+    layerId = 'nom_comunidades',
+    label_chr = 'NOM_CA'
+  ),
 
   provincia = list(
     polygon = 'polygons_provincies',

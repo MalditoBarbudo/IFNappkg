@@ -216,11 +216,13 @@ map_modificator <- function(
 ) {
 
   # noms division
+  nom_cas <- as.character(polygons_catalunya@data$NOM_CA)
   nom_provincies <- as.character(polygons_provincies@data$NOMPROV)
   nom_vegueries <- as.character(polygons_vegueries@data$NOMVEGUE)
   nom_comarques <- as.character(polygons_comarques@data$NOMCOMAR)
   nom_municipis <- as.character(polygons_municipis@data$NOMMUNI)
   nom_delegacions <- as.character(polygons_delegacions@data$comarcas_d)
+  nom_comunidades <- as.character(polygons_catalunya@data$NOM_CA)
   # noms proteccions
   nom_enpe <- as.character(polygons_enpe@data$nom)
   nom_pein <- as.character(polygons_pein@data$nom)
@@ -348,6 +350,7 @@ map_modificator <- function(
         leaflet::clearGroup('municipi') %>%
         leaflet::clearGroup('provincia') %>%
         leaflet::clearGroup('delegacio') %>%
+        leaflet::clearGroup('comunidad') %>%
         leaflet::addPolygons(
           data = rlang::eval_tidy(
             rlang::sym(polygons_dictionary[[admin_div_val]][['polygon']])
@@ -504,6 +507,7 @@ map_modificator <- function(
         leaflet::clearGroup('municipi') %>%
         leaflet::clearGroup('provincia') %>%
         leaflet::clearGroup('delegacio') %>%
+        leaflet::clearGroup('comunidad') %>%
         leaflet::addPolygons(
           data = rlang::eval_tidy(rlang::sym(polygons_dictionary[[admin_div_val]][['polygon']])),
           group = polygons_dictionary[[admin_div_val]][['group']],
@@ -638,6 +642,7 @@ map_modificator <- function(
           leaflet::clearGroup('comarca') %>%
           leaflet::clearGroup('municipi') %>%
           leaflet::clearGroup('delegacio') %>%
+          leaflet::clearGroup('comunidad') %>%
           leaflet::clearGroup('provincia')
       })
     } else {
@@ -649,6 +654,7 @@ map_modificator <- function(
           leaflet::clearGroup('provincia') %>%
           leaflet::clearGroup('delegacio') %>%
           leaflet::clearGroup('idparcela') %>%
+          leaflet::clearGroup('comunidad') %>%
           leaflet::addPolygons(
             data = polygon_data,
             group = polygons_dictionary[[admin_div_val]][['group']],
@@ -764,6 +770,7 @@ map_modificator <- function(
           leaflet::clearGroup('comarca') %>%
           leaflet::clearGroup('municipi') %>%
           leaflet::clearGroup('delegacio') %>%
+          leaflet::clearGroup('comunidad') %>%
           leaflet::clearGroup('provincia')
       })
     } else {
@@ -775,6 +782,7 @@ map_modificator <- function(
           leaflet::clearGroup('provincia') %>%
           leaflet::clearGroup('delegacio') %>%
           leaflet::clearGroup('idparcela') %>%
+          leaflet::clearGroup('comunidad') %>%
           leaflet::addPolygons(
             data = polygon_data,
             group = polygons_dictionary[[admin_div_val]][['group']],
