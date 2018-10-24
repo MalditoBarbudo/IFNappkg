@@ -1,0 +1,136 @@
+{
+  "output": {
+    "mod_mapUI-map": {
+      "x": {
+        "options": {
+          "crs": {
+            "crsClass": "L.CRS.EPSG3857",
+            "code": null,
+            "proj4def": null,
+            "projectedBounds": null,
+            "options": {
+
+            }
+          }
+        },
+        "setView": [
+          [
+            41.67,
+            0.8
+          ],
+          8,
+          [
+
+          ]
+        ],
+        "calls": [
+          {
+            "method": "createMapPane",
+            "args": [
+              "admin_divs",
+              410
+            ]
+          },
+          {
+            "method": "createMapPane",
+            "args": [
+              "proteccions",
+              405
+            ]
+          },
+          {
+            "method": "createMapPane",
+            "args": [
+              "parceles",
+              420
+            ]
+          },
+          {
+            "method": "addDrawToolbar",
+            "args": [
+              null,
+              "custom_poly",
+              {
+                "position": "topleft",
+                "draw": {
+                  "polyline": false,
+                  "polygon": {
+                    "showArea": false,
+                    "metric": true,
+                    "shapeOptions": {
+                      "stroke": true,
+                      "color": "#03f",
+                      "weight": 1,
+                      "opacity": 1,
+                      "fill": true,
+                      "fillColor": "#03f",
+                      "fillOpacity": 0.4,
+                      "clickable": true,
+                      "smoothFactor": 1,
+                      "noClip": true
+                    },
+                    "repeatMode": false
+                  },
+                  "circle": false,
+                  "rectangle": false,
+                  "marker": false,
+                  "circlemarker": false,
+                  "singleFeature": true
+                },
+                "edit": {
+                  "edit": true,
+                  "remove": true,
+                  "allowIntersection": true
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "evals": [
+
+      ],
+      "jsHooks": {
+        "render": [
+          {
+            "code": "function(el, x, data) {\n  return (function(el, x) {\n        L.easyPrint({\n        title: '',\n        sizeModes: ['A4Landscape', 'A4Portrait'],\n        filename: 'IFNmap',\n        exportOnly: true,\n        hideControlContainer: false\n        }).addTo(this);\n        }).call(this.getMap(), el, x, data);\n}",
+            "data": null
+          }
+        ]
+      },
+      "deps": [
+        {
+          "name": "lfx-draw",
+          "version": "1.0.2",
+          "src": {
+            "href": "lfx-draw-1.0.2"
+          },
+          "meta": null,
+          "script": [
+            "lfx-draw-prod.js",
+            "lfx-draw-bindings.js"
+          ],
+          "stylesheet": "lfx-draw-prod.css",
+          "head": null,
+          "attachment": null,
+          "package": null,
+          "all_files": true
+        },
+        {
+          "name": "lfx-draw-drag",
+          "version": "1.0.2",
+          "src": {
+            "href": "lfx-draw-drag-1.0.2"
+          },
+          "meta": null,
+          "script": "lfx-draw-drag-prod.js",
+          "stylesheet": null,
+          "head": null,
+          "attachment": null,
+          "package": null,
+          "all_files": true
+        }
+      ]
+    }
+  }
+}
