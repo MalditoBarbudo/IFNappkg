@@ -66,7 +66,7 @@ mod_map <- function(
         ),
         singleFeature = TRUE
       ) %>%
-      # raw easyPrint plugin
+      # raw easyPrint plugin (js bundle loaded in the ifn_app.R file)
       htmlwidgets::onRender(
         "function(el, x) {
         L.easyPrint({
