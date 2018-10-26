@@ -273,7 +273,7 @@ mod_map <- function(
   )
 
   map_base_data_modifs <- shiny::eventReactive(
-    ignoreInit = TRUE,
+    ignoreInit = FALSE,
     eventExpr = base_data_modifs_reactives(),
     valueExpr = {
 
@@ -310,7 +310,7 @@ mod_map <- function(
   )
 
   shiny::observeEvent(
-    ignoreInit = TRUE,
+    ignoreInit = FALSE,
     eventExpr = map_base_data_modifs(),
     handlerExpr = {
       map_base_data_modifs()
