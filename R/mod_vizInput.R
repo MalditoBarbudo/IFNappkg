@@ -58,7 +58,7 @@ mod_vizInput <- function(id, ifndb) {
 
     shiny::tagList(
 
-      shiny::wellPanel(
+      # shiny::wellPanel(
         shiny::h3(label_getter(ifndb, 'esp', 'vizControls_h3_label')),
         shinyWidgets::pickerInput(
           ns('color'), label_getter(ifndb, 'esp', 'color_label'),
@@ -92,7 +92,7 @@ mod_vizInput <- function(id, ifndb) {
           choices = grup_func_choices,
           width = '100%'
         )
-      )
+      # )
     )
   )
 }

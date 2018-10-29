@@ -220,15 +220,60 @@ mod_infopanel <- function(
 
   })
 
+  # shiny::observeEvent(
+  #   eventExpr = mod_map$map_shape_click,
+  #   handlerExpr = {
+  #     # ns
+  #     ns <- session$ns
+  #
+  #     # dummy modal function
+  #     infoPlot_modal <- function(click) {
+  #       shiny::modalDialog(
+  #         shiny::tags$div(
+  #           id = 'infoPlot_tmp',
+  #           shiny::plotOutput(
+  #             ns('shape_click_plot')
+  #           ) %>%
+  #             shinycssloaders::withSpinner(
+  #               type = 4, color = '#D2527F'
+  #             )
+  #         ),
+  #         title = label_getter(
+  #           ifndb, 'esp', 'sweetalert_shape_click_info_label', 'title'
+  #         ),
+  #         footer = shiny::modalButton(
+  #           label_getter(
+  #             ifndb, 'esp', 'sweetalert_shape_click_info_label', 'btn_labels'
+  #           )
+  #         ),
+  #         size = 'l',
+  #         easyClose = TRUE
+  #       )
+  #     }
+  #
+  #     # modal
+  #     shiny::showModal(
+  #       infoPlot_modal(mod_map$map_shape_click),
+  #       session = session
+  #     )
+  #   }
+  # )
+
   # observer to create the sweet alert
   shiny::observeEvent(
     eventExpr = mod_map$map_shape_click,
     handlerExpr = {
+      # ns
       ns <- session$ns
+
+      # sweetalert
       shinyWidgets::sendSweetAlert(
         session = session,
         title = label_getter(ifndb, 'esp', 'sweetalert_shape_click_info_label', 'title'),
+
+        # here in text we insert the UI again
         text = shiny::tags$div(
+          id = 'infoPlot_tmp',
           shiny::plotOutput(
             ns('shape_click_plot')
           ) %>%

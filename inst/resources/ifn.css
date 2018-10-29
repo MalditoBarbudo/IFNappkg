@@ -42,13 +42,14 @@ div.inner {
 /* Controls */
 #dataControls {
   /* Appearance */
-  background-color: white;
+  background-color: #bdc3c7;
   padding: 0 20px 20px 20px;
   cursor: move;
+  border-radius: 8px;
   /* Fade out while not hovering */
   opacity: 0.65;
   zoom: 0.9;
-  transition: opacity 500ms 1s;
+  transition: opacity 1s 100ms;
   z-index: 1000;
 }
 #dataControls:hover {
@@ -59,13 +60,14 @@ div.inner {
 
 #vizControls {
   /* Appearance */
-  background-color: white;
+  background-color: #bdc3c7;
   padding: 0 20px 20px 20px;
   cursor: move;
+  border-radius: 8px;
   /* Fade out while not hovering */
   opacity: 0.65;
   zoom: 0.9;
-  transition: opacity 500ms 1s;
+  transition: opacity 1s 100ms;
   z-index: 999;
 }
 #vizControls:hover {
@@ -74,46 +76,14 @@ div.inner {
   transition-delay: 0;
 }
 
-/* Shape conditional selector */
-#infoPanel {
+/* Sweet alerts */
+.swal-modal {
   /* Appearance */
-  background-color: white;
-  padding: 5px 10px 10px 10px;
-  cursor: move;
-  /* Fade out while not hovering */
-  opacity: 0.65;
-  zoom: 0.9;
-  transition: opacity 500ms 1s;
-  z-index: 999;
-}
-#infoPanel:hover {
-  /* Fade in while hovering */
-  opacity: 0.95;
-  transition-delay: 0;
+  background-color: #bdc3c7;
+  width: 55%;
 }
 
-#mod_advancedFiltersUI-advancedFiltersControls {
-  /* Appearance */
-  background-color: white;
-  padding: 0 20px 20px 20px;
-  opacity: 0.99;
-  zoom: 0.9;
-  z-index: 1010;
-}
-
-#mod_advancedFiltersUI-close_adv_fils {
-  margin: 17px 0 7px 0;
-}
-
-#tururu > li > a {
-  width: 263px;
-}
-
-#controls_buttons {
-  padding-left: 12px;
-}
-
-/* debug panel */
-#debug {
-  z-index: 1200;
+/* dropdowns */
+.dropdown-toggle {
+  border-bottom-width: 0;
 }
