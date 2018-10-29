@@ -54,7 +54,7 @@ mod_tableOutput <- function(id, ifndb) {
               ns('apply_col_vis'),
               'Aplicar',
               icon = shiny::icon('eye'),
-              style = "material-flat",
+              style = "stretch",
               block = FALSE,
               size = 'sm'
             )
@@ -81,7 +81,7 @@ mod_tableOutput <- function(id, ifndb) {
               ns('apply_table_filters'),
               'Aplicar',
               icon = shiny::icon('eye'),
-              style = "material-flat",
+              style = "stretch",
               block = FALSE,
               size = 'sm'
             )

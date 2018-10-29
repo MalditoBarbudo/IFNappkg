@@ -222,7 +222,7 @@ mod_dataInput <- function(id, ifndb) {
                 ns('apply_filters'),
                 label_getter(ifndb, 'esp', 'apply_filters_label'),
                 icon = shiny::icon('check'),
-                style = "material-flat",
+                style = "stretch",
                 block = TRUE,
                 size = 'sm'
               )
