@@ -22,13 +22,13 @@ mod_tableOutput <- function(id, ifndb) {
             ns('dwl_csv_button'),
             label_getter(ifndb, 'esp', 'dwl_csv_button_label'),
             color = 'primary', size = 'sm', block = FALSE,
-            style = 'minimal'
+            style = 'stretch'
           ),
           shinyWidgets::downloadBttn(
             ns('dwl_xlsx_button'),
             label_getter(ifndb, 'esp', 'dwl_xlsx_button_label'),
             color = 'primary', size = 'sm', block = FALSE,
-            style = 'minimal'
+            style = 'stretch'
           )
         ),
 
@@ -110,8 +110,8 @@ mod_tableOutput <- function(id, ifndb) {
         shinyWidgets::actionBttn(
           ns('see_query'),
           label_getter(ifndb, 'esp', 'see_query_label'),
-          icon = shiny::icon('brain'),
-          style = "material-flat",
+          icon = shiny::icon('database'),
+          style = "stretch",
           block = FALSE,
           size = 'sm'
         )
@@ -142,34 +142,6 @@ mod_table <- function(
 
   scenario_reac <- shiny::reactive({
     get_scenario(mod_data$viz_shape, mod_data$agg_level)
-  })
-
-  # update col_filter_selector variables.
-  shiny::observe({
-
-    cd <- ifelse(mod_data$diameter_classes, 'cd', 'nocd')
-
-    col_vis_choices <- dplyr::tbl(ifndb, 'col_vis_thesaurus') %>%
-      dplyr::filter(scenario_id == !!scenario_reac(), cd_id == cd) %>%
-      dplyr::collect() %>% {
-        magrittr::set_names(
-          magrittr::extract2(., 'col_vis_val'), magrittr::extract2(., 'esp')
-        )
-      }
-
-    shinyWidgets::updatePickerInput(
-      session, 'col_vis_selector',
-      # label_getter(ifndb, 'esp', 'col_vis_selector_label'),
-      label = 'variables IFN',
-      choices = col_vis_choices,
-      selected = col_vis_choices[1:10]
-    )
-
-    shinyWidgets::updatePickerInput(
-      session, 'col_filter_selector',
-      label_getter(ifndb, 'esp', 'col_filter_selector_label'),
-      choices = col_vis_choices
-    )
   })
 
   # base data reactives
@@ -267,6 +239,42 @@ mod_table <- function(
         mod_data$admin_div, mod_data$agg_level, mod_data$diameter_classes,
         ifndb, updateProgress = updateProgress
       )
+  })
+
+  # update col_filter_selector variables.
+  shiny::observe({
+
+    cd <- ifelse(mod_data$diameter_classes, 'cd', 'nocd')
+
+    present_vars <- table_base_data() %>% names()
+
+    # browser()
+
+    col_vis_choices <- dplyr::tbl(ifndb, 'col_vis_thesaurus') %>%
+      dplyr::filter(
+        scenario_id == !!scenario_reac(),
+        cd_id == cd,
+        col_vis_val %in% present_vars
+      ) %>%
+      dplyr::collect() %>% {
+        magrittr::set_names(
+          magrittr::extract2(., 'col_vis_val'), magrittr::extract2(., 'esp')
+        )
+      }
+
+    shinyWidgets::updatePickerInput(
+      session, 'col_vis_selector',
+      # label_getter(ifndb, 'esp', 'col_vis_selector_label'),
+      label = 'variables IFN',
+      choices = col_vis_choices,
+      selected = col_vis_choices[1:8]
+    )
+
+    shinyWidgets::updatePickerInput(
+      session, 'col_filter_selector',
+      label_getter(ifndb, 'esp', 'col_filter_selector_label'),
+      choices = col_vis_choices
+    )
   })
 
   output$col_filter <- shiny::renderUI({
