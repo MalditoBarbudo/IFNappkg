@@ -100,7 +100,7 @@ mod_tableOutput <- function(id, ifndb) {
       ),
       shiny::column(
         10,
-        DT::DTOutput(ns('ifn_table')) %>%
+        DT::DTOutput(ns('ifn_table'), height = 'auto') %>%
         # formattable::formattableOutput(ns('ifn_table')) #%>%
           shinycssloaders::withSpinner(
             type = 4, color = '#D2527F'
@@ -472,17 +472,36 @@ mod_table <- function(
         DT::datatable(
           style = 'default', rownames = FALSE,
           fillContainer = TRUE, autoHideNavigation = TRUE,
-          extensions = c('Scroller'),
+          # class = 'display nowrap',
           options = list(
-            autoWidth = TRUE,
-            deferRender = TRUE, scrollY = '70vh', scroller = TRUE,
-            dom = 'ti'
+            dom = 'ti',
+            scrollY = '600px',
+            scrollCollapse = FALSE,
+            deferRender = TRUE,
+            # deferLoading = nrow(data_table_temp),
+            paging = FALSE
           )
         ) %>%
         DT::formatRound(
           columns = numeric_cols,
           digits = 2
         )
+
+      # data_table_mutated <- data_table_temp %>%
+      #   DT::datatable(
+      #     style = 'default', rownames = FALSE,
+      #     fillContainer = TRUE, autoHideNavigation = TRUE,
+      #     extensions = c('Scroller'),
+      #     options = list(
+      #       autoWidth = TRUE,
+      #       deferRender = TRUE, scrollY = '70vh', scroller = TRUE,
+      #       dom = 'ti'
+      #     )
+      #   ) %>%
+      #   DT::formatRound(
+      #     columns = numeric_cols,
+      #     digits = 2
+      #   )
 
       for (var in numeric_cols) {
         data_table_mutated <- data_table_mutated %>%
