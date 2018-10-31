@@ -15,8 +15,71 @@ mod_tableOutput <- function(id, ifndb) {
   shiny::tagList(
 
     shiny::fluidRow(
+      DT::DTOutput(ns('ifn_table'), height = 'auto') %>%
+        # formattable::formattableOutput(ns('ifn_table')) #%>%
+        shinycssloaders::withSpinner(
+          type = 4, color = '#D2527F'
+        )
+    ),
+    shiny::fluidRow(
       shiny::column(
-        2,
+        4,
+        shiny::h4('Columnas visibles'),
+        shiny::inputPanel(
+          shinyWidgets::pickerInput(
+            ns('col_vis_selector'),
+            # label_getter(ifndb, 'esp', 'col_vis_selector_label'),
+            label = 'variables IFN',
+            choices = '', multiple = TRUE,
+            width = '90%',
+            options = list(
+              `actions-box` = TRUE,
+              `deselect-all-text` = 'None selected...',
+              `select-all-text` = 'All selected',
+              `selected-text-format` = 'count',
+              `count-selected-text` = "{0} variables selected (of {1})"
+            )
+          ),
+          shinyWidgets::actionBttn(
+            ns('apply_col_vis'),
+            'Aplicar',
+            icon = shiny::icon('eye'),
+            style = "stretch",
+            block = FALSE,
+            size = 'sm'
+          )
+        )
+      ),
+      shiny::column(
+        4,
+        shiny::h4(label_getter(ifndb, 'esp', 'col_filter_h4_label')),
+        shiny::inputPanel(
+          shinyWidgets::pickerInput(
+            ns('col_filter_selector'),
+            label_getter(ifndb, 'esp', 'col_filter_selector_label'),
+            choices = '', multiple = TRUE,
+            width = '90%',
+            options = list(
+              `actions-box` = TRUE,
+              `deselect-all-text` = 'None selected...',
+              `select-all-text` = 'All selected',
+              `selected-text-format` = 'count',
+              `count-selected-text` = "{0} variables selected (of {1})"
+            )
+          ),
+          shiny::uiOutput(ns('col_filter')),
+          shinyWidgets::actionBttn(
+            ns('apply_table_filters'),
+            'Aplicar',
+            icon = shiny::icon('eye'),
+            style = "stretch",
+            block = FALSE,
+            size = 'sm'
+          )
+        )
+      ),
+      shiny::column(
+        4,
         shiny::fluidRow(
           shinyWidgets::downloadBttn(
             ns('dwl_csv_button'),
@@ -31,82 +94,6 @@ mod_tableOutput <- function(id, ifndb) {
             style = 'stretch'
           )
         ),
-
-        shiny::hr(),
-
-        shiny::h4('Columnas visibles'),
-        shiny::fluidRow(
-          shiny::inputPanel(
-            shinyWidgets::pickerInput(
-              ns('col_vis_selector'),
-              # label_getter(ifndb, 'esp', 'col_vis_selector_label'),
-              label = 'variables IFN',
-              choices = '', multiple = TRUE,
-              options = list(
-                `actions-box` = TRUE,
-                `deselect-all-text` = 'None selected...',
-                `select-all-text` = 'All selected',
-                `selected-text-format` = 'count',
-                `count-selected-text` = "{0} variables selected (of {1})"
-              )
-            ),
-            shinyWidgets::actionBttn(
-              ns('apply_col_vis'),
-              'Aplicar',
-              icon = shiny::icon('eye'),
-              style = "stretch",
-              block = FALSE,
-              size = 'sm'
-            )
-          )
-        ),
-
-        shiny::h4(label_getter(ifndb, 'esp', 'col_filter_h4_label')),
-        shiny::fluidRow(
-          shiny::inputPanel(
-            shinyWidgets::pickerInput(
-              ns('col_filter_selector'),
-              label_getter(ifndb, 'esp', 'col_filter_selector_label'),
-              choices = '', multiple = TRUE,
-              options = list(
-                `actions-box` = TRUE,
-                `deselect-all-text` = 'None selected...',
-                `select-all-text` = 'All selected',
-                `selected-text-format` = 'count',
-                `count-selected-text` = "{0} variables selected (of {1})"
-              )
-            ),
-            shiny::uiOutput(ns('col_filter')),
-            shinyWidgets::actionBttn(
-              ns('apply_table_filters'),
-              'Aplicar',
-              icon = shiny::icon('eye'),
-              style = "stretch",
-              block = FALSE,
-              size = 'sm'
-            )
-          )
-        )
-        # shiny::fluidRow(
-        #   shinyWidgets::actionBttn(
-        #     ns('apply_table_filters'),
-        #     label_getter(ifndb, 'esp', 'apply_table_filters_label'),
-        #     icon = shiny::icon('eye'),
-        #     style = "material-flat",
-        #     block = FALSE,
-        #     size = 'sm'
-        #   )
-        # )
-      ),
-      shiny::column(
-        10,
-        DT::DTOutput(ns('ifn_table'), height = 'auto') %>%
-        # formattable::formattableOutput(ns('ifn_table')) #%>%
-          shinycssloaders::withSpinner(
-            type = 4, color = '#D2527F'
-          ),
-
-        # show query button
         shinyWidgets::actionBttn(
           ns('see_query'),
           label_getter(ifndb, 'esp', 'see_query_label'),
@@ -117,6 +104,100 @@ mod_tableOutput <- function(id, ifndb) {
         )
       )
     )
+
+    # shiny::fluidRow(
+    #   shiny::column(
+    #     2,
+    #     shiny::fluidRow(
+    #       shinyWidgets::downloadBttn(
+    #         ns('dwl_csv_button'),
+    #         label_getter(ifndb, 'esp', 'dwl_csv_button_label'),
+    #         color = 'primary', size = 'sm', block = FALSE,
+    #         style = 'stretch'
+    #       ),
+    #       shinyWidgets::downloadBttn(
+    #         ns('dwl_xlsx_button'),
+    #         label_getter(ifndb, 'esp', 'dwl_xlsx_button_label'),
+    #         color = 'primary', size = 'sm', block = FALSE,
+    #         style = 'stretch'
+    #       )
+    #     ),
+    #
+    #     shiny::hr(),
+    #
+    #     shiny::h4('Columnas visibles'),
+    #     shiny::fluidRow(
+    #       shiny::inputPanel(
+    #         shinyWidgets::pickerInput(
+    #           ns('col_vis_selector'),
+    #           # label_getter(ifndb, 'esp', 'col_vis_selector_label'),
+    #           label = 'variables IFN',
+    #           choices = '', multiple = TRUE,
+    #           options = list(
+    #             `actions-box` = TRUE,
+    #             `deselect-all-text` = 'None selected...',
+    #             `select-all-text` = 'All selected',
+    #             `selected-text-format` = 'count',
+    #             `count-selected-text` = "{0} variables selected (of {1})"
+    #           )
+    #         ),
+    #         shinyWidgets::actionBttn(
+    #           ns('apply_col_vis'),
+    #           'Aplicar',
+    #           icon = shiny::icon('eye'),
+    #           style = "stretch",
+    #           block = FALSE,
+    #           size = 'sm'
+    #         )
+    #       )
+    #     ),
+    #
+    #     shiny::h4(label_getter(ifndb, 'esp', 'col_filter_h4_label')),
+    #     shiny::fluidRow(
+    #       shiny::inputPanel(
+    #         shinyWidgets::pickerInput(
+    #           ns('col_filter_selector'),
+    #           label_getter(ifndb, 'esp', 'col_filter_selector_label'),
+    #           choices = '', multiple = TRUE,
+    #           options = list(
+    #             `actions-box` = TRUE,
+    #             `deselect-all-text` = 'None selected...',
+    #             `select-all-text` = 'All selected',
+    #             `selected-text-format` = 'count',
+    #             `count-selected-text` = "{0} variables selected (of {1})"
+    #           )
+    #         ),
+    #         shiny::uiOutput(ns('col_filter')),
+    #         shinyWidgets::actionBttn(
+    #           ns('apply_table_filters'),
+    #           'Aplicar',
+    #           icon = shiny::icon('eye'),
+    #           style = "stretch",
+    #           block = FALSE,
+    #           size = 'sm'
+    #         )
+    #       )
+    #     )
+    #   ),
+    #   shiny::column(
+    #     10,
+    #     DT::DTOutput(ns('ifn_table'), height = 'auto') %>%
+    #     # formattable::formattableOutput(ns('ifn_table')) #%>%
+    #       shinycssloaders::withSpinner(
+    #         type = 4, color = '#D2527F'
+    #       ),
+    #
+    #     # show query button
+    #     shinyWidgets::actionBttn(
+    #       ns('see_query'),
+    #       label_getter(ifndb, 'esp', 'see_query_label'),
+    #       icon = shiny::icon('database'),
+    #       style = "stretch",
+    #       block = FALSE,
+    #       size = 'sm'
+    #     )
+    #   )
+    # )
   )
 }
 
