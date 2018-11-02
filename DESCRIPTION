@@ -30,7 +30,7 @@ Imports:
   tidyIFN,
   writexl
 RoxygenNote: 6.1.0
-Suggests:.9002
+Suggests:
   testthat,
   shinytest,
   rmapshaper
