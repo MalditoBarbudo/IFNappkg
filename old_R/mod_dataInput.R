@@ -257,7 +257,7 @@ mod_data <- function(
   # observers to update the dataFil inputs
   shiny::observe({
     # create the input choices based on the administrative division input
-   admin_div_sel <- input$admin_div
+    admin_div_sel <- input$admin_div
     if (is.null(admin_div_sel) | admin_div_sel == '') {
 
       shinyjs::reset('admin_div_fil')
